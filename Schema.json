@@ -1,0 +1,355 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CorePlan",
+  "type": "object",
+  "required": [
+    "corePlanName",
+    "corePlanID",
+    "variationName",
+    "levels",
+    "catalog"
+  ],
+  "properties": {
+    "corePlanName": {
+      "type": "string"
+    },
+    "corePlanID": {
+      "type": "integer"
+    },
+    "variationName": {
+      "type": "string"
+    },
+    "catalog": {
+      "type": "string"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "elevation"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "elevation": {
+            "type": "number"
+          },
+          "roofs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["gables", "roofEdges", "roofSurfaces"],
+              "properties": {
+                "gables": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["gablePanelType", "gableEdges"],
+                    "properties": {
+                      "gablePanelType": {
+                        "anyOf": [
+                          { "type": "null" },
+                          { "type": "string" }
+                        ]
+                      },
+                      "gableEdges": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["startNode", "endNode"],
+                          "properties": {
+                            "startNode": {
+                              "type": "object",
+                              "required": ["x", "y", "z"],
+                              "properties": {
+                                "x": { "type": "number" },
+                                "y": { "type": "number" },
+                                "z": { "type": "number" }
+                              },
+                              "additionalProperties": false
+                            },
+                            "endNode": {
+                              "type": "object",
+                              "required": ["x", "y", "z"],
+                              "properties": {
+                                "x": { "type": "number" },
+                                "y": { "type": "number" },
+                                "z": { "type": "number" }
+                              },
+                              "additionalProperties": false
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "roofEdges": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["startNode", "endNode", "slope", "gableDepth"],
+                    "properties": {
+                      "startNode": {
+                        "type": "object",
+                        "required": ["x", "y"],
+                        "properties": {
+                          "x": { "type": "number" },
+                          "y": { "type": "number" }
+                        },
+                        "additionalProperties": false
+                      },
+                      "endNode": {
+                        "type": "object",
+                        "required": ["x", "y"],
+                        "properties": {
+                          "x": { "type": "number" },
+                          "y": { "type": "number" }
+                        },
+                        "additionalProperties": false
+                      },
+                      "slope": {
+                        "type": "number"
+                      },
+                      "gableDepth": {
+                        "type": "number"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "roofSurfaces": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["surfaceEdges", "surfaceSlope", "surfaceInnerHoles"],
+                    "properties": {
+                      "surfaceEdges": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["startNode", "endNode", "edgeType"],
+                          "properties": {
+                            "startNode": {
+                              "type": "object",
+                              "required": ["x", "y", "z"],
+                              "properties": {
+                                "x": { "type": "number" },
+                                "y": { "type": "number" },
+                                "z": { "type": "number" }
+                              },
+                              "additionalProperties": false
+                            },
+                            "endNode": {
+                              "type": "object",
+                              "required": ["x", "y", "z"],
+                              "properties": {
+                                "x": { "type": "number" },
+                                "y": { "type": "number" },
+                                "z": { "type": "number" }
+                              },
+                              "additionalProperties": false
+                            },
+                            "edgeType": {
+                              "type": "number"
+                            }
+                          },
+                          "additionalProperties": false
+                        }
+                      },
+                      "surfaceSlope": {
+                        "type": "number"
+                      },
+                      "surfaceInnerHoles": {
+                        "type": "array"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "rooms": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "category",
+                "function",
+                "type",
+                "centerXY",
+                "sizeXY",
+                "rotation90CounterClockWise",
+                "openings",
+                "floorSlope",
+                "panelType",
+                "gablePanelType",
+                "groupId"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string"
+                },
+                "function": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "centerXY": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                },
+                "sizeXY": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                },
+                "rotation90CounterClockWise": {
+                  "type": "number"
+                },
+                "openings": {
+                  "type": "array"
+                },
+                "floorSlope": {
+                  "anyOf": [
+                    { "type": "number" },
+                    { "type": "null" }
+                  ]
+                },
+                "panelType": {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "anyOf": [
+                      { "type": "null" },
+                      { "type": "string" }
+                    ]
+                  }
+                },
+                "gablePanelType": {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "items": {
+                    "anyOf": [
+                      { "type": "null" },
+                      { "type": "string" }
+                    ]
+                  }
+                },
+                "groupId": {
+                  "type": "string"
+                },
+                "isPrimary": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "arcAreas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["areaType", "areaContourPoints"],
+              "properties": {
+                "areaType": {
+                  "type": "string"
+                },
+                "areaContourPoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["point"],
+                    "properties": {
+                      "point": {
+                        "type": "object",
+                        "required": ["x", "y", "z"],
+                        "properties": {
+                          "x": { "type": "number" },
+                          "y": { "type": "number" },
+                          "z": { "type": "number" }
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "walls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "startPoint",
+                "endPoint",
+                "classification",
+                "functionCode",
+                "offset",
+                "id",
+                "wallFlippped"
+              ],
+              "properties": {
+                "startPoint": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                },
+                "endPoint": {
+                  "type": "array",
+                  "minItems": 2,
+                  "maxItems": 2,
+                  "items": { "type": "number" }
+                },
+                "classification": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "functionCode": { "type": "string" },
+                "offset": { "type": "number" },
+                "id": { "type": "string" },
+                "wallFlippped": { "type": "boolean" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "noWalls": {
+            "type": "array"
+          },
+          "gravityWalls": {
+            "type": "array"
+          },
+          "shearWalls": {
+            "type": "array"
+          },
+          "beams": {
+            "type": "array"
+          },
+          "spatialWalls": {
+            "type": "object",
+            "properties": {
+              "DDL": { "type": "array" },
+              "GRG": { "type": "array" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}
