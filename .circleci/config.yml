@@ -166,9 +166,6 @@ jobs:
             PublicALBSecurityGroupId=sg-0989ce36f62da2ae7
             PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0
             PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com
-            PrivateALBSecurityGroupId=sg-06fcee45cb5fc51b7
-            PrivateALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-private/1c7ba88c97adf469/cd7e4004ffc156d6
-            PrivateALBDNSRecord=e2e-prod-core-private-alb.private.modsy.com
             VpcId=vpc-0df37fa28593dad4e
             PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323
             ALBPriority=<<parameters.alb_priority>>

@@ -1,0 +1,246 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Description: Studio Validator
+
+Metadata: &config
+  Environment:
+    - Name: DEPLOYMENT_ENV
+      Value: !Ref DeploymentEnv
+    - Name: DJANGO_SETTINGS_MODULE
+      Value: !Sub 'server.settings.${DeploymentEnv}'
+
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+  DeploymentEnv:
+    Type: String
+  Cluster:
+    Type: String
+  ValidatorImage:
+    Type: String
+  PublicALBDNSRecord:
+    Type: String
+  PublicALBSecurityGroupId:
+    Type: String
+  PublicALBHTTPSListenerArn:
+    Type: String
+  ALBPriority:
+    Type: Number
+  ContainerPort:
+    Type: Number
+    Default: 8000
+
+Mappings:
+  ServiceGroupSize:
+    dev:
+      Desired: 1
+    staging:
+      Desired: 1
+    prod:
+      Desired: 1
+
+Resources:
+  PublicALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: !Ref ContainerPort
+      HealthCheckEnabled: true
+      HealthCheckPath: !Sub '/health/'
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref VpcId
+      TargetGroupAttributes:
+        - Key: 'deregistration_delay.timeout_seconds'
+          Value: 60
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: '2012-10-17'
+
+  TaskRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action: cloudformation:DescribeStacks
+            Effect: Allow
+            Resource: !Sub 'arn:aws:cloudformation:*:${AWS::AccountId}:stack/e2e-${DeploymentEnv}-*'
+      PolicyName: !Sub '${AWS::StackName}-task-role-policy'
+      Roles:
+        - !Ref TaskRole
+
+  TaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
+    Properties:
+      RetentionInDays: 30
+
+  TaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: '2012-10-17'
+
+  TaskExecutionRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ecr:BatchCheckLayerAvailability
+              - ecr:BatchGetImage
+              - ecr:GetDownloadUrlForLayer
+            Effect: Allow
+            Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/e2e'
+          - Action: ecr:GetAuthorizationToken
+            Effect: Allow
+            Resource: '*'
+          - Action:
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Effect: Allow
+            Resource: !GetAtt TaskLogGroup.Arn
+          - Action:
+              - secretsmanager:DescribeSecret
+              - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${DeploymentEnv}.validator.*'
+        Version: '2012-10-17'
+      PolicyName: !Sub '${AWS::StackName}-execution-role-policy'
+      Roles:
+        - !Ref TaskExecutionRole
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Essential: true
+          HealthCheck:
+            Command:
+              - CMD-SHELL
+              - !Sub 'curl -f http://localhost:8000/health/ || exit 1'
+            Interval: 10
+            Retries: 2
+            StartPeriod: 5
+            Timeout: 5
+          Image: !Ref ValidatorImage
+          <<: *config
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref TaskLogGroup
+              awslogs-stream-prefix: !Sub '${AWS::StackName}-service'
+              awslogs-region: !Ref AWS::Region
+          Name: validator
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+              Protocol: tcp
+      Cpu: 512
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Family: !Sub '${AWS::StackName}-service-task-definition'
+      Memory: 1024
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt TaskRole.Arn
+    DependsOn:
+      - TaskExecutionRolePolicy
+      - TaskRolePolicy
+
+  Service:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      DesiredCount: !FindInMap [ServiceGroupSize, !Ref DeploymentEnv, Desired]
+      LoadBalancers:
+        - ContainerName: validator
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !Ref PublicALBTargetGroup
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt ServiceSecurityGroup.GroupId
+          Subnets: !Ref PrivateSubnets
+      ServiceName: !Sub '${AWS::StackName}-service'
+      TaskDefinition: !Ref TaskDefinition
+      EnableECSManagedTags: true
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 50
+      HealthCheckGracePeriodSeconds: 5
+      LaunchType: FARGATE
+    DependsOn:
+      - PublicALBTargetGroup
+      - PublicALBRule1
+
+  ServiceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub 'Security group for ${AWS::StackName}-service'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic by default
+          IpProtocol: '-1'
+      VpcId: !Ref VpcId
+
+  PublicALBToServiceSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Public load balancer to Validator
+      SourceSecurityGroupId: !Ref PublicALBSecurityGroupId
+      GroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref ContainerPort
+      ToPort: !Ref ContainerPort
+
+  PublicALBToServiceSecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      Description: Public load balancer to Validator
+      GroupId: !Ref PublicALBSecurityGroupId
+      DestinationSecurityGroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref ContainerPort
+      ToPort: !Ref ContainerPort
+
+  ValidatorToPublicALB:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Validator to public load balancer
+      GroupId: !Ref PublicALBSecurityGroupId
+      SourceSecurityGroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+
+  PublicALBRule1:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref PublicALBTargetGroup
+          Type: forward
+      Conditions:
+        - Field: http-header
+          HttpHeaderConfig:
+            HttpHeaderName: x-e2e-app
+            Values:
+              - !Ref AWS::StackName
+      ListenerArn: !Ref PublicALBHTTPSListenerArn
+      Priority: !Ref ALBPriority
