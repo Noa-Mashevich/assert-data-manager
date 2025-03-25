@@ -26,7 +26,7 @@ commands:
           name: Lint
           command: |
             pip install -r requirements.txt
-            black -S app/studio --force-exclude migrations --line-length 90 --check
+            black -S app/studio --force-exclude migrations --line-length 90 --check --verbose
 
   test:
     steps:
