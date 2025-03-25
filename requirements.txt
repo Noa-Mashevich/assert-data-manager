@@ -1,0 +1,10 @@
+Django~=4.2.2
+boto3~=1.28.39
+djangorestframework~=3.14.0
+mysqlclient~=2.2.1
+cryptography~=41.0.2
+sentry-sdk~=2.4.0
+django-filter~=23.5
+python-dotenv~=1.0.1
+black~=24.10.0
+pre_commit~=4.0.1
