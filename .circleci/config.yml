@@ -1,0 +1,232 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: cimg/python:3.10.8
+
+orbs:
+  docker: circleci/docker@2.5.0
+  sam: circleci/aws-sam-serverless@3.2.0
+  aws-cli: circleci/aws-cli@3.1.3
+
+commands:
+  fast_checkout:
+    steps:
+      - run:
+          name: GitHub clone
+          command: |
+            mkdir ~/.ssh || true
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git clone "${CIRCLE_REPOSITORY_URL}" --branch "${CIRCLE_BRANCH}" --depth=1 .
+
+  lint:
+    steps:
+      - run:
+          name: Lint
+          command: |
+            pip install -r requirements.txt
+            black -S app/validator --force-exclude migrations --line-length 90 --check
+
+  test:
+    steps:
+      - run:
+          name: Test
+          command: |
+            # TODO figure out a way to use the container
+            python app/manage.py test validator
+
+  sam_build_deploy:
+    parameters:
+      stack-name:
+        type: string
+      environment:
+        type: string
+      overrides:
+        type: string
+      tags:
+        type: string
+      template:
+        type: string
+        default: template.yml
+    steps:
+      - run:
+          name: SAM Build
+          command: |
+            sam build \
+              --template-file <<parameters.template>> \
+              --parameter-overrides "<<parameters.overrides>>" \
+              --parallel
+      - run:
+          name: SAM Deploy
+          no_output_timeout: 30m
+          command: |
+            sam deploy \
+              --stack-name <<parameters.stack-name>> \
+              --parameter-overrides "<<parameters.overrides>>" \
+              --image-repository "052457202381.dkr.ecr.us-west-2.amazonaws.com/e2e" \
+              --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
+              --s3-prefix e2e_<<parameters.environment>>_validator \
+              --capabilities CAPABILITY_IAM \
+              --no-confirm-changeset \
+              --no-fail-on-empty-changeset \
+              --tags "<<parameters.tags>>"
+
+  undeploy:
+    parameters:
+      environment:
+        type: string
+      stack-name:
+        type: string
+    steps:
+      - aws-cli/setup:
+          role-arn: ${AWS_ROLE_ARN}
+      - run:
+          name: Undeploy <<parameters.environment>>
+          command: |
+            if [ "<<parameters.environment>>" = "prod" ]; then
+              echo "Undeploying prod environment is not allowed."
+              exit 1
+            fi
+            aws cloudformation delete-stack --stack-name=<<parameters.stack-name>>
+            aws cloudformation wait stack-delete-complete --stack-name=<<parameters.stack-name>>
+
+jobs:
+  lint-test:
+    steps:
+      - aws-cli/setup:
+          role-arn: ${AWS_ROLE_ARN}
+      - fast_checkout
+      - lint
+      - test
+    executor: default
+    resource_class: large
+
+  undeploy-app:
+    parameters:
+      environment:
+        type: string
+    steps:
+      - undeploy:
+          environment: <<parameters.environment>>
+          stack-name: e2e-<<parameters.environment>>-validator
+    executor: default
+    resource_class: large
+
+  build-deploy:
+    parameters:
+      environment:
+        type: string
+      image_host:
+        type: string
+        default: 052457202381.dkr.ecr.us-west-2.amazonaws.com
+      image_name:
+        type: string
+        default: e2e-validator
+      alb_priority:
+        type: integer
+    steps:
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-cli/setup:
+          role-arn: ${AWS_ROLE_ARN}
+      - sam/install
+      - fast_checkout
+      - run:
+          name: ECR Login
+          command: |
+            ECR_NAME=e2e
+            ECR_HOST=052457202381.dkr.ecr.us-west-2.amazonaws.com
+            aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin ${ECR_HOST}
+            ECR_PATH=${ECR_HOST}/${ECR_NAME}
+            
+            echo "export ECR_NAME=${ECR_NAME}" >> ${BASH_ENV}
+            echo "export ECR_PATH=${ECR_PATH}" >> ${BASH_ENV}
+      - run:
+          name: Image build
+          command: |
+            GIT_SHA=${CIRCLE_SHA1}
+            APP_IMAGE_PATH=${ECR_PATH}:${GIT_SHA}
+            docker build -f Dockerfile -t "${APP_IMAGE_PATH}" .
+            docker push "${APP_IMAGE_PATH}"
+            
+            echo "export APP_IMAGE_PATH=${APP_IMAGE_PATH}" >> ${BASH_ENV}
+      - run:
+          name: Check migrations
+          command: |
+            docker run ${APP_IMAGE_PATH} python manage.py makemigrations
+            docker run ${APP_IMAGE_PATH} python manage.py showmigrations
+      - sam_build_deploy:
+          stack-name: e2e-<<parameters.environment>>-validator
+          environment: <<parameters.environment>>
+          overrides: >-
+            ValidatorImage=${APP_IMAGE_PATH}
+            DeploymentEnv=<<parameters.environment>>
+            Cluster=e2e-prod-core
+            PublicALBSecurityGroupId=sg-0989ce36f62da2ae7
+            PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0
+            PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com
+            VpcId=vpc-0df37fa28593dad4e
+            PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323
+            ALBPriority=<<parameters.alb_priority>>
+          tags: >-
+            org=e2e
+            app=validator
+            env=<<parameters.environment>>
+            ApplicationName=\"Studio Validator\"
+            ApplicationID=ID045611
+            ApplicationOwner=\"Adam Konrad\"
+            CostCenter=\"1901901 - 3d Tools\"
+            Environment=<<parameters.environment>>
+            Budget=100000
+    executor: default
+    resource_class: small
+
+workflows:
+  validator:
+    jobs:
+      - lint-test:
+          context: aws
+          filters:
+            branches:
+              ignore:
+                - main
+                - staging
+                - staging-clean
+                - production
+      - build-deploy:
+          context: aws
+          environment: 'dev'
+          alb_priority: 352
+          filters:
+            branches:
+              only: main
+      - undeploy-app:
+          environment: 'staging'
+          context: aws
+          filters:
+            branches:
+              only: staging-clean
+      - build-deploy:
+          context: aws
+          environment: 'staging'
+          alb_priority: 351
+          requires:
+            - undeploy-app
+          filters:
+            branches:
+              only: staging-clean
+      - build-deploy:
+          context: aws
+          environment: 'staging'
+          alb_priority: 351
+          filters:
+            branches:
+              only: staging
+      - build-deploy:
+          context: aws
+          environment: 'prod'
+          alb_priority: 350
+          filters:
+            branches:
+              only: production
