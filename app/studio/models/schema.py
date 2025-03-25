@@ -25,8 +25,7 @@ class SchemaManager(models.Manager):
 
         schema_file_name = join_path(schemas_dir, f'{version}.json')
         if not os.path.isfile(schema_file_name):
-            raise FileNotFoundError('Schema file does not exist for '
-                                    f'version "{version}"')
+            raise FileNotFoundError(f'Schema file does not exist for version "{version}"')
 
         schema_data = read_dict(schema_file_name)
         schema = self.model.objects.create(schema_data=schema_data)
