@@ -28,7 +28,7 @@ class SchemaManager(models.Manager):
             raise FileNotFoundError(f'Schema file does not exist for version "{version}"')
 
         schema_data = read_dict(schema_file_name)
-        schema = self.model.objects.create(schema_data=schema_data)
+        schema = Schema(schema_data=schema_data)
 
         return schema
 
