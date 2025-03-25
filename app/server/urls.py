@@ -20,5 +20,5 @@ from .health import health
 
 urlpatterns = [
     path('health/', health),
-    path("validator/", include("validator.views")),
+    path("studio/", include("studio.views")),
 ]
