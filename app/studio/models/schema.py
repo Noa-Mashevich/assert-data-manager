@@ -35,5 +35,8 @@ class SchemaManager(models.Manager):
 
 class Schema(models.Model):
     schema_data: dict
-
     objects = SchemaManager()
+
+    def __init__(self, *args, schema_data, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.schema_data = schema_data
