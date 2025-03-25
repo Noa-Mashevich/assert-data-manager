@@ -1,0 +1,22 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "e2e-dev-validator"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_prefix = "validator_dev"
+region = "us-west-2"
+capabilities = "CAPABILITY_IAM"
+
+[staging.deploy.parameters]
+stack_name = "e2e-staging-validator"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_prefix = "validator_staging"
+region = "us-west-2"
+capabilities = "CAPABILITY_IAM"
+
+[prod.deploy.parameters]
+stack_name = "e2e-prod-validator"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_prefix = "validator_prod"
+region = "us-west-2"
+capabilities = "CAPABILITY_IAM"
