@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ValidatorConfig(AppConfig):
+class StudioConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'validator'
+    name = 'studio'

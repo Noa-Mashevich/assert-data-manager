@@ -6,7 +6,7 @@ from .validator import ValidatorViewSet
 
 router = routers.DefaultRouter()
 
-router.register(r'validator', ValidatorViewSet, basename='validator')
+router.register(r'validator', ValidatorViewSet, basename='studio')
 
 urlpatterns = [
     path('', include(router.urls)),
