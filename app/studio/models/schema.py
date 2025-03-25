@@ -13,7 +13,7 @@ def clean_path(path: str) -> str:
 
 
 def read_dict(file_name: str) -> dict:
-    with open(file_name, 't', encoding='utf-8-sig') as file:
+    with open(file_name, 'rt', encoding='utf-8-sig') as file:
         content = file.read()
         return json.loads(content)
 
