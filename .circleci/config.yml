@@ -197,7 +197,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'dev'
-          alb_priority: 320
+          alb_priority: 352
           filters:
             branches:
               only: main
@@ -210,7 +210,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'staging'
-          alb_priority: 310
+          alb_priority: 351
           requires:
             - undeploy-app
           filters:
@@ -219,14 +219,14 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'staging'
-          alb_priority: 310
+          alb_priority: 351
           filters:
             branches:
               only: staging
       - build-deploy:
           context: aws
           environment: 'prod'
-          alb_priority: 300
+          alb_priority: 350
           filters:
             branches:
               only: production
