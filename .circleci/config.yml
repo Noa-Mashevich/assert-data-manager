@@ -26,7 +26,7 @@ commands:
           name: Lint
           command: |
             pip install -r requirements.txt
-            black -S app/validator --force-exclude migrations --line-length 90 --check
+            black -S app/studio --force-exclude migrations --line-length 90 --check --verbose
 
   test:
     steps:
@@ -34,7 +34,7 @@ commands:
           name: Test
           command: |
             # TODO figure out a way to use the container
-            python app/manage.py test validator
+            python app/manage.py test studio
 
   sam_build_deploy:
     parameters:
@@ -66,7 +66,7 @@ commands:
               --parameter-overrides "<<parameters.overrides>>" \
               --image-repository "052457202381.dkr.ecr.us-west-2.amazonaws.com/e2e" \
               --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
-              --s3-prefix e2e_<<parameters.environment>>_validator \
+              --s3-prefix e2e_<<parameters.environment>>_studio \
               --capabilities CAPABILITY_IAM \
               --no-confirm-changeset \
               --no-fail-on-empty-changeset \
@@ -109,7 +109,7 @@ jobs:
     steps:
       - undeploy:
           environment: <<parameters.environment>>
-          stack-name: e2e-<<parameters.environment>>-validator
+          stack-name: e2e-<<parameters.environment>>-studio
     executor: default
     resource_class: large
 
@@ -122,7 +122,7 @@ jobs:
         default: 052457202381.dkr.ecr.us-west-2.amazonaws.com
       image_name:
         type: string
-        default: e2e-validator
+        default: e2e-studio
       alb_priority:
         type: integer
     steps:
@@ -157,10 +157,10 @@ jobs:
             docker run ${APP_IMAGE_PATH} python manage.py makemigrations
             docker run ${APP_IMAGE_PATH} python manage.py showmigrations
       - sam_build_deploy:
-          stack-name: e2e-<<parameters.environment>>-validator
+          stack-name: e2e-<<parameters.environment>>-studio
           environment: <<parameters.environment>>
           overrides: >-
-            ValidatorImage=${APP_IMAGE_PATH}
+            StudioImage=${APP_IMAGE_PATH}
             DeploymentEnv=<<parameters.environment>>
             Cluster=e2e-prod-core
             PublicALBSecurityGroupId=sg-0989ce36f62da2ae7
@@ -171,9 +171,9 @@ jobs:
             ALBPriority=<<parameters.alb_priority>>
           tags: >-
             org=e2e
-            app=validator
+            app=studio
             env=<<parameters.environment>>
-            ApplicationName=\"Studio Validator\"
+            ApplicationName=\"Studio BE\"
             ApplicationID=ID045611
             ApplicationOwner=\"Adam Konrad\"
             CostCenter=\"1901901 - 3d Tools\"
@@ -183,7 +183,7 @@ jobs:
     resource_class: small
 
 workflows:
-  validator:
+  studio:
     jobs:
       - lint-test:
           context: aws
