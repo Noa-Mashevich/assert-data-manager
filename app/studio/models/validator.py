@@ -5,9 +5,9 @@ from studio.models import Schema
 
 class Validator(models.Model):
     data = models.JSONField()
-    version = models.CharField(max_length=128, unique=True)
+    version = models.CharField(max_length=128)
     success = models.BooleanField()
-    message = models.CharField(max_length=1024)
+    message = models.TextField()
 
     def validate(self):
         if 'version' not in self.data:

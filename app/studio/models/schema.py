@@ -40,7 +40,7 @@ class SchemaManager(models.Manager):
 
 
 class Schema(models.Model):
-    version = models.CharField(max_length=128, unique=True)
+    version = models.CharField(max_length=128)
     schema_data = models.JSONField()
 
     objects = SchemaManager()
