@@ -12,14 +12,11 @@ def get_schema_dir() -> str:
 
 
 def get_schema_file_name(version: str) -> str:
-    current_dir = os.path.dirname(__file__)
-    schemas_dir = FileUtils.join_path(current_dir, '..', '..', 'data', 'schema')
-
-    return FileUtils.join_path(schemas_dir, f'{version}.json')
+    return FileUtils.join_path(get_schema_dir(), f'{version}.json')
 
 
 class SchemaManager(models.Manager):
-    def create(self, version: str):
+    def create_from_version(self, version: str):
         if version not in SchemaManager.get_supported_versions():
             raise ValueError(f'Schema version "{version}" is not supported')
 
@@ -43,14 +40,13 @@ class SchemaManager(models.Manager):
 
 
 class Schema(models.Model):
-    version: str
-    schema_data: dict
+    version = models.CharField(max_length=128, unique=True)
+    schema_data = models.JSONField()
+
     objects = SchemaManager()
 
-    def __init__(self, *args, version, schema_data, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.version = version
-        self.schema_data = schema_data
+    class Meta:
+        managed = False
 
     def validate(self, data: dict) -> (bool, str):
         success = False

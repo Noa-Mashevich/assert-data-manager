@@ -10,12 +10,12 @@ class TestSchema(TestCase):
     def test_schemas(self):
         versions = SchemaManager.get_supported_versions()
         for version in versions:
-            schema = Schema.objects.create(version)
+            schema = Schema.objects.create_from_version(version)
             self.assertEqual(schema.version, version)
             self.assertIsNotNone(schema.schema_data)
 
         with self.assertRaises(ValueError):
-            Schema.objects.create('x.y.z')
+            Schema.objects.create_from_version('x.y.z')
 
     @staticmethod
     def get_test_dir() -> str:
@@ -27,7 +27,7 @@ class TestSchema(TestCase):
         return FileUtils.join_path(TestSchema.get_test_dir(), 'data', sub_dir, file_name)
 
     def test_schema_validation(self):
-        schema = Schema.objects.create('1.0.0')
+        schema = Schema.objects.create_from_version('1.0.0')
 
         success, error_message = schema.validate({})
 
