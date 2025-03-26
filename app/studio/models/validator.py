@@ -8,6 +8,7 @@ class Validator(models.Model):
     version = models.CharField(max_length=128)
     success = models.BooleanField()
     message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def validate(self):
         if 'version' not in self.data:
