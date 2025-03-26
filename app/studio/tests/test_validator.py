@@ -22,3 +22,8 @@ class TestValidatorApi(TestCase):
         with self.assertRaises(Exception):
             request = self.factory.post(f'/validator', {'version': '1.0.0'})
             view(request)
+
+        # data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
+        # data = FileUtils.read_dict(data_file_name)
+        # request = self.factory.post(f'/validator', data)
+        # response = view(request)

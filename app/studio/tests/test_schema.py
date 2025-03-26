@@ -5,6 +5,8 @@ from django.test import TestCase
 from studio.file_utils import FileUtils
 from studio.models import Schema, SchemaManager
 
+from .utils import TestUtils
+
 
 class TestSchema(TestCase):
     def test_schemas(self):
@@ -17,15 +19,6 @@ class TestSchema(TestCase):
         with self.assertRaises(ValueError):
             Schema.objects.create_from_version('x.y.z')
 
-    @staticmethod
-    def get_test_dir() -> str:
-        filepath = os.path.realpath(__file__)
-        return os.path.dirname(filepath)
-
-    @staticmethod
-    def get_data_path(file_name: str, sub_dir: str) -> str:
-        return FileUtils.join_path(TestSchema.get_test_dir(), 'data', sub_dir, file_name)
-
     def test_schema_validation(self):
         schema = Schema.objects.create_from_version('1.0.0')
 
@@ -34,7 +27,7 @@ class TestSchema(TestCase):
         self.assertEqual(success, False)
         self.assertGreater(len(error_message), 0)
 
-        data_file_name = TestSchema.get_data_path('test_schema_v1.0.0.json', 'schema')
+        data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_1.json', 'schema')
         data = FileUtils.read_dict(data_file_name)
         success, error_message = schema.validate(data)
 
