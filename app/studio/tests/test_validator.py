@@ -28,7 +28,7 @@ class TestValidatorApi(TestCase):
 
         data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
         data = FileUtils.read_dict(data_file_name)
-        request = self.factory.post(f'/validator', data)
+        request = self.factory.post(f'/validator', data, format='json')
         response = view(request)
 
         self.assertEqual(response.status_code, 200)
