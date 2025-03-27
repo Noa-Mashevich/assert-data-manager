@@ -28,14 +28,16 @@
     },
     "levels": {
       "type": "array",
-      "items": { "$ref": "#/$definitions/level" }
+      "items": {
+        "$ref": "#/$definitions/level"
+      }
     }
   },
   "$definitions": {
     "level": {
       "type": "object",
       "properties": {
-        "name":{
+        "name": {
           "type": "string"
         },
         "elevation": {
