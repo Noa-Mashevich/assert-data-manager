@@ -1,7 +1,7 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
+from django.urls import reverse
+from rest_framework.test import APIClient
 
-from studio.views.validator import ValidatorViewSet
 from studio.file_utils import FileUtils
 
 from .utils import TestUtils
@@ -9,26 +9,22 @@ from .utils import TestUtils
 
 class TestValidatorApi(TestCase):
     def setUp(self):
-        self.factory = APIRequestFactory()
+        self.client = APIClient()
 
     def test_validator(self):
-        view = ValidatorViewSet.as_view({'post': 'validate'})
+        url = reverse('validator-validate')
 
         with self.assertRaises(Exception):
-            request = self.factory.post(f'/validator')
-            view(request)
+            self.client.post(url, data='', content_type='application/json')
 
         with self.assertRaises(Exception):
-            request = self.factory.post(f'/validator', {})
-            view(request)
+            self.client.post(url, data='{}', content_type='application/json')
 
         with self.assertRaises(Exception):
-            request = self.factory.post(f'/validator', {'version': '1.0.0'})
-            view(request)
+            self.client.post(url, data='{"version": "1.0.0"}', content_type='application/json')
 
         data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
-        data = FileUtils.read_dict(data_file_name)
-        request = self.factory.post(f'/validator', data, format='json')
-        response = view(request)
+        data = FileUtils.read_content(data_file_name)
+        response = self.client.post(url, data=data, content_type='application/json')
 
         self.assertEqual(response.status_code, 200)
