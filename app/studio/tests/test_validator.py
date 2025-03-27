@@ -23,8 +23,9 @@ class TestValidatorApi(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.content, 'Missing version in input data')
 
-        response = self.client.post(url, data='{"version": "1.0.0"}', content_type='application/json')
-
+        response = self.client.post(
+            url, data='{"version": "1.0.0"}', content_type='application/json'
+        )
         self.assertEqual(response.status_code, 400)
 
         data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
