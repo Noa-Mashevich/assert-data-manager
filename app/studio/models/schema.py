@@ -42,7 +42,6 @@ class SchemaManager(models.Manager):
 class Schema(models.Model):
     version = models.CharField(max_length=128)
     schema_data = models.JSONField()
-    created_at = models.DateTimeField(auto_now_add=True)
 
     objects = SchemaManager()
 
