@@ -7,7 +7,7 @@ from studio.serializers import ValidatorResponseSerializer
 
 
 class ValidatorViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
-    @action(detail=True, methods=['post'])
+    @action(detail=False, methods=['post'])
     def validate(self, request):
         validator = Validator(data=request.data)
         validator.validate()
