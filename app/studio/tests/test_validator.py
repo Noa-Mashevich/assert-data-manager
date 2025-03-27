@@ -21,7 +21,9 @@ class TestValidatorApi(TestCase):
             self.client.post(url, data='{}', content_type='application/json')
 
         with self.assertRaises(Exception):
-            self.client.post(url, data='{"version": "1.0.0"}', content_type='application/json')
+            self.client.post(
+                url, data='{"version": "1.0.0"}', content_type='application/json'
+            )
 
         data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
         data = FileUtils.read_content(data_file_name)
