@@ -31,3 +31,10 @@ class TestSchema(TestCase):
 
         self.assertEqual(success, False)
         self.assertGreater(len(error_message), 0)
+
+        data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
+        data = FileUtils.read_dict(data_file_name)
+        success, error_message = schema.validate(data)
+
+        self.assertEqual(success, True)
+        self.assertEqual(len(error_message), 0)
