@@ -12,10 +12,14 @@ class FileUtils:
         return path.replace('\\', '/')
 
     @staticmethod
-    def read_dict(file_name: str) -> dict:
+    def read_content(file_name: str) -> str:
         with open(file_name, 'rt', encoding='utf-8-sig') as file:
-            content = file.read()
-            return json.loads(content)
+            return file.read()
+
+    @staticmethod
+    def read_dict(file_name: str) -> dict:
+        content = FileUtils.read_content(file_name)
+        return json.loads(content)
 
     @staticmethod
     def listdir(dir_name: str) -> [str]:

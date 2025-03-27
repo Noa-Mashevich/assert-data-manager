@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "corePlanName":  "Name",
+  "corePlanName":  "Plan Name",
   "corePlanID":  12,
-  "variationName":  "Variation",
-  "levels":  [
+  "variationName":  "Variation Name",
+  "levels": [
     {
       "name": "Level #0",
       "elevation": 0
