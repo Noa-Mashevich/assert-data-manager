@@ -1,0 +1,2030 @@
+{
+    "version": "1.0.1",
+	"corePlanName": "Beckman_Dor",
+	"corePlanID": "9",
+	"variationName": "Elevation-B",
+	"levels": [{
+		"name": "Story 1",
+		"elevation": 0,
+		"roofs": [{
+			"gables": [{
+				"gablePanelType": "Basic Wall⇨EF_Horizontal Siding & Sheathing",
+				"gableEdges": [{
+					"startNode": {
+						"x": -1.1458333333333333,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"endNode": {
+						"x": 34.85416666666697,
+						"y": 49.68750000000008,
+						"z": 0.5
+					}
+				}, {
+					"startNode": {
+						"x": 34.85416666666697,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"endNode": {
+						"x": 24.52083333333356,
+						"y": 49.68750000000008,
+						"z": 5.666666666666704
+					}
+				}, {
+					"startNode": {
+						"x": 24.52083333333356,
+						"y": 49.68750000000008,
+						"z": 5.666666666666704
+					},
+					"endNode": {
+						"x": 16.854166666666817,
+						"y": 49.68750000000008,
+						"z": 9.500000000000076
+					}
+				}, {
+					"startNode": {
+						"x": 16.854166666666817,
+						"y": 49.68750000000008,
+						"z": 9.500000000000076
+					},
+					"endNode": {
+						"x": -1.1458333333333333,
+						"y": 49.68750000000008,
+						"z": 0.5
+					}
+				}]
+			}],
+			"roofEdges": [{
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 14.708333333333334
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 0.4791666666663635
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 0.4791666666663635
+				},
+				"endNode": {
+					"x": 10.708333333333636,
+					"y": 0.4791666666663635
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 10.708333333333636,
+					"y": 0.4791666666663635
+				},
+				"endNode": {
+					"x": 14.187500000000151,
+					"y": 0.4791666666663635
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 14.187500000000151,
+					"y": 0.4791666666663635
+				},
+				"endNode": {
+					"x": 14.187500000000151,
+					"y": -1.2291666666666667
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 14.187500000000151,
+					"y": -1.2291666666666667
+				},
+				"endNode": {
+					"x": 34.85416666666682,
+					"y": -1.2291666666667094
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 34.85416666666682,
+					"y": -1.2291666666667094
+				},
+				"endNode": {
+					"x": 34.854166666667574,
+					"y": 19.83333333333348
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 34.854166666667574,
+					"y": 19.83333333333348
+				},
+				"endNode": {
+					"x": 34.854166666667574,
+					"y": 31.125000000000142
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 34.854166666667574,
+					"y": 31.125000000000142
+				},
+				"endNode": {
+					"x": 34.85416666666697,
+					"y": 36.58333333333339
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 34.85416666666697,
+					"y": 36.58333333333339
+				},
+				"endNode": {
+					"x": 34.85416666666697,
+					"y": 50.68750000000008
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 34.85416666666697,
+					"y": 50.68750000000008
+				},
+				"endNode": {
+					"x": 21.249999999999698,
+					"y": 50.68750000000008
+				},
+				"slope": 0,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 21.249999999999698,
+					"y": 50.68750000000008
+				},
+				"endNode": {
+					"x": 18.041666666667272,
+					"y": 50.68750000000008
+				},
+				"slope": 0,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 18.041666666667272,
+					"y": 50.68750000000008
+				},
+				"endNode": {
+					"x": 15.041666666666515,
+					"y": 50.68750000000008
+				},
+				"slope": 0,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": 15.041666666666515,
+					"y": 50.68750000000008
+				},
+				"endNode": {
+					"x": -1.1458333333333333,
+					"y": 50.68750000000008
+				},
+				"slope": 0,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333333333,
+					"y": 50.68750000000008
+				},
+				"endNode": {
+					"x": -1.1458333333333333,
+					"y": 35.541666666666636
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333333333,
+					"y": 35.541666666666636
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 23
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 23
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 20.3125
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 20.3125
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 19.810465494791668
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 19.810465494791668
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 18.149007161458332
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 18.149007161458332
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 17.604085286458332
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}, {
+				"startNode": {
+					"x": -1.1458333333330302,
+					"y": 17.604085286458332
+				},
+				"endNode": {
+					"x": -1.1458333333330302,
+					"y": 14.708333333333334
+				},
+				"slope": 0.5,
+				"gableDepth": 0
+			}],
+			"roofSurfaces": [{
+				"surfaceEdges": [{
+					"startNode": {
+						"x": -2.14583333333303,
+						"y": -0.5208333333336412,
+						"z": 0
+					},
+					"endNode": {
+						"x": -2.1458333333333335,
+						"y": 50.68750000000008,
+						"z": 0
+					},
+					"edgeType": 5,
+					"hasGutter": true,
+					"downspout": {
+						"U": [0.019528071602929065, 0.980471928397071],
+						"z0": 0,
+						"z1": 7.739583333333333
+					}
+				}, {
+					"startNode": {
+						"x": -2.1458333333333335,
+						"y": 50.68750000000008,
+						"z": 0
+					},
+					"endNode": {
+						"x": 16.854166666666856,
+						"y": 50.68750000000008,
+						"z": 9.500000000000094
+					},
+					"edgeType": 3,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666856,
+						"y": 50.68750000000008,
+						"z": 9.500000000000094
+					},
+					"endNode": {
+						"x": 16.854166666666902,
+						"y": 18.479166666666405,
+						"z": 9.500000000000021
+					},
+					"edgeType": 4,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666902,
+						"y": 18.479166666666405,
+						"z": 9.500000000000021
+					},
+					"endNode": {
+						"x": -2.14583333333303,
+						"y": -0.5208333333336412,
+						"z": 0
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0.5,
+				"surfaceInnerHoles": []
+			}, {
+				"surfaceEdges": [{
+					"startNode": {
+						"x": -1.1458333333333333,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"endNode": {
+						"x": 34.85416666666697,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"edgeType": 7,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 34.85416666666697,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"endNode": {
+						"x": 24.52083333333356,
+						"y": 49.68750000000008,
+						"z": 5.666666666666704
+					},
+					"edgeType": 0,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.52083333333356,
+						"y": 49.68750000000008,
+						"z": 5.666666666666704
+					},
+					"endNode": {
+						"x": 16.854166666666817,
+						"y": 49.68750000000008,
+						"z": 9.500000000000076
+					},
+					"edgeType": 0,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666817,
+						"y": 49.68750000000008,
+						"z": 9.500000000000076
+					},
+					"endNode": {
+						"x": -1.1458333333333333,
+						"y": 49.68750000000008,
+						"z": 0.5
+					},
+					"edgeType": 0,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0,
+				"surfaceInnerHoles": []
+			}, {
+				"surfaceEdges": [{
+					"startNode": {
+						"x": 35.85416666666682,
+						"y": -2.229166666666712,
+						"z": 0
+					},
+					"endNode": {
+						"x": 35.85416666666697,
+						"y": 50.68750000000008,
+						"z": 0
+					},
+					"edgeType": 5,
+					"hasGutter": true,
+					"downspout": {
+						"U": [0.01889763779527555, 0.9811023622047245],
+						"z0": 0,
+						"z1": 7.739583333333333
+					}
+				}, {
+					"startNode": {
+						"x": 35.85416666666697,
+						"y": 50.68750000000008,
+						"z": 0
+					},
+					"endNode": {
+						"x": 24.520833333333524,
+						"y": 50.68750000000008,
+						"z": 5.666666666666724
+					},
+					"edgeType": 3,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333524,
+						"y": 50.68750000000008,
+						"z": 5.666666666666724
+					},
+					"endNode": {
+						"x": 16.854166666666856,
+						"y": 50.68750000000008,
+						"z": 9.500000000000059
+					},
+					"edgeType": 3,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666856,
+						"y": 50.68750000000008,
+						"z": 9.500000000000059
+					},
+					"endNode": {
+						"x": 16.854166666666902,
+						"y": 18.47916666666634,
+						"z": 9.49999999999999
+					},
+					"edgeType": 4,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666902,
+						"y": 18.47916666666634,
+						"z": 9.49999999999999
+					},
+					"endNode": {
+						"x": 24.520833333333467,
+						"y": 10.812499999999758,
+						"z": 5.666666666666697
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333467,
+						"y": 10.812499999999758,
+						"z": 5.666666666666697
+					},
+					"endNode": {
+						"x": 24.520833333333467,
+						"y": 9.104166666666698,
+						"z": 5.666666666666693
+					},
+					"edgeType": 4,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333467,
+						"y": 9.104166666666698,
+						"z": 5.666666666666693
+					},
+					"endNode": {
+						"x": 35.85416666666682,
+						"y": -2.229166666666712,
+						"z": 0
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0.5,
+				"surfaceInnerHoles": []
+			}, {
+				"surfaceEdges": [{
+					"startNode": {
+						"x": 13.187500000000151,
+						"y": -2.2291666666666665,
+						"z": 0
+					},
+					"endNode": {
+						"x": 35.85416666666682,
+						"y": -2.229166666666712,
+						"z": 0
+					},
+					"edgeType": 5,
+					"hasGutter": true,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 35.85416666666682,
+						"y": -2.229166666666712,
+						"z": 0
+					},
+					"endNode": {
+						"x": 24.520833333333503,
+						"y": 9.104166666666659,
+						"z": 5.666666666666674
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333503,
+						"y": 9.104166666666659,
+						"z": 5.666666666666674
+					},
+					"endNode": {
+						"x": 13.187500000000151,
+						"y": -2.2291666666666665,
+						"z": 0
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0.5,
+				"surfaceInnerHoles": []
+			}, {
+				"surfaceEdges": [{
+					"startNode": {
+						"x": 13.187500000000151,
+						"y": -2.2291666666666665,
+						"z": 0
+					},
+					"endNode": {
+						"x": 13.187500000000151,
+						"y": -0.5208333333336365,
+						"z": 0
+					},
+					"edgeType": 5,
+					"hasGutter": true,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 13.187500000000151,
+						"y": -0.5208333333336365,
+						"z": 0
+					},
+					"endNode": {
+						"x": 24.520833333333503,
+						"y": 10.812499999999714,
+						"z": 5.666666666666675
+					},
+					"edgeType": 2,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333503,
+						"y": 10.812499999999714,
+						"z": 5.666666666666675
+					},
+					"endNode": {
+						"x": 24.5208333333335,
+						"y": 9.104166666666657,
+						"z": 5.666666666666674
+					},
+					"edgeType": 4,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.5208333333335,
+						"y": 9.104166666666657,
+						"z": 5.666666666666674
+					},
+					"endNode": {
+						"x": 13.187500000000151,
+						"y": -2.2291666666666665,
+						"z": 0
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0.5,
+				"surfaceInnerHoles": []
+			}, {
+				"surfaceEdges": [{
+					"startNode": {
+						"x": -2.14583333333303,
+						"y": -0.5208333333336412,
+						"z": 0
+					},
+					"endNode": {
+						"x": 13.187500000000151,
+						"y": -0.5208333333336365,
+						"z": 0
+					},
+					"edgeType": 5,
+					"hasGutter": true,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 13.187500000000151,
+						"y": -0.5208333333336365,
+						"z": 0
+					},
+					"endNode": {
+						"x": 24.520833333333503,
+						"y": 10.812499999999716,
+						"z": 5.666666666666676
+					},
+					"edgeType": 2,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 24.520833333333503,
+						"y": 10.812499999999716,
+						"z": 5.666666666666676
+					},
+					"endNode": {
+						"x": 16.854166666666874,
+						"y": 18.479166666666377,
+						"z": 9.500000000000005
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}, {
+					"startNode": {
+						"x": 16.854166666666874,
+						"y": 18.479166666666377,
+						"z": 9.500000000000005
+					},
+					"endNode": {
+						"x": -2.14583333333303,
+						"y": -0.5208333333336412,
+						"z": 0
+					},
+					"edgeType": 1,
+					"hasGutter": false,
+					"downspout": null
+				}],
+				"surfaceSlope": 0.5,
+				"surfaceInnerHoles": []
+			}]
+		}],
+		"rooms": [{
+			"category": "BATHROOM",
+			"function": "BATHROOM",
+			"type": "BT8",
+			"centerXY": [2.6458333333336364, 18.854166666666668],
+			"sizeXY": [-5.291666666666667, 8.291666666666666],
+			"rotation90CounterClockWise": 1,
+			"openings": [{
+				"id": "09f548b8-94e5-4c11-83b0-1fc2b276b589-011dc2e8",
+				"shiftDistance": -0.00003307387957359372,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "BATHROOM",
+			"function": "BATHROOM",
+			"type": "BT9",
+			"centerXY": [20.708333333333332, 33.85416666666671],
+			"sizeXY": [11.33333333333394, 5.458333333333409],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "ace6b5fc-cdc5-443a-a2d2-9bc8fc147cbc-011ca9db",
+				"shiftDistance": 0.00003307387972502814,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "BEDROOM",
+			"function": "BEDROOM",
+			"type": "BD2",
+			"centerXY": [28.812500000000302, 25.479166666666746],
+			"sizeXY": [9.79166666666788, 11.291666666666531],
+			"rotation90CounterClockWise": 2,
+			"openings": [{
+				"id": "3a8eb967-d8bd-449c-b7d3-16cdb72f8c4f-011bbc15",
+				"shiftDistance": -6.727550250218428e-8,
+				"offsetX": 0,
+				"offsetY": 0
+			}, {
+				"id": "3a8eb967-d8bd-449c-b7d3-16cdb72f8c4f-011bbc19",
+				"shiftDistance": 1.8869027853616476,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "BEDROOM",
+			"function": "BEDROOM",
+			"type": "BD8",
+			"centerXY": [27.479166666666668, 43.062500000000064],
+			"sizeXY": [12.45833333333394, 12.958333333333352],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "60900f0b-477e-4736-86af-f3f0cc5a24c2-011c90b6",
+				"shiftDistance": 0.0000015092388518193427,
+				"offsetX": 0,
+				"offsetY": 0
+			}, {
+				"id": "09f548b8-94e5-4c11-83b0-1fc2b276b589-011d98f2",
+				"shiftDistance": -1.2197236702130946e-8,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": ["Basic Wall⇨EF_Horizontal Siding & Sheathing", null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "BEDROOM",
+			"function": "BEDROOM",
+			"type": "BD9",
+			"centerXY": [5.35416666666697, 8.166666666666515],
+			"sizeXY": [10.708333333333334, 13.083333333333636],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "09f548b8-94e5-4c11-83b0-1fc2b276b589-011d9a30",
+				"shiftDistance": 0.000001509238396923962,
+				"offsetX": 0,
+				"offsetY": 0
+			}, {
+				"id": "55e52a71-ea14-43c1-abb1-082de65859a8-01215a33",
+				"shiftDistance": -1.7872427951312158,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CLOSET",
+			"function": "CLOSET",
+			"type": "C1",
+			"centerXY": [8.000000000000151, 19.56249999999996],
+			"sizeXY": [5.416666666666667, 2.291666666666591],
+			"rotation90CounterClockWise": 2,
+			"openings": [{
+				"id": "96275b30-6adc-4167-8df8-f04c5db1d3e4-011c32e9",
+				"shiftDistance": 0.0000029660219905321603,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CLOSET",
+			"function": "CLOSET",
+			"type": "C11",
+			"centerXY": [22.625000000000302, 25.3125],
+			"sizeXY": [-2.5833333333332953, 3.875],
+			"rotation90CounterClockWise": 3,
+			"openings": [{
+				"id": "09f548b8-94e5-4c11-83b0-1fc2b276b589-011dbfe1",
+				"shiftDistance": -0.000002966022141966581,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CLOSET",
+			"function": "CLOSET",
+			"type": "C3",
+			"centerXY": [30.04166666666697, 33.85416666666671],
+			"sizeXY": [7.333333333333333, 5.458333333333371],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "9fc761b0-60db-44b4-8f14-a70765d19737-011c984d",
+				"shiftDistance": 0.000019926346946104918,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CLOSET",
+			"function": "PANTRY",
+			"type": "PTY1",
+			"centerXY": [8.000000000000151, 21.85416666666659],
+			"sizeXY": [5.41666666666606, 2.2916666666666665],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "3a8eb967-d8bd-449c-b7d3-16cdb72f8c4f-011bbce5",
+				"shiftDistance": 0.000004018659031620094,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "FOYER",
+			"type": "H7",
+			"centerXY": [13.020833333333636, 11.23958333333303],
+			"sizeXY": [4.625, 6.9375],
+			"rotation90CounterClockWise": 1,
+			"openings": [{
+				"id": "96275b30-6adc-4167-8df8-f04c5db1d3e4-011c41d4",
+				"shiftDistance": 0.000006652323918387992,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "GARAGE",
+			"type": "H2",
+			"centerXY": [17.35416666666697, 21.604166666666817],
+			"sizeXY": [4.041666666666667, 3.5416666666663636],
+			"rotation90CounterClockWise": 1,
+			"openings": [{
+				"id": "96275b30-6adc-4167-8df8-f04c5db1d3e4-011c462e",
+				"shiftDistance": -0.10145816282962035,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "HALLWAY",
+			"type": "H3",
+			"centerXY": [12.875000000000151, 29.458333333333258],
+			"sizeXY": [4.333333333333637, 12.166666666666515],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "HALLWAY LIGHT",
+			"type": "H1",
+			"centerXY": [13.020833333333485, 16.5625],
+			"sizeXY": [4.624999999999697, 3.7083333333333335],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "HALLWAY LIGHT",
+			"type": "H1",
+			"centerXY": [8.000000000000151, 16.5625],
+			"sizeXY": [5.416666666666363, 3.7083333333333335],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "HALLWAY LIGHT",
+			"type": "H1",
+			"centerXY": [21.645833333333332, 21.604166666666668],
+			"sizeXY": [-4.54166666666606, 3.5416666666663636],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "CORRIDORS",
+			"function": "HALLWAY LIGHT",
+			"type": "H1",
+			"centerXY": [13.020833333333334, 20.895833333333332],
+			"sizeXY": [4.625000000000303, 4.9583333333332575],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "DINING",
+			"function": "DINING",
+			"type": "DG5",
+			"centerXY": [18.145833333333183, 43.06250000000008],
+			"sizeXY": [6.208333333333333, 12.958333333333334],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "60900f0b-477e-4736-86af-f3f0cc5a24c2-011c94c1",
+				"shiftDistance": -0.5833333333330302,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": ["Basic Wall⇨EF_Horizontal Siding & Sheathing", null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "FAMILY ROOM",
+			"function": "FAMILY ROOM",
+			"type": "FA1",
+			"centerXY": [7.520833333333637, 42.54166666666671],
+			"sizeXY": [15.041666666667274, 14.000000000000076],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "3a8eb967-d8bd-449c-b7d3-16cdb72f8c4f-011bbc85",
+				"shiftDistance": 0.0000015092388518193427,
+				"offsetX": 0,
+				"offsetY": 0
+			}, {
+				"id": "3a8eb967-d8bd-449c-b7d3-16cdb72f8c4f-011bbc8a",
+				"shiftDistance": 0.0000015092388518193427,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": ["Basic Wall⇨EF_Horizontal Siding & Sheathing", null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "GARAGE",
+			"function": "GARAGE",
+			"type": "GA1",
+			"centerXY": [24.520833333333485, 9.916666666666666],
+			"sizeXY": [18.375, 19.833333333333332],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": {
+				"ratio": 0.01,
+				"directionXY": [0, -1]
+			},
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "KITCHEN",
+			"function": "KITCHEN",
+			"type": "KI6",
+			"centerXY": [5.354166666666818, 29.270833333333332],
+			"sizeXY": [10.70833333333303, 12.541666666666666],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "OUTDOOR AREAS",
+			"function": "AC UNIT SLAB",
+			"type": "PR1",
+			"centerXY": [38.19347263767713, 34.04166666666659],
+			"sizeXY": [3, 3],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": false,
+			"groupId": ""
+		}, {
+			"category": "OUTDOOR AREAS",
+			"function": "FRONT PORCH",
+			"type": "PR2",
+			"centerXY": [13.020833333333485, 4.697916666666363],
+			"sizeXY": [4.625, 6.145833333333333],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "OUTDOOR AREAS",
+			"function": "REAR PORCH",
+			"type": "PR3",
+			"centerXY": [16.541666666667272, 51.04166666666674],
+			"sizeXY": [3, 3],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": ["Basic Wall⇨EF_Horizontal Siding & Sheathing", null, null, null],
+			"hasRoof": false,
+			"groupId": ""
+		}, {
+			"category": "UTILITY ROOM",
+			"function": "LAUNDRY",
+			"type": "LA1",
+			"centerXY": [22.625000000000153, 29.1875],
+			"sizeXY": [2.5833333333333335, 3.875],
+			"rotation90CounterClockWise": 0,
+			"openings": [],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}, {
+			"category": "UTILITY ROOM",
+			"function": "LAUNDRY",
+			"type": "LA2",
+			"centerXY": [18.187500000000153, 27.25],
+			"sizeXY": [6.291666666666667, 7.75],
+			"rotation90CounterClockWise": 0,
+			"openings": [{
+				"id": "4a462406-a6ee-434b-a335-9beff354878b-011d7b91",
+				"shiftDistance": -0.000026725009320068455,
+				"offsetX": 0,
+				"offsetY": 0
+			}],
+			"floorSlope": null,
+			"panelType": [null, null, null, null],
+			"gablePanelType": [null, null, null, null],
+			"hasRoof": true,
+			"groupId": ""
+		}],
+		"arcAreas": [{
+			"areaType": "livableArea",
+			"areaContourPoints": [{
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 17.604085286458332,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 18.149007161458332,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 19.810465494791668,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 20.3125,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 23,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333333334,
+					"y": 35.541666666666664,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333333334,
+					"y": 49.68750000000008,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.041666666666515,
+					"y": 49.68750000000008,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 18.041666666667272,
+					"y": 49.68750000000008,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 21.249999999999698,
+					"y": 49.68750000000008,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.85416666666697,
+					"y": 49.68750000000008,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.85416666666697,
+					"y": 36.58333333333339,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.854166666667574,
+					"y": 31.12500000000003,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.854166666667574,
+					"y": 19.68750000000015,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 23.916666666666362,
+					"y": 19.68750000000015,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 19.3750000000003,
+					"y": 19.687500000000302,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.47916666666697,
+					"y": 19.687500000000274,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.479166666666666,
+					"y": 18.416666666666636,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.47916666666697,
+					"y": 14.708333333333043,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.47916666666697,
+					"y": 7.624999999999697,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 10.85416666666697,
+					"y": 7.624999999999697,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 10.85416666666697,
+					"y": 1.4791666666663634,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 1.4791666666663634,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": -0.14583333333303017,
+					"y": 14.708333333333334,
+					"z": 0
+				}
+			}]
+		}, {
+			"areaType": "garageArea",
+			"areaContourPoints": [{
+				"point": {
+					"x": 15.479164439857707,
+					"y": 19.687503548226104,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.479164439857707,
+					"y": 7.625003548226103,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.18749777319104,
+					"y": 7.625003548226103,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.18749777319104,
+					"y": -0.229163118440565,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.854164439857705,
+					"y": -0.229163118440565,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 33.854164439857705,
+					"y": 19.687503548226104,
+					"z": 0
+				}
+			}]
+		}, {
+			"areaType": "porchesAndPatiosArea",
+			"areaContourPoints": [{
+				"point": {
+					"x": 18.04166443985771,
+					"y": 52.54167021489277,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.041664439857707,
+					"y": 52.54167021489277,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.041664439857707,
+					"y": 49.6875035482261,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 18.04166443985771,
+					"y": 49.6875035482261,
+					"z": 0
+				}
+			}]
+		}, {
+			"areaType": "porchesAndPatiosArea",
+			"areaContourPoints": [{
+				"point": {
+					"x": 39.69347277319105,
+					"y": 35.54167021489277,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 36.69347277319105,
+					"y": 35.54167021489277,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 36.69347277319105,
+					"y": 32.54167021489277,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 39.69347277319105,
+					"y": 32.54167021489277,
+					"z": 0
+				}
+			}]
+		}, {
+			"areaType": "porchesAndPatiosArea",
+			"areaContourPoints": [{
+				"point": {
+					"x": 10.854164439857707,
+					"y": 1.6250035482261016,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.18749777319104,
+					"y": 1.6250035482261016,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 15.18749777319104,
+					"y": 7.625003548226103,
+					"z": 0
+				}
+			}, {
+				"point": {
+					"x": 10.854164439857707,
+					"y": 7.625003548226103,
+					"z": 0
+				}
+			}]
+		}],
+		"walls": [{
+			"startPoint": [3.0316490059097606e-13, 14.708333333333334],
+			"endPoint": [3.0316490059097606e-13, 17.604085286458332],
+			"classification": ["PLM", "EXT"],
+			"functionCode": "EXT_2X4_PLMB",
+			"offset": 0,
+			"id": "192.06,13.77$192.06,48.52",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 17.604085286458332],
+			"endPoint": [3.0316490059097606e-13, 18.149007161458332],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,48.52$192.06,55.06",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 18.149007161458332],
+			"endPoint": [3.0316490059097606e-13, 19.810465494791668],
+			"classification": ["PLM", "EXT"],
+			"functionCode": "EXT_2X4_PLMB",
+			"offset": 0,
+			"id": "192.06,55.06$192.06,75",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 19.810465494791668],
+			"endPoint": [3.0316490059097606e-13, 20.3125],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,75$192.06,81.02",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 20.3125],
+			"endPoint": [3.0316490059097606e-13, 23],
+			"classification": ["SHW", "EXT"],
+			"functionCode": "EXT_2X4_WET",
+			"offset": 0,
+			"id": "192.06,81.02$192.06,113.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 23],
+			"endPoint": [5.29166666666697, 23],
+			"classification": ["SHW", "INT"],
+			"functionCode": "INT_2X4_WET",
+			"offset": 0,
+			"id": "192.06,113.27$255.56,113.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 14.708333333333334],
+			"endPoint": [2.02085367838572, 14.708333333333334],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "192.06,13.77$216.31,13.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [2.02085367838572, 14.708333333333334],
+			"endPoint": [5.29166666666697, 14.708333333333334],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "216.31,13.77$255.56,13.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [15.041666666666364, 36.58333333333341],
+			"endPoint": [17.854166666666362, 36.58333333333341],
+			"classification": ["SHW", "INT"],
+			"functionCode": "INT_2X4_WET",
+			"offset": 0,
+			"id": "372.56,276.27$406.31,276.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [26.375000000000302, 31.125],
+			"endPoint": [26.375000000000302, 33.145833333333336],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "508.56,210.77$508.56,235.02",
+			"wallFlippped": true
+		}, {
+			"startPoint": [26.375000000000302, 33.145833333333336],
+			"endPoint": [26.375000000000302, 36.58333333333341],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "508.56,235.02$508.56,276.27",
+			"wallFlippped": true
+		}, {
+			"startPoint": [15.041666666666364, 31.125],
+			"endPoint": [17.854166666666362, 31.125],
+			"classification": ["PLM", "SHW", "INT"],
+			"functionCode": "INT_2X6_WET_PLMB",
+			"offset": 0,
+			"id": "372.56,210.77$406.31,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [17.854166666666362, 31.125],
+			"endPoint": [18.544921875, 31.125],
+			"classification": ["INT"],
+			"functionCode": "INT_2X6",
+			"offset": 0,
+			"id": "406.31,210.77$414.59,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [18.544921875, 31.125],
+			"endPoint": [20.206380208333332, 31.125],
+			"classification": ["PLM", "INT"],
+			"functionCode": "INT_2X6_PLMB",
+			"offset": 0,
+			"id": "414.59,210.77$434.53,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [20.206380208333332, 31.125],
+			"endPoint": [20.97916666666697, 31.125],
+			"classification": ["INT"],
+			"functionCode": "INT_2X6",
+			"offset": 0,
+			"id": "434.53,210.77$443.81,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [23.916666666666362, 31.125000000000014],
+			"endPoint": [26.375000000000302, 31.125],
+			"classification": ["PLM", "INT"],
+			"functionCode": "INT_2X6_PLMB",
+			"offset": 0,
+			"id": "479.06,210.77$508.56,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [26.375000000000302, 31.125],
+			"endPoint": [33.708333333334245, 31.125000000000014],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "508.56,210.77$596.56,210.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [33.708333333334245, 19.83333333333348],
+			"endPoint": [33.708333333334245, 31.125000000000014],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "596.56,75.27$596.56,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [23.916666666666362, 19.83333333333348],
+			"endPoint": [33.708333333334245, 19.83333333333348],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "479.06,75.27$596.56,75.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [17.854166666666362, 36.58333333333341],
+			"endPoint": [21.249999999999698, 36.58333333333339],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "406.31,276.27$447.06,276.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.249999999999698, 36.58333333333339],
+			"endPoint": [26.375000000000302, 36.58333333333341],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "447.06,276.27$508.56,276.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.249999999999698, 36.58333333333339],
+			"endPoint": [21.249999999999698, 49.54166666666674],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "447.06,276.27$447.06,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.249999999999698, 49.54166666666674],
+			"endPoint": [33.708333333333634, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "447.06,431.77$596.56,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [33.708333333333634, 36.58333333333339],
+			"endPoint": [33.708333333333634, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "596.56,276.27$596.56,431.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [26.375000000000302, 36.58333333333341],
+			"endPoint": [33.708333333333634, 36.58333333333339],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "508.56,276.27$596.56,276.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 1.624999999999697],
+			"endPoint": [3.0316490059097606e-13, 14.708333333333334],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,-143.23$192.06,13.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [5.29166666666697, 14.708333333333334],
+			"endPoint": [10.708333333333636, 14.708333333333334],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,13.77$320.56,13.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [3.0316490059097606e-13, 1.624999999999697],
+			"endPoint": [10.708333333333636, 1.624999999999697],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,-143.23$320.56,-143.23",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.29166666666697, 14.708333333333334],
+			"endPoint": [5.291666666666818, 18.416666666666668],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,13.77$255.56,58.27",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.291666666666818, 18.416666666666668],
+			"endPoint": [5.29166666666697, 20.3125],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,58.27$255.56,81.02",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.29166666666697, 20.3125],
+			"endPoint": [5.291666666666818, 20.708333333333258],
+			"classification": ["PLM", "SHW", "INT"],
+			"functionCode": "INT_2X4_WET_PLMB",
+			"offset": 0,
+			"id": "255.56,81.02$255.56,85.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.291666666666818, 20.708333333333258],
+			"endPoint": [5.29166666666697, 23],
+			"classification": ["PLM", "SHW", "INT"],
+			"functionCode": "INT_2X4_WET_PLMB",
+			"offset": 0,
+			"id": "255.56,85.77$255.56,113.27",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.291666666666818, 20.708333333333258],
+			"endPoint": [10.708333333333485, 20.708333333333258],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,85.77$320.56,85.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333485, 18.416666666666668],
+			"endPoint": [10.708333333333485, 20.708333333333258],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "320.56,58.27$320.56,85.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [5.291666666666818, 18.416666666666668],
+			"endPoint": [10.708333333333485, 18.416666666666668],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,58.27$320.56,58.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [23.916666666666952, 27.25],
+			"endPoint": [23.916666666666362, 31.125000000000014],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "479.06,164.27$479.06,210.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [23.916666666666362, 19.83333333333348],
+			"endPoint": [23.916666666666952, 23.375],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "479.06,75.27$479.06,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [23.916666666666952, 23.375],
+			"endPoint": [23.916666666666952, 27.25],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "479.06,117.77$479.06,164.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.333333333333655, 23.375],
+			"endPoint": [21.333333333333655, 27.25],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "448.06,117.77$448.06,164.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.333333333333655, 27.25],
+			"endPoint": [23.916666666666952, 27.25],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "448.06,164.27$479.06,164.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [21.333333333333655, 23.375],
+			"endPoint": [23.916666666666952, 23.375],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "448.06,117.77$479.06,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [33.708333333334245, 31.125000000000014],
+			"endPoint": [33.708333333333634, 36.58333333333339],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "596.56,210.77$596.56,276.27",
+			"wallFlippped": true
+		}, {
+			"startPoint": [5.29166666666697, 23],
+			"endPoint": [10.708333333333181, 22.999999999999925],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "255.56,113.27$320.56,113.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333485, 20.708333333333258],
+			"endPoint": [10.708333333333181, 22.999999999999925],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "320.56,85.77$320.56,113.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333636, 1.624999999999697],
+			"endPoint": [10.708333333333636, 7.77083333333303],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "320.56,-143.23$320.56,-69.48",
+			"wallFlippped": true
+		}, {
+			"startPoint": [10.708333333333636, 7.77083333333303],
+			"endPoint": [10.708333333333636, 14.708333333333334],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "320.56,-69.48$320.56,13.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333636, 7.77083333333303],
+			"endPoint": [15.333333333333636, 14.70833333333303],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,-69.48$376.06,13.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333636, 7.77083333333303],
+			"endPoint": [15.333333333333636, 7.77083333333303],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "320.56,-69.48$376.06,-69.48",
+			"wallFlippped": true
+		}, {
+			"startPoint": [15.333333333333636, 23.375],
+			"endPoint": [19.375000000000302, 23.375],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "376.06,117.77$424.56,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333636, 19.833333333333638],
+			"endPoint": [19.375000000000302, 19.833333333333638],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,75.27$424.56,75.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.041666666666364, 31.125],
+			"endPoint": [15.04166666666697, 35.541666666666515],
+			"classification": ["SHW", "INT"],
+			"functionCode": "INT_2X4_WET",
+			"offset": 0,
+			"id": "372.56,210.77$372.56,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.04166666666697, 35.541666666666515],
+			"endPoint": [15.041666666666364, 36.58333333333341],
+			"classification": ["SHW", "INT"],
+			"functionCode": "INT_2X4_WET",
+			"offset": 0,
+			"id": "372.56,263.77$372.56,276.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.04166666666697, 23.375],
+			"endPoint": [15.041666666666364, 31.125],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "372.56,117.77$372.56,210.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333636, 14.70833333333303],
+			"endPoint": [15.333333333333334, 18.416666666666668],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,13.77$376.06,58.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [19.375000000000302, 23.375],
+			"endPoint": [21.333333333333655, 23.375],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "424.56,117.77$448.06,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [19.375000000000302, 19.833333333333638],
+			"endPoint": [23.916666666666362, 19.83333333333348],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "424.56,75.27$479.06,75.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.04166666666697, 23.375],
+			"endPoint": [15.333333333333636, 23.375],
+			"classification": ["INT"],
+			"functionCode": "INT_2X4",
+			"offset": 0,
+			"id": "372.56,117.77$376.06,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333334, 18.416666666666668],
+			"endPoint": [15.333333333333636, 19.833333333333638],
+			"classification": ["GRG", "INT"],
+			"functionCode": "INT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,58.27$376.06,75.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [0, 35.541666666666664],
+			"endPoint": [0, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,263.77$192.06,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [0, 49.54166666666674],
+			"endPoint": [15.041666666666515, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,431.77$372.56,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [33.708333333333485, 0],
+			"endPoint": [33.708333333334245, 19.83333333333348],
+			"classification": ["GRG", "EXT"],
+			"functionCode": "EXT_2X4_GARG",
+			"offset": 0,
+			"id": "596.56,-162.73$596.56,75.27",
+			"wallFlippped": true
+		}, {
+			"startPoint": [15.333333333333485, 0],
+			"endPoint": [33.708333333333485, 0],
+			"classification": ["GRG", "EXT"],
+			"functionCode": "EXT_2X6_GARG",
+			"offset": 0,
+			"id": "376.06,-162.73$596.56,-162.73",
+			"wallFlippped": true
+		}, {
+			"startPoint": [3.0316490059097606e-13, 23],
+			"endPoint": [0, 35.541666666666664],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "192.06,113.27$192.06,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333485, 0],
+			"endPoint": [15.333333333333485, 1.624999999999697],
+			"classification": ["GRG", "EXT"],
+			"functionCode": "EXT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,-162.73$376.06,-143.23",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333485, 1.624999999999697],
+			"endPoint": [15.333333333333636, 7.77083333333303],
+			"classification": ["GRG", "EXT"],
+			"functionCode": "EXT_2X4_GARG",
+			"offset": 0,
+			"id": "376.06,-143.23$376.06,-69.48",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.041666666666515, 49.54166666666674],
+			"endPoint": [18.041666666667272, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "372.56,431.77$408.56,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [18.041666666667272, 49.54166666666674],
+			"endPoint": [21.249999999999698, 49.54166666666674],
+			"classification": ["EXT"],
+			"functionCode": "EXT_2X4",
+			"offset": 0,
+			"id": "408.56,431.77$447.06,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [20.97916666666697, 31.125],
+			"endPoint": [21.333333333333485, 31.125],
+			"classification": ["PLM", "INT"],
+			"functionCode": "INT_2X6_PLMB",
+			"offset": 0,
+			"id": "443.81,210.77$448.06,210.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [21.333333333333485, 31.125],
+			"endPoint": [23.916666666666362, 31.125000000000014],
+			"classification": ["PLM", "INT"],
+			"functionCode": "INT_2X6_PLMB",
+			"offset": 0,
+			"id": "448.06,210.77$479.06,210.77",
+			"wallFlippped": true
+		}],
+		"noWalls": [{
+			"startPoint": [10.708333333333636, 14.708333333333334],
+			"endPoint": [15.333333333333636, 14.70833333333303],
+			"id": "320.56,13.77$376.06,13.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.333333333333636, 19.833333333333638],
+			"endPoint": [15.333333333333636, 23.375],
+			"id": "376.06,75.27$376.06,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [19.375000000000302, 19.833333333333638],
+			"endPoint": [19.375000000000302, 23.375],
+			"id": "424.56,75.27$424.56,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333334, 23.375],
+			"endPoint": [10.708333333333334, 35.541666666666515],
+			"id": "320.56,117.77$320.56,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333334, 35.541666666666515],
+			"endPoint": [15.04166666666697, 35.541666666666515],
+			"id": "320.56,263.77$372.56,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333334, 23.375],
+			"endPoint": [15.04166666666697, 23.375],
+			"id": "320.56,117.77$372.56,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333636, 14.708333333333334],
+			"endPoint": [10.708333333333485, 18.416666666666668],
+			"id": "320.56,13.77$320.56,58.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333485, 18.416666666666668],
+			"endPoint": [15.333333333333334, 18.416666666666668],
+			"id": "320.56,58.27$376.06,58.27",
+			"wallFlippped": false
+		}, {
+			"startPoint": [10.708333333333181, 22.999999999999925],
+			"endPoint": [10.708333333333334, 23.375],
+			"id": "320.56,113.27$320.56,117.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.041666666666364, 36.58333333333341],
+			"endPoint": [15.041666666666515, 49.54166666666674],
+			"id": "372.56,276.27$372.56,431.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [0, 35.541666666666664],
+			"endPoint": [10.708333333333334, 35.541666666666515],
+			"id": "192.06,263.77$320.56,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [36.69347263767713, 32.54166666666659],
+			"endPoint": [36.69347263767713, 35.54166666666659],
+			"id": "632.38,227.77$632.38,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [36.69347263767713, 35.54166666666659],
+			"endPoint": [39.69347263767713, 35.54166666666659],
+			"id": "632.38,263.77$668.38,263.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [39.69347263767713, 32.54166666666659],
+			"endPoint": [39.69347263767713, 35.54166666666659],
+			"id": "668.38,227.77$668.38,263.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [36.69347263767713, 32.54166666666659],
+			"endPoint": [39.69347263767713, 32.54166666666659],
+			"id": "632.38,227.77$668.38,227.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [10.708333333333636, 1.624999999999697],
+			"endPoint": [15.333333333333485, 1.624999999999697],
+			"id": "320.56,-143.23$376.06,-143.23",
+			"wallFlippped": true
+		}, {
+			"startPoint": [15.041666666666515, 49.54166666666674],
+			"endPoint": [15.041666666667274, 52.54166666666674],
+			"id": "372.56,431.77$372.56,467.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [15.041666666667274, 52.54166666666674],
+			"endPoint": [18.041666666667272, 52.54166666666674],
+			"id": "372.56,467.77$408.56,467.77",
+			"wallFlippped": false
+		}, {
+			"startPoint": [18.041666666667272, 49.54166666666674],
+			"endPoint": [18.041666666667272, 52.54166666666674],
+			"id": "408.56,431.77$408.56,467.77",
+			"wallFlippped": true
+		}, {
+			"startPoint": [21.333333333333655, 27.25],
+			"endPoint": [21.333333333333485, 31.125],
+			"id": "448.06,164.27$448.06,210.77",
+			"wallFlippped": false
+		}],
+		"gravityWalls": [],
+		"shearWalls": [],
+		"beams": [],
+		"spatialWalls": {
+			"DDL": [],
+			"GRG": []
+		}
+	}, {
+		"name": "Roof",
+		"elevation": 7.739583333
+	}],
+	"catalog": "revit/DECatalog-2.9.9"
+}

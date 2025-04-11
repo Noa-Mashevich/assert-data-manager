@@ -18,23 +18,52 @@ class TestSchema(TestCase):
             Schema.objects.create_from_version('x.y.z')
 
     def test_schema_validation(self):
-        schema = Schema.objects.create_from_version('1.0.0')
+        schema_data = [
+            {
+                'version': '1.0.0',
+                'files': [
+                    {'file_name': 'test_schema_v1.0.0_1.json', 'result': False},
+                    {'file_name': 'test_schema_v1.0.0_2.json', 'result': True},
+                ],
+            },
+            {
+                'version': '1.0.1',
+                'files': [
+                    {
+                        'file_name': 'test_schema_v1.0.1_09_The_Beckman_Elevation-BB_2025-03-31_08-14.json',  # noqa
+                        'result': True,
+                    },
+                    {
+                        'file_name': 'test_schema_v1.0.1_9_Beckman_Dor_Elevation-B_2025-03-23_11-56.json',  # noqa
+                        'result': False,
+                    },
+                ],
+            },
+        ]
 
-        success, error_message = schema.validate({})
+        for data in schema_data:
+            version = data.get('version')
 
-        self.assertEqual(success, False)
-        self.assertGreater(len(error_message), 0)
+            schema = Schema.objects.create_from_version(version)
 
-        data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_1.json', 'schema')
-        data = FileUtils.read_dict(data_file_name)
-        success, error_message = schema.validate(data)
+            success, error_message = schema.validate({})
 
-        self.assertEqual(success, False)
-        self.assertGreater(len(error_message), 0)
+            self.assertEqual(success, False)
+            self.assertGreater(len(error_message), 0)
 
-        data_file_name = TestUtils.get_data_path('test_schema_v1.0.0_2.json', 'schema')
-        data = FileUtils.read_dict(data_file_name)
-        success, error_message = schema.validate(data)
+            files = data.get('files')
 
-        self.assertEqual(success, True)
-        self.assertEqual(len(error_message), 0)
+            for file in files:
+                file_name = file.get('file_name')
+                result = file.get('result')
+
+                file_path = TestUtils.get_data_path(file_name, 'schema')
+                data = FileUtils.read_dict(file_path)
+                success, error_message = schema.validate(data)
+
+                self.assertEqual(success, result)
+
+                if result:
+                    self.assertEqual(len(error_message), 0)
+                else:
+                    self.assertGreater(len(error_message), 0)
