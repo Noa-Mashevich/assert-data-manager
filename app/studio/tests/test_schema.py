@@ -42,7 +42,9 @@ class TestSchema(TestCase):
         ]
 
         for data in schema_data:
-            version = data.get('version')
+            version = data.get('version', None)
+
+            self.assertIsNotNone(version)
 
             schema = Schema.objects.create_from_version(version)
 
@@ -51,7 +53,9 @@ class TestSchema(TestCase):
             self.assertEqual(success, False)
             self.assertGreater(len(error_message), 0)
 
-            files = data.get('files')
+            files = data.get('files', [])
+
+            self.assertGreater(len(files), 0)
 
             for file in files:
                 file_name = file.get('file_name')
