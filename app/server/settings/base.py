@@ -82,8 +82,12 @@ sentry_sdk.init(
     send_default_pii=True,
 )
 
+QUEUE_URL = os.getenv('QUEUE_URL')
+
 AWS_REGION = 'us-west-2'
 
+AWS_CLIENT_S3 = boto3.client('s3', region_name=AWS_REGION)
+AWS_CLIENT_SQS = boto3.client('sqs', region_name=AWS_REGION)
 AWS_CLIENT_CFN = boto3.client('cloudformation', region_name=AWS_REGION)
 
 AWS_STACKS = []

@@ -1,0 +1,141 @@
+import json
+
+from django.db import models, transaction
+
+from server.utils import get_object, is_migration, is_test
+
+from .element import Element
+from .element_data_status import ElementDataStatus
+
+
+class ElementDataManager(models.Manager):
+    @transaction.atomic
+    def create_versioned_element(self, element):
+        element_data_versions = self.model.objects.filter(element=element)
+        if len(element_data_versions) == 0:
+            version = 1
+        else:
+            version = element.latest_element_data.version + 1
+        element_data = self.model.objects.create(element=element, version=version)
+        return element_data
+
+    def create_for_element(self, element):
+        from .file_ownership import FileOwnership
+        from .file_type import FileType
+
+        element_data = self.model.objects.create_versioned_element(element=element)
+
+        FileOwnership.objects.create_for_element(FileType.Json, element_data)
+        FileOwnership.objects.create_for_element(FileType.Dxf, element_data)
+        FileOwnership.objects.create_for_element(FileType.Rfa, element_data)
+        FileOwnership.objects.create_for_element(FileType.Jpg, element_data)
+
+        return element_data
+
+    def latest(self, element):
+        element_data_versions = self.model.objects.filter(element=element).order_by(
+            '-version'
+        )
+
+        if len(element_data_versions) == 0:
+            raise ValueError(f'Element data not found for element {element.pk}')
+
+        return element_data_versions[0]
+
+    def latest_valid(self, element):
+        element_data_versions = self.model.objects.filter(
+            element=element, deleted_at__isnull=True
+        ).order_by('-version')
+
+        valid_element_data = [
+            x for x in element_data_versions if x.status == ElementDataStatus.Complete
+        ]
+
+        if len(valid_element_data) == 0:
+            return None
+
+        return valid_element_data[0]
+
+    def previous(self, element):
+        element_data_versions = self.model.objects.filter(element=element).order_by(
+            '-version'
+        )
+
+        if len(element_data_versions) < 2:
+            return None
+
+        return element_data_versions[1]
+
+    def versions(self, element):
+        return self.model.objects.filter(element=element).order_by('-version')
+
+
+class ElementData(models.Model):
+    element = models.ForeignKey(Element, on_delete=models.RESTRICT)
+    version = models.BigIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True)
+
+    objects = ElementDataManager()
+
+    class Meta:
+        # newest first
+        ordering = ['-version']
+
+    @property
+    def data(self):
+        from .file import File
+        from .file_type import FileType
+
+        # TODO: figure out how to unittest.
+        if is_migration() or is_test():
+            return {}
+
+        json_files = File.objects.filter(ownership__element_data=self, type=FileType.Json)
+
+        if len(json_files) != 1:
+            raise ValueError(
+                f'Json file not found for element {self.pk} version = {self.version}'
+            )
+
+        json_file = json_files[0]
+
+        if not json_file.exists:
+            return {}
+
+        json_file_s3 = get_object(json_file.s3_key)
+        json_data = json.load(json_file_s3['Body'])
+
+        return json_data
+
+    @property
+    def status(self):
+        from .file import File
+        from .file_type import FileType
+
+        json_files = File.objects.filter(ownership__element_data=self, type=FileType.Json)
+
+        if len(json_files) != 1:
+            return ElementDataStatus.Incomplete
+
+        json_file = json_files[0]
+
+        if not json_file.exists:
+            return ElementDataStatus.Incomplete
+
+        return ElementDataStatus.Complete
+
+    @property
+    def files(self):
+        from .file import File
+
+        return File.objects.filter(ownership__element_data=self)
+
+    def get_parent(self):
+        return self.element
+
+    def save(self, *args, **kwargs):
+        # Always insert a new record
+        self.pk = None
+        super().save(*args, **kwargs)

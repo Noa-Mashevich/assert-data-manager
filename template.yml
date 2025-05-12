@@ -9,6 +9,8 @@ Metadata: &config
       Value: !Ref DeploymentEnv
     - Name: DJANGO_SETTINGS_MODULE
       Value: !Sub 'server.settings.${DeploymentEnv}'
+    - Name: QUEUE_URL
+      Value: !Ref Queue
 
 Parameters:
   VpcId:
@@ -43,6 +45,34 @@ Mappings:
       Desired: 1
 
 Resources:
+  Queue:
+    Type: AWS::SQS::Queue
+
+  QueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: SNS
+            Effect: Allow
+            Principal: '*'
+            Action:
+              - sqs:SendMessage
+            Resource: !GetAtt Queue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref StorageTopicARN
+      Queues:
+        - !Ref Queue
+
+  TopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      TopicArn: !Ref StorageTopicARN
+      Endpoint: !GetAtt Queue.Arn
+
   PublicALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
@@ -75,6 +105,12 @@ Resources:
           - Action: cloudformation:DescribeStacks
             Effect: Allow
             Resource: !Sub 'arn:aws:cloudformation:*:${AWS::AccountId}:stack/e2e-${DeploymentEnv}-*'
+          - Action:
+              - sqs:SendMessage
+              - sqs:ReceiveMessage
+              - sqs:DeleteMessage
+            Effect: Allow
+            Resource: !Sub 'arn:aws:sqs:*:${AWS::AccountId}:e2e-${DeploymentEnv}-*'
       PolicyName: !Sub '${AWS::StackName}-task-role-policy'
       Roles:
         - !Ref TaskRole
@@ -125,6 +161,58 @@ Resources:
       PolicyName: !Sub '${AWS::StackName}-execution-role-policy'
       Roles:
         - !Ref TaskExecutionRole
+
+
+  QueuePollerTaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ContainerDefinitions:
+        - Name: storage-queue-poller
+          Essential: true
+          Image: !Ref NormaImage
+          <<: *config
+          Command:
+            - python
+            - manage.py
+            - poller_storage
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref TaskLogGroup
+              awslogs-stream-prefix: !Sub '${AWS::StackName}-storage-queue-poller'
+              awslogs-region: !Ref AWS::Region
+      Cpu: 256
+      Memory: 512
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      Family: !Sub '${AWS::StackName}-queue-poller'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt TaskRole.Arn
+    DependsOn:
+      - TaskExecutionRolePolicy
+      - TaskRolePolicy
+
+  QueuePollerService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref Cluster
+      DeploymentConfiguration:
+        MinimumHealthyPercent: 50
+        MaximumPercent: 200
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !GetAtt ServiceSecurityGroup.GroupId
+          Subnets: !Ref PrivateSubnets
+      ServiceName: !Sub '${AWS::StackName}-queue-pollers'
+      TaskDefinition: !Ref QueuePollerTaskDefinition
+# TODO: figure out migration stuff.
+#    DependsOn:
+#      - MigrationPollerResource
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
