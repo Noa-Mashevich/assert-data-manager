@@ -169,7 +169,7 @@ Resources:
       ContainerDefinitions:
         - Name: storage-queue-poller
           Essential: true
-          Image: !Ref NormaImage
+          Image: !Ref StudioImage
           <<: *config
           Command:
             - python
