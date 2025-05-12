@@ -125,6 +125,8 @@ jobs:
         default: e2e-studio
       alb_priority:
         type: integer
+      storage_topic_arn:
+        type: string
     steps:
       - setup_remote_docker:
           docker_layer_caching: true
@@ -169,6 +171,7 @@ jobs:
             VpcId=vpc-0df37fa28593dad4e
             PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323
             ALBPriority=<<parameters.alb_priority>>
+            StorageTopicARN=<<parameters.storage_topic_arn>>
           tags: >-
             org=e2e
             app=studio
@@ -197,6 +200,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'dev'
+          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-dev-storage-Topic-9QSPbYMurh6P'
           alb_priority: 352
           filters:
             branches:
@@ -210,6 +214,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'staging'
+          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-staging-storage-Topic-nQjaiemFAnkO'
           alb_priority: 351
           requires:
             - undeploy-app
@@ -219,6 +224,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'staging'
+          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-staging-storage-Topic-nQjaiemFAnkO'
           alb_priority: 351
           filters:
             branches:
@@ -226,6 +232,7 @@ workflows:
       - build-deploy:
           context: aws
           environment: 'prod'
+          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-prod-storage-Topic-BK2lrnhs7qwu'
           alb_priority: 350
           filters:
             branches:
