@@ -34,6 +34,8 @@ Parameters:
   ContainerPort:
     Type: Number
     Default: 8000
+  StorageTopicARN:
+    Type: String
 
 Mappings:
   ServiceGroupSize:
