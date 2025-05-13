@@ -107,12 +107,28 @@ Resources:
           - Action: cloudformation:DescribeStacks
             Effect: Allow
             Resource: !Sub 'arn:aws:cloudformation:*:${AWS::AccountId}:stack/e2e-${DeploymentEnv}-*'
+          - Action: ssm:GetParameter
+            Effect: Allow
+            Resource: !Sub 'arn:aws:ssm:*:${AWS::AccountId}:parameter/e2e-${DeploymentEnv}-*'
+          - Action: lambda:InvokeFunction
+            Effect: Allow
+            Resource: !Sub 'arn:aws:lambda:*:${AWS::AccountId}:function:e2e-${DeploymentEnv}-*'
+          - Action: sns:Publish
+            Effect: Allow
+            Resource: !Sub 'arn:aws:sns:*:${AWS::AccountId}:e2e-${DeploymentEnv}-*'
           - Action:
               - sqs:SendMessage
               - sqs:ReceiveMessage
               - sqs:DeleteMessage
             Effect: Allow
             Resource: !Sub 'arn:aws:sqs:*:${AWS::AccountId}:e2e-${DeploymentEnv}-*'
+          - Action:
+              - s3:GetObject
+              - s3:PutObject
+              - s3:PutObjectAcl
+            Effect: Allow
+            Resource:
+              - !Sub 'arn:aws:s3:::e2e-${DeploymentEnv}-storage/*'
       PolicyName: !Sub '${AWS::StackName}-task-role-policy'
       Roles:
         - !Ref TaskRole
