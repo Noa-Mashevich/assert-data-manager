@@ -19,8 +19,19 @@ def flatten_dict(dd, separator='.', prefix=''):
 def compare_element_data(previous_data, current_data):
     changes = []
 
-    previous_data_flattened = flatten_dict(previous_data)
     current_data_flattened = flatten_dict(current_data)
+
+    if previous_data is None:
+        for x in current_data_flattened.keys():
+            changes.append(
+                {
+                    'type': ElementDataChangeType.Minor,
+                    'description': f"added property '{x}'",
+                }
+            )
+        return changes
+
+    previous_data_flattened = flatten_dict(previous_data)
 
     removed_properties = {
         x: previous_data_flattened[x]
@@ -86,7 +97,9 @@ def compare_element_data(previous_data, current_data):
 
 class ElementDataChangeManager(models.Manager):
     def create_from_data_comparison(self, previous_element_data, current_element_data):
-        previous_data = previous_element_data.data
+        previous_data = (
+            previous_element_data.data if previous_element_data is not None else None
+        )
         current_data = current_element_data.data
 
         changes = compare_element_data(previous_data, current_data)
@@ -103,7 +116,7 @@ class ElementDataChangeManager(models.Manager):
 
 
 class ElementDataChange(models.Model):
-    element_data = models.ForeignKey(ElementData, null=True, on_delete=models.RESTRICT)
+    element_data = models.ForeignKey(ElementData, on_delete=models.RESTRICT)
     type = models.IntegerField()
     description = models.TextField(default='')
 

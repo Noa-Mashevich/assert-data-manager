@@ -1,8 +1,10 @@
 import json
+import os
 
 from django.db import models, transaction
 
 from server.utils import get_object, is_migration, is_test
+from studio.file_utils import FileUtils
 
 from .element import Element
 from .element_data_status import ElementDataStatus
@@ -84,44 +86,15 @@ class ElementData(models.Model):
         ordering = ['-version']
 
     @property
-    def data(self):
-        from .file import File
-        from .file_type import FileType
-
-        # TODO: figure out how to unittest.
-        if is_migration() or is_test():
-            return {}
-
-        json_files = File.objects.filter(ownership__element_data=self, type=FileType.Json)
-
-        if len(json_files) != 1:
-            raise ValueError(
-                f'Json file not found for element {self.pk} version = {self.version}'
-            )
-
-        json_file = json_files[0]
-
-        if not json_file.exists:
-            return {}
-
-        json_file_s3 = get_object(json_file.s3_key)
-        json_data = json.load(json_file_s3['Body'])
-
-        return json_data
-
-    @property
     def status(self):
         from .file import File
-        from .file_type import FileType
 
-        json_files = File.objects.filter(ownership__element_data=self, type=FileType.Json)
+        files = File.objects.filter(ownership__element_data=self)
 
-        if len(json_files) != 1:
+        if len(files) != 4:
             return ElementDataStatus.Incomplete
 
-        json_file = json_files[0]
-
-        if not json_file.exists:
+        if not all([x.exists for x in files]):
             return ElementDataStatus.Incomplete
 
         return ElementDataStatus.Complete
@@ -139,3 +112,38 @@ class ElementData(models.Model):
         # Always insert a new record
         self.pk = None
         super().save(*args, **kwargs)
+
+    @property
+    def data(self):
+        from .file import File
+        from .file_type import FileType
+
+        json_files = File.objects.filter(ownership__element_data=self, type=FileType.Json)
+
+        if len(json_files) != 1:
+            raise ValueError(
+                f'Json file not found for element {self.pk} version = {self.version}'
+            )
+
+        json_file = json_files[0]
+
+        if not json_file.exists:
+            return {}
+
+        # Note: only for unittesting.
+        if is_migration() or is_test():
+            current_path = os.path.realpath(__file__)
+            test_path = os.path.realpath(
+                FileUtils.join_path(current_path, '..', '..', 'tests')
+            )
+            base_name = os.path.basename(json_file.s3_key)
+            file_path = FileUtils.join_path(test_path, 'data', 'file', base_name)
+            try:
+                return FileUtils.read_dict(file_path)
+            except Exception:
+                return {}
+
+        json_file_s3 = get_object(json_file.s3_key)
+        json_data = json.load(json_file_s3['Body'])
+
+        return json_data

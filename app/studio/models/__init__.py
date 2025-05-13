@@ -1,4 +1,5 @@
 from .element import Element, ElementManager
+from .element_data_change import ElementDataChange, ElementDataChangeManager
 from .file import File, FileManager
 from .file_notification import FileNotification
 from .file_ownership import FileOwnership

@@ -80,10 +80,8 @@ class Element(models.Model):
     def track_changes(self):
         from .element_data_change import ElementDataChange
 
+        # TODO: should this be previous valid element data?
         previous_element_data = self.previous_element_data
-
-        if previous_element_data is None:
-            return
 
         ElementDataChange.objects.create_from_data_comparison(
             previous_element_data, self.latest_element_data

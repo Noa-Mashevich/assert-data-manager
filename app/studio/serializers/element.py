@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from studio.models.element import Element
@@ -47,6 +48,17 @@ class ElementReadSerializer(ModelSerializer):
         ]
 
 
+class ElementUpgradeSerializer(ModelSerializer):
+    class Meta:
+        model = Element
+        fields = []
+
+    def to_representation(self, data):
+        return ElementWriteResponseSerializer(context=self.context).to_representation(
+            data
+        )
+
+
 class ElementVersionsReadSerializer(ModelSerializer):
     versions = ElementDataReadSerializer(many=True, read_only=True)
 
@@ -57,4 +69,20 @@ class ElementVersionsReadSerializer(ModelSerializer):
             'name',
             'category',
             'versions',
+        ]
+
+
+class ElementVersionReadSerializer(ModelSerializer):
+    id = serializers.IntegerField(source='element_id')
+    name = serializers.CharField(source='element.name')
+    category = serializers.IntegerField(source='element.category')
+    element_data = ElementDataReadSerializer(source='*')
+
+    class Meta:
+        model = Element
+        fields = [
+            'id',
+            'name',
+            'category',
+            'element_data',
         ]

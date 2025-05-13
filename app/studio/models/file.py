@@ -149,7 +149,6 @@ class File(models.Model):
         except Exception:
             raise Http404
 
-        # TODO: figure out if this is a requirement that all files exist.
         if not self.exists:
             raise Http404
 
