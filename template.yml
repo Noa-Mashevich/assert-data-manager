@@ -11,6 +11,13 @@ Metadata: &config
       Value: !Sub 'server.settings.${DeploymentEnv}'
     - Name: QUEUE_URL
       Value: !Ref Queue
+  Secrets:
+    - Name: DB_HOSTNAME
+      ValueFrom: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${DeploymentEnv}.studio.rds:host::'
+    - Name: DB_USERNAME
+      ValueFrom: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${DeploymentEnv}.studio.rds:username::'
+    - Name: DB_PASSWORD
+      ValueFrom: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${DeploymentEnv}.studio.rds:password::'
 
 Parameters:
   VpcId:
@@ -22,6 +29,8 @@ Parameters:
   Cluster:
     Type: String
   StudioImage:
+    Type: String
+  RDSSecurityGroup:
     Type: String
   PublicALBDNSRecord:
     Type: String
@@ -140,6 +149,137 @@ Resources:
     Properties:
       RetentionInDays: 30
 
+  MigrationTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt TaskRole.Arn
+      Family: !Sub '${AWS::StackName}-migration'
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      Cpu: 512
+      Memory: 1024
+      ContainerDefinitions:
+        - Name: 'migration'
+          Image: !Ref StudioImage
+          Command:
+            - python
+            - manage.py
+            - migrate
+            - --noinput
+          <<: *config
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: us-west-2
+              awslogs-group: !Ref TaskLogGroup
+              awslogs-stream-prefix: ecs
+    DependsOn:
+      - TaskExecutionRolePolicy
+      - TaskRolePolicy
+
+  MigrationResourceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: '/'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: Lambda
+            Effect: Allow
+            Action: 'sts:AssumeRole'
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+
+  MigrationPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Ref AWS::StackName
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: 'iam'
+            Action:
+              - 'iam:PassRole'
+            Resource: !GetAtt TaskExecutionRole.Arn
+            Effect: Allow
+          - Sid: 'ecs'
+            Action:
+              - 'ecs:ListTasks'
+              - 'ecs:DescribeTasks'
+              - 'ecs:RunTask'
+            Resource: '*'
+            Effect: Allow
+          - Sid: 'crhelper'
+            Action:
+              - 'lambda:AddPermission'
+              - 'lambda:RemovePermission'
+              - 'events:PutRule'
+              - 'events:DeleteRule'
+              - 'events:PutTargets'
+              - 'events:RemoveTargets'
+            Resource: '*'
+            Effect: Allow
+      Roles:
+        - !Ref MigrationResourceRole
+
+  MigrationTaskLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Timeout: 5
+      Role: !GetAtt MigrationResourceRole.Arn
+    Metadata:
+      DockerContext: sam/migration/migrate
+      Dockerfile: ./Dockerfile
+      DockerTag: python3.9-v1
+    DependsOn:
+      - MigrationTask
+      - MigrationPolicy
+
+  MigrationTaskLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub '/aws/lambda/${MigrationTaskLambda}'
+      RetentionInDays: 1
+
+  MigrationTaskResource:
+    Type: Custom::Migration
+    Properties:
+      ServiceToken: !GetAtt MigrationTaskLambda.Arn
+      Cluster: !Ref Cluster
+      TaskDefinition: !Ref MigrationTask
+      Family: !Sub '${AWS::StackName}-migration'
+      Subnets: !Ref PrivateSubnets
+      SecurityGroups:
+        - !GetAtt ServiceSecurityGroup.GroupId
+
+  MigrationPollerLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      Timeout: 5
+      Role: !GetAtt MigrationResourceRole.Arn
+    Metadata:
+      DockerContext: sam/migration/poll
+      Dockerfile: ./Dockerfile
+      DockerTag: python3.9-v1
+    DependsOn:
+      - MigrationTask
+      - MigrationPolicy
+      - ServiceToRDSIngress
+
+  MigrationPollerResource:
+    Type: Custom::Migration
+    Properties:
+      ServiceToken: !GetAtt MigrationPollerLambda.Arn
+      Cluster: !Ref Cluster
+      TaskArn: !GetAtt MigrationTaskResource.TaskArn
+
   TaskExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -228,9 +368,8 @@ Resources:
           Subnets: !Ref PrivateSubnets
       ServiceName: !Sub '${AWS::StackName}-queue-pollers'
       TaskDefinition: !Ref QueuePollerTaskDefinition
-# TODO: figure out migration stuff.
-#    DependsOn:
-#      - MigrationPollerResource
+    DependsOn:
+      - MigrationPollerResource
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -293,6 +432,7 @@ Resources:
       HealthCheckGracePeriodSeconds: 5
       LaunchType: FARGATE
     DependsOn:
+      - MigrationPollerResource
       - PublicALBTargetGroup
       - PublicALBRule1
 
@@ -305,6 +445,16 @@ Resources:
           Description: Allow all outbound traffic by default
           IpProtocol: '-1'
       VpcId: !Ref VpcId
+
+  ServiceToRDSIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Allow access from Studio
+      SourceSecurityGroupId: !GetAtt ServiceSecurityGroup.GroupId
+      GroupId: !Ref RDSSecurityGroup
+      IpProtocol: tcp
+      FromPort: 5432
+      ToPort: 5432
 
   PublicALBToServiceSecurityGroupIngress:
     Type: AWS::EC2::SecurityGroupIngress

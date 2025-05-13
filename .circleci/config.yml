@@ -158,6 +158,12 @@ jobs:
           command: |
             docker run ${APP_IMAGE_PATH} python manage.py makemigrations
             docker run ${APP_IMAGE_PATH} python manage.py showmigrations
+      - run:
+          name: Lookup the RDS SecurityGroup
+          command: |
+            RDS_SG=$(aws cloudformation describe-stacks --stack-name=e2e-<<parameters.environment>>-studio-db --query="Stacks[0].Outputs[?OutputKey=='SecurityGroup'].OutputValue" --output text)
+            echo "Found RDS Security Group: ${RDS_SG}"
+            echo "export RDS_SG=${RDS_SG}" >> ${BASH_ENV}
       - sam_build_deploy:
           stack-name: e2e-<<parameters.environment>>-studio
           environment: <<parameters.environment>>
@@ -168,6 +174,7 @@ jobs:
             PublicALBSecurityGroupId=sg-0989ce36f62da2ae7
             PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0
             PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com
+            RDSSecurityGroup=${RDS_SG}
             VpcId=vpc-0df37fa28593dad4e
             PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323
             ALBPriority=<<parameters.alb_priority>>

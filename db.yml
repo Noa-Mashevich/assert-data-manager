@@ -1,0 +1,106 @@
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+  PrivateSubnets:
+    Type: List<AWS::EC2::Subnet::Id>
+  DeploymentEnv:
+    Type: String
+  Database:
+    Type: String
+  InstanceType:
+    Type: String
+  Storage:
+    Type: String
+  HighlyAvailable:
+    Type: String
+    AllowedValues: [true, false]
+  SnapshotARN:
+    Type: String
+    Default: ''
+
+Conditions:
+  Create: !Equals [!Ref SnapshotARN, '']
+  RestoreFromSnapshot: !Not [!Equals [!Ref SnapshotARN, '']]
+
+Resources:
+  PrivateSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: !Sub '${AWS::StackName}-private'
+      DBSubnetGroupDescription: !Sub '${AWS::StackName}-private'
+      SubnetIds: !Ref PrivateSubnets
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VpcId
+      GroupDescription: !Ref AWS::StackName
+
+  MasterSecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Description: !Ref AWS::StackName
+      Name: !Sub '${DeploymentEnv}.${Database}.rds'
+      GenerateSecretString:
+        SecretStringTemplate: '{"username": "studioadmin"}'
+        GenerateStringKey: 'password'
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+
+  Instance:
+    Type: AWS::RDS::DBInstance
+    Condition: Create
+    Properties:
+      Engine: postgres
+      DBName: !Ref Database
+      DBInstanceClass: !Ref InstanceType
+      AllocatedStorage: !Ref Storage
+      StorageEncrypted: false
+      MultiAZ: !Ref HighlyAvailable
+      MasterUsername: !Sub '{{resolve:secretsmanager:${MasterSecrets}::username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${MasterSecrets}::password}}'
+      DBSubnetGroupName: !Ref PrivateSubnetGroup
+      VPCSecurityGroups:
+        - !GetAtt SecurityGroup.GroupId
+    DeletionPolicy: 'Snapshot'
+    DependsOn: MasterSecrets
+
+  MasterSecretAttachment1:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Condition: Create
+    Properties:
+      SecretId: !Ref MasterSecrets
+      TargetId: !Ref Instance
+      TargetType: AWS::RDS::DBInstance
+
+  RestoredInstance:
+    Type: AWS::RDS::DBInstance
+    Condition: RestoreFromSnapshot
+    Properties:
+      Engine: postgres
+      DBInstanceClass: !Ref InstanceType
+      DBSnapshotIdentifier: !Ref SnapshotARN
+      AllocatedStorage: !Ref Storage
+      StorageEncrypted: false
+      MultiAZ: !Ref HighlyAvailable
+      MasterUsername: !Sub '{{resolve:secretsmanager:${MasterSecrets}::username}}'
+      MasterUserPassword: !Sub '{{resolve:secretsmanager:${MasterSecrets}::password}}'
+      DBSubnetGroupName: !Ref PrivateSubnetGroup
+      VPCSecurityGroups:
+        - !GetAtt SecurityGroup.GroupId
+    DeletionPolicy: 'Snapshot'
+    DependsOn: MasterSecrets
+
+  MasterSecretAttachment2:
+    Type: AWS::SecretsManager::SecretTargetAttachment
+    Condition: RestoreFromSnapshot
+    Properties:
+      SecretId: !Ref MasterSecrets
+      TargetId: !Ref RestoredInstance
+      TargetType: AWS::RDS::DBInstance
+
+Outputs:
+  SecurityGroup:
+    Value: !GetAtt SecurityGroup.GroupId
+  MasterSecrets:
+    Value: !GetAtt MasterSecrets.Id
