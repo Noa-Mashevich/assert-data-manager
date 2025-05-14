@@ -165,6 +165,34 @@ class ElementApiTests(TestCase):
     def test_create_element(self):
         url = reverse('element-list')
 
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post(
+            url,
+            data='{"name": "Test name"}',
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post(
+            url,
+            data='{"category": 6}',
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        response = self.client.post(
+            url,
+            data='{"name": "Test name", "category": 12211221}',
+            content_type='application/json',
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
         response = self.client.post(
             url,
             data='{"name": "Test name", "category": 6}',

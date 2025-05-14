@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from studio.models.element import Element
+from studio.models.element import (
+    Element,
+    ElementCategory,
+)
 from studio.serializers.element_data import (
     ElementDataReadSerializer,
     ElementDataWriteSerializer,
@@ -15,6 +18,17 @@ class ElementWriteSerializer(ModelSerializer):
             'name',
             'category',
         ]
+
+    def validate(self, data):
+        name = data.get('name')
+        if name is None or len(name) <= 0:
+            raise serializers.ValidationError('Name is not valid')
+
+        category = data.get('category')
+        if category is None or category not in set(ElementCategory):
+            raise serializers.ValidationError('Category is not valid')
+
+        return data
 
     def to_representation(self, data):
         return ElementWriteResponseSerializer(context=self.context).to_representation(
