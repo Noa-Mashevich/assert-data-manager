@@ -1,11 +1,11 @@
 FROM python:3.10.8-alpine
-RUN apk --no-cache add curl mariadb-connector-c-dev
+RUN apk --no-cache add curl postgresql-dev
 
 # install build tools
-RUN apk add --no-cache --virtual .build-deps build-base mariadb-dev git
+RUN apk add --no-cache --virtual .build-deps build-base git
 
 COPY requirements.txt .
-# install deps & build mysqlclient
+# install deps & build psycopg2
 RUN pip install -r requirements.txt --no-cache-dir
 
 # remove build tools
