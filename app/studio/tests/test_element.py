@@ -180,6 +180,10 @@ class ElementApiTests(TestCase):
     def test_get_elements(self):
         url = reverse('element-list')
 
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
         self.client.post(
             url,
             data='{"name": "Test name #1", "category": 6}',
