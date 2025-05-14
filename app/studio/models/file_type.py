@@ -15,7 +15,7 @@ class FileType(IntEnum):
         if self.value == FileType.Dxf:
             return 'application/dxf'
         if self.value == FileType.Rfa:
-            return 'application/octet-stream'
+            return 'application/xml'
         if self.value == FileType.Jpg:
             return 'image/jpeg'
         if self.value == FileType.Png:
