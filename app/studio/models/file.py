@@ -149,8 +149,9 @@ class File(models.Model):
         except Exception:
             raise Http404
 
+        # TODO: figure out what should be done when file has not been uploaded.
         if not self.exists:
-            raise Http404
+            return None
 
         return File.objects.get_signed_url(s3_key)
 
