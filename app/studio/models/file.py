@@ -89,7 +89,7 @@ class FileManager(models.Manager):
 
         if file_ownership.get_entity_type() == EntityType.Element:
             if file.type == FileType.Json:
-                file_ownership.element_data.get_parent().track_changes()
+                file_ownership.element_data.track_changes()
 
 
 class File(models.Model):

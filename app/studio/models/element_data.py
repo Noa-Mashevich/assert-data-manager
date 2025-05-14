@@ -58,15 +58,19 @@ class ElementDataManager(models.Manager):
 
         return valid_element_data[0]
 
-    def previous(self, element):
-        element_data_versions = self.model.objects.filter(element=element).order_by(
-            '-version'
+    def previous(self, element_data):
+        element_data_versions = self.model.objects.filter(
+            element=element_data.get_parent()
         )
 
-        if len(element_data_versions) < 2:
+        previous_version = [
+            x for x in element_data_versions if x.version == element_data.version - 1
+        ]
+
+        if len(previous_version) != 1:
             return None
 
-        return element_data_versions[1]
+        return previous_version[0]
 
     def versions(self, element):
         return self.model.objects.filter(element=element).order_by('-version')
@@ -105,14 +109,6 @@ class ElementData(models.Model):
 
         return File.objects.filter(ownership__element_data=self)
 
-    def get_parent(self):
-        return self.element
-
-    def save(self, *args, **kwargs):
-        # Always insert a new record
-        self.pk = None
-        super().save(*args, **kwargs)
-
     @property
     def data(self):
         from .file import File
@@ -147,3 +143,18 @@ class ElementData(models.Model):
         json_data = json.load(json_file_s3['Body'])
 
         return json_data
+
+    def get_parent(self):
+        return self.element
+
+    def track_changes(self):
+        from .element_data_change import ElementDataChange
+
+        previous_element_data = ElementData.objects.previous(self)
+
+        ElementDataChange.objects.create_from_data_comparison(previous_element_data, self)
+
+    def save(self, *args, **kwargs):
+        # Always insert a new record
+        self.pk = None
+        super().save(*args, **kwargs)

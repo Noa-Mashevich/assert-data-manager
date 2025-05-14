@@ -421,14 +421,49 @@ class ElementApiTests(TestCase):
 
         self.client.post(url)
 
-        create_file_notification('studio/elements/1/files/5.json')
-        create_file_notification('studio/elements/1/files/6.dxf')
-        create_file_notification('studio/elements/1/files/7.rfa')
-        create_file_notification('studio/elements/1/files/8.jpg')
-
         url = reverse(
             'element-id-version-id-changes-list',
             kwargs={'element_id': '1', 'version_id': 2},
+        )
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
+        url = reverse('element-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        create_file_notification('studio/elements/1/files/9.json')
+        create_file_notification('studio/elements/1/files/10.dxf')
+        create_file_notification('studio/elements/1/files/11.rfa')
+        create_file_notification('studio/elements/1/files/12.jpg')
+
+        url = reverse(
+            'element-id-version-id-changes-list',
+            kwargs={'element_id': '1', 'version_id': 3},
+        )
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 33)
+
+        for x in results:
+            self.assertEqual(x.get('type'), ElementDataChangeType.Minor)
+            self.assertTrue('added property' in x.get('description'))
+
+        url = reverse('element-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        create_file_notification('studio/elements/1/files/13.json')
+        create_file_notification('studio/elements/1/files/14.dxf')
+        create_file_notification('studio/elements/1/files/15.rfa')
+        create_file_notification('studio/elements/1/files/16.jpg')
+
+        url = reverse(
+            'element-id-version-id-changes-list',
+            kwargs={'element_id': '1', 'version_id': 4},
         )
 
         results = self.get_paginated(url)

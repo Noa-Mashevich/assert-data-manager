@@ -61,7 +61,7 @@ class Element(models.Model):
     def previous_element_data(self):
         from .element_data import ElementData
 
-        return ElementData.objects.previous(self)
+        return ElementData.objects.previous(self.latest_element_data)
 
     @property
     def versions(self):
@@ -76,16 +76,6 @@ class Element(models.Model):
         from .element_data import ElementData
 
         ElementData.objects.create_for_element(element=self)
-
-    def track_changes(self):
-        from .element_data_change import ElementDataChange
-
-        # TODO: should this be previous valid element data?
-        previous_element_data = self.previous_element_data
-
-        ElementDataChange.objects.create_from_data_comparison(
-            previous_element_data, self.latest_element_data
-        )
 
     def destroy(self):
         # TODO: figure out if all versions should be destroyed, or just
