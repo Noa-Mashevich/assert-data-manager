@@ -121,14 +121,18 @@ class ElementApiTests(TestCase):
         element_data = data.get('element_data')
 
         self.assertIsNotNone(element_data)
-        self.assertIsNotNone(element_data.get('id'))
-        self.assertIsNotNone(element_data.get('version'))
-        self.assertIsNotNone(element_data.get('status'))
-        self.assertIsNotNone(element_data.get('created_at'))
-        self.assertIsNotNone(element_data.get('updated_at'))
-        self.assertIsNone(element_data.get('deleted_at'))
 
-        files = element_data.get('files')
+        self.check_data_for_element_data(element_data, is_created)
+
+    def check_data_for_element_data(self, data, is_created):
+        self.assertIsNotNone(data.get('id'))
+        self.assertIsNotNone(data.get('version'))
+        self.assertIsNotNone(data.get('status'))
+        self.assertIsNotNone(data.get('created_at'))
+        self.assertIsNotNone(data.get('updated_at'))
+        self.assertIsNone(data.get('deleted_at'))
+
+        files = data.get('files')
 
         self.assertIsNotNone(files)
         self.assertEqual(len(files), 4)
@@ -319,24 +323,31 @@ class ElementApiTests(TestCase):
             data='{"name": "Test name #1", "category": 6}',
             content_type='application/json',
         )
+        self.client.post(
+            url,
+            data='{"name": "Test name #2", "category": 6}',
+            content_type='application/json',
+        )
 
-        url = reverse('element-upgrade', kwargs={'pk': '1'})
+        url_1 = reverse('element-upgrade', kwargs={'pk': '1'})
+        url_2 = reverse('element-upgrade', kwargs={'pk': '2'})
 
-        self.client.post(url)
-        self.client.post(url)
-        self.client.post(url)
+        self.client.post(url_1)
+        self.client.post(url_2)
+        self.client.post(url_1)
+        self.client.post(url_2)
+        self.client.post(url_1)
+        self.client.post(url_2)
 
-        url = reverse('element-id-versions-list', kwargs={'element_id': '1'})
+        for element_id in [1, 2]:
+            url = reverse('element-id-version-list', kwargs={'element_id': element_id})
 
-        results = self.get_paginated(url)
+            results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
+            self.assertEqual(len(results), 4)
 
-        element_data = results[0]
-        versions = element_data.get('versions')
-
-        self.assertIsNotNone(versions)
-        self.assertEqual(len(versions), 4)
+            for result in results:
+                self.check_data_for_element(result, False)
 
     def test_get_element_version(self):
         url = reverse('element-list')
@@ -346,16 +357,25 @@ class ElementApiTests(TestCase):
             data='{"name": "Test name #1", "category": 6}',
             content_type='application/json',
         )
+        self.client.post(
+            url,
+            data='{"name": "Test name #2", "category": 6}',
+            content_type='application/json',
+        )
 
         url = reverse('element-upgrade', kwargs={'pk': '1'})
+        url_2 = reverse('element-upgrade', kwargs={'pk': '2'})
 
         self.client.post(url)
+        self.client.post(url_2)
         self.client.post(url)
+        self.client.post(url_2)
         self.client.post(url)
+        self.client.post(url_2)
 
         for version in [1, 2, 3, 4]:
             url = reverse(
-                'element-id-version-id-detail', kwargs={'element_id': '1', 'pk': version}
+                'element-id-version-detail', kwargs={'element_id': '1', 'pk': version}
             )
 
             response = self.client.get(url)

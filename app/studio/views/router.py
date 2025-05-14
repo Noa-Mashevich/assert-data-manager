@@ -7,7 +7,6 @@ from rest_framework import routers
 
 from .element import (
     ElementViewSet,
-    ElementVersionsViewSet,
     ElementVersionViewSet,
     ElementVersionChangesViewSet,
 )
@@ -17,8 +16,7 @@ from .validator import ValidatorViewSet
 router = routers.DefaultRouter()
 
 router.register(r'element', ElementViewSet, basename='element')
-router.register(r'element/(?P<element_id>[\d]+)/version', ElementVersionViewSet, basename='element-id-version-id')
-router.register(r'element/(?P<element_id>[\d]+)/versions', ElementVersionsViewSet, basename='element-id-versions')
+router.register(r'element/(?P<element_id>[\d]+)/version', ElementVersionViewSet, basename='element-id-version')
 router.register(r'element/(?P<element_id>[\d]+)/version/(?P<version_id>[\d]+)/changes', ElementVersionChangesViewSet, basename='element-id-version-id-changes')
 
 router.register(r'validator', ValidatorViewSet, basename='validator')

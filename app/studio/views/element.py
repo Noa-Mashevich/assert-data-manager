@@ -11,7 +11,6 @@ from studio.serializers.element import (
     ElementReadSerializer,
     ElementWriteSerializer,
     ElementUpgradeSerializer,
-    ElementVersionsReadSerializer,
     ElementVersionReadSerializer,
 )
 from studio.serializers.element_data_change import ElementDataChangeReadSerializer
@@ -63,15 +62,6 @@ class ElementViewSet(
         return Response(serializer.data)
 
 
-class ElementVersionsViewSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        element_id = int(self.kwargs['element_id'])
-        return Element.objects.filter(pk=element_id)
-
-    def get_serializer_class(self):
-        return ElementVersionsReadSerializer
-
-
 class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         element_id = int(self.kwargs['element_id'])
@@ -79,6 +69,12 @@ class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_serializer_class(self):
         return ElementVersionReadSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        version_id = int(kwargs['pk'])
+        element_data = self.get_queryset().get(version=version_id)
+        serializer = ElementVersionReadSerializer(element_data)
+        return Response(serializer.data)
 
 
 class ElementVersionChangesViewSet(viewsets.ReadOnlyModelViewSet):

@@ -73,19 +73,6 @@ class ElementUpgradeSerializer(ModelSerializer):
         )
 
 
-class ElementVersionsReadSerializer(ModelSerializer):
-    versions = ElementDataReadSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Element
-        fields = [
-            'id',
-            'name',
-            'category',
-            'versions',
-        ]
-
-
 class ElementVersionReadSerializer(ModelSerializer):
     id = serializers.IntegerField(source='element_id')
     name = serializers.CharField(source='element.name')
