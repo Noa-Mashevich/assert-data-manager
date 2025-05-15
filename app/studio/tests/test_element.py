@@ -7,8 +7,8 @@ from rest_framework.test import APIClient
 
 from studio.file_utils import FileUtils
 from studio.models import FileNotification
+from studio.models.data_change_type import DataChangeType
 from studio.models.element import Element, ElementCategory
-from studio.models.element_data_change_type import ElementDataChangeType
 
 from .utils import TestUtils
 
@@ -414,7 +414,7 @@ class ElementApiTests(TestCase):
         self.assertEqual(len(results), 33)
 
         for x in results:
-            self.assertEqual(x.get('type'), ElementDataChangeType.Minor)
+            self.assertEqual(x.get('type'), DataChangeType.Minor)
             self.assertTrue('added property' in x.get('description'))
 
         url = reverse('element-upgrade', kwargs={'pk': '1'})
@@ -449,7 +449,7 @@ class ElementApiTests(TestCase):
         self.assertEqual(len(results), 33)
 
         for x in results:
-            self.assertEqual(x.get('type'), ElementDataChangeType.Minor)
+            self.assertEqual(x.get('type'), DataChangeType.Minor)
             self.assertTrue('added property' in x.get('description'))
 
         url = reverse('element-upgrade', kwargs={'pk': '1'})
@@ -472,24 +472,24 @@ class ElementApiTests(TestCase):
 
         removed_property = results[0]
 
-        self.assertEqual(removed_property.get('type'), ElementDataChangeType.Major)
+        self.assertEqual(removed_property.get('type'), DataChangeType.Major)
         self.assertTrue('removed property' in removed_property.get('description'))
 
         changed_property_type = results[1]
 
-        self.assertEqual(changed_property_type.get('type'), ElementDataChangeType.Major)
+        self.assertEqual(changed_property_type.get('type'), DataChangeType.Major)
         self.assertTrue(
             'changed type for property' in changed_property_type.get('description')
         )
 
         added_property = results[2]
 
-        self.assertEqual(added_property.get('type'), ElementDataChangeType.Minor)
+        self.assertEqual(added_property.get('type'), DataChangeType.Minor)
         self.assertTrue('added property' in added_property.get('description'))
 
         changed_property_value = results[3]
 
-        self.assertEqual(changed_property_value.get('type'), ElementDataChangeType.Patch)
+        self.assertEqual(changed_property_value.get('type'), DataChangeType.Patch)
         self.assertTrue(
             'changed value for property' in changed_property_value.get('description')
         )

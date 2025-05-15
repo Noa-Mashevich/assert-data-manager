@@ -1,7 +1,7 @@
 from django.db import models
 
+from .data_change_type import DataChangeType
 from .element_data import ElementData
-from .element_data_change_type import ElementDataChangeType
 
 
 def flatten_dict(dd, separator='.', prefix=''):
@@ -25,7 +25,7 @@ def compare_element_data(previous_data, current_data):
         for x in current_data_flattened.keys():
             changes.append(
                 {
-                    'type': ElementDataChangeType.Minor,
+                    'type': DataChangeType.Minor,
                     'description': f"added property '{x}'",
                 }
             )
@@ -42,7 +42,7 @@ def compare_element_data(previous_data, current_data):
     for removed_property_name in removed_properties.keys():
         changes.append(
             {
-                'type': ElementDataChangeType.Major,
+                'type': DataChangeType.Major,
                 'description': f"removed property '{removed_property_name}'",
             }
         )
@@ -57,7 +57,7 @@ def compare_element_data(previous_data, current_data):
     for type_changed_property_name in type_changed_properties.keys():
         changes.append(
             {
-                'type': ElementDataChangeType.Major,
+                'type': DataChangeType.Major,
                 'description': f"changed type for property '{type_changed_property_name}'",
             }
         )
@@ -71,7 +71,7 @@ def compare_element_data(previous_data, current_data):
     for added_property_name in added_properties.keys():
         changes.append(
             {
-                'type': ElementDataChangeType.Minor,
+                'type': DataChangeType.Minor,
                 'description': f"added property '{added_property_name}'",
             }
         )
@@ -87,7 +87,7 @@ def compare_element_data(previous_data, current_data):
     for value_changed_property_name in value_changed_properties.keys():
         changes.append(
             {
-                'type': ElementDataChangeType.Patch,
+                'type': DataChangeType.Patch,
                 'description': f"changed value for property '{value_changed_property_name}'",
             }
         )

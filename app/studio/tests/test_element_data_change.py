@@ -1,7 +1,7 @@
 from django.test import TestCase
 
+from studio.models.data_change_type import DataChangeType
 from studio.models.element_data_change import compare_element_data
-from studio.models.element_data_change_type import ElementDataChangeType
 
 
 class TestElementData(TestCase):
@@ -36,11 +36,11 @@ class TestElementData(TestCase):
 
         self.assertEqual(len(changes), 4)
         self.assertEqual(
-            len([x for x in changes if x.get('type') == ElementDataChangeType.Major]), 2
+            len([x for x in changes if x.get('type') == DataChangeType.Major]), 2
         )
         self.assertEqual(
-            len([x for x in changes if x.get('type') == ElementDataChangeType.Minor]), 1
+            len([x for x in changes if x.get('type') == DataChangeType.Minor]), 1
         )
         self.assertEqual(
-            len([x for x in changes if x.get('type') == ElementDataChangeType.Patch]), 1
+            len([x for x in changes if x.get('type') == DataChangeType.Patch]), 1
         )
