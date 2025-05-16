@@ -95,9 +95,6 @@ class ElementData(models.Model):
 
         files = File.objects.filter(ownership__element_data=self)
 
-        if len(files) != 4:
-            return ElementDataStatus.Incomplete
-
         if not all([x.exists for x in files]):
             return ElementDataStatus.Incomplete
 
