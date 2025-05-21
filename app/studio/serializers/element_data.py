@@ -1,7 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 
 from studio.models.element_data import ElementData
-from studio.serializers.file import FileReadSerializer, FileWriteSerializer
+from studio.serializers.file import (
+    FileReadSerializer,
+    FileWriteSerializer,
+)
 
 
 class ElementDataWriteSerializer(ModelSerializer):

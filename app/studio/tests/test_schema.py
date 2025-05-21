@@ -1,7 +1,10 @@
 from django.test import TestCase
 
 from studio.file_utils import FileUtils
-from studio.models import Schema, SchemaManager
+from studio.models import (
+    Schema,
+    SchemaManager,
+)
 
 from .utils import TestUtils
 

@@ -1,4 +1,7 @@
-from rest_framework import mixins, viewsets
+from rest_framework import (
+    mixins,
+    viewsets,
+)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -13,7 +16,7 @@ from studio.serializers.element import (
     ElementUpgradeSerializer,
     ElementVersionReadSerializer,
 )
-from studio.serializers.element_data_change import ElementDataChangeReadSerializer
+from studio.serializers.element_data_change import ElementDataChangeSerializer
 
 
 class ElementQuerySet(list):
@@ -87,4 +90,4 @@ class ElementVersionChangesViewSet(viewsets.ReadOnlyModelViewSet):
         return ElementDataChange.objects.filter(element_data_id=element_data.id)
 
     def get_serializer_class(self):
-        return ElementDataChangeReadSerializer
+        return ElementDataChangeSerializer

@@ -3,7 +3,11 @@ import signal
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db import connection, reset_queries, close_old_connections
+from django.db import (
+    connection,
+    reset_queries,
+    close_old_connections,
+)
 from sentry_sdk import capture_exception
 
 

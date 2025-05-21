@@ -8,7 +8,10 @@ from rest_framework.test import APIClient
 from studio.file_utils import FileUtils
 from studio.models import FileNotification
 from studio.models.data_change_type import DataChangeType
-from studio.models.element import Element, ElementCategory
+from studio.models.element import (
+    Element,
+    ElementCategory,
+)
 
 from .utils import TestUtils
 

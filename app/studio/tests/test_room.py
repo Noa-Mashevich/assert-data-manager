@@ -8,8 +8,14 @@ from rest_framework.test import APIClient
 from studio.models.data_change_type import DataChangeType
 from studio.file_utils import FileUtils
 from studio.models import FileNotification
-from studio.models.element import Element, ElementCategory
-from studio.models.room import Room, RoomCategory
+from studio.models.element import (
+    Element,
+    ElementCategory,
+)
+from studio.models.room import (
+    Room,
+    RoomCategory,
+)
 from studio.models.room_element import RoomElement
 
 from .utils import TestUtils

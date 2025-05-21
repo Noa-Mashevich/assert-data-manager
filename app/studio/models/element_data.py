@@ -1,9 +1,12 @@
 import json
-import os
 
 from django.db import models, transaction
 
-from server.utils import get_object, is_migration, is_test
+from server.utils import (
+    get_object,
+    is_migration,
+    is_test,
+)
 from studio.file_utils import FileUtils
 
 from .element import Element

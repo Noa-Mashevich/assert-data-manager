@@ -10,7 +10,11 @@ from django.conf import settings
 from django.db import models
 from django.http import Http404
 
-from server.utils import invoke_lambda, is_migration, is_test
+from server.utils import (
+    invoke_lambda,
+    is_migration,
+    is_test,
+)
 
 from .entity_type import EntityType
 from .file_notification import FileNotification

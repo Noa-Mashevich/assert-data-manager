@@ -1,6 +1,9 @@
 from django.http import HttpResponse
 from http import HTTPStatus
-from rest_framework import mixins, viewsets
+from rest_framework import (
+    mixins,
+    viewsets,
+)
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
