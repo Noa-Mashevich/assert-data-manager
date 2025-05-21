@@ -7,7 +7,7 @@ class EntityType(IntEnum):
     RoomElement = 2
     Room = 3
 
-    def get_name(self):
+    def get_name(self) -> str:
         if self.value == EntityType.Element:
             return 'element'
         elif self.value == EntityType.Room:
@@ -16,7 +16,7 @@ class EntityType(IntEnum):
             return 'room-element'
         raise ValueError(f'Entity type {self.value} is not valid')
 
-    def get_s3_folder(self):
+    def get_s3_folder(self) -> str:
         if self.value == EntityType.Element:
             return 'studio/elements'
         elif self.value == EntityType.Room:
@@ -25,7 +25,7 @@ class EntityType(IntEnum):
             return 'studio/roomelements'
         raise ValueError(f'Entity type {self.value} is not valid')
 
-    def get_s3_prefix(self, entity_id):
+    def get_s3_prefix(self, entity_id) -> str:
         s3_folder = self.get_s3_folder()
         return f'{s3_folder}/{entity_id}'
 

@@ -115,15 +115,15 @@ class File(models.Model):
         indexes = [models.Index(fields=['type'])]
 
     @property
-    def content_type(self):
+    def content_type(self) -> str:
         return FileType(self.type).get_content_type()
 
     @property
-    def extension(self):
+    def extension(self) -> str:
         return FileType(self.type).get_extension()
 
     @property
-    def upload_url(self):
+    def upload_url(self) -> str:
         if self.exists:
             return None
 
@@ -151,7 +151,7 @@ class File(models.Model):
         return signed_url
 
     @property
-    def download_url(self):
+    def download_url(self) -> str:
         if not self.exists:
             return None
 
@@ -183,7 +183,7 @@ class File(models.Model):
         return f'{self.s3_prefix}/files/{self.pk}.{self.extension}'
 
     @property
-    def status(self):
+    def status(self) -> int:
         return FileNotification.objects.file_status(self)
 
     def save(self, *args, **kwargs):

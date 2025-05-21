@@ -9,7 +9,7 @@ class FileType(IntEnum):
     Jpg = 4
     Png = 5
 
-    def get_content_type(self):
+    def get_content_type(self) -> str:
         if self.value == FileType.Json:
             return 'application/json'
         if self.value == FileType.Dxf:
@@ -22,7 +22,7 @@ class FileType(IntEnum):
             return 'image/png'
         raise ValueError(f'File type {self.value} is not valid')
 
-    def get_extension(self):
+    def get_extension(self) -> str:
         if self.value == FileType.Json:
             return 'json'
         if self.value == FileType.Dxf:

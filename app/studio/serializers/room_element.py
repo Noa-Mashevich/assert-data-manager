@@ -26,14 +26,14 @@ class RoomElementSerializer(ModelSerializer):
             'deleted_at',
         ]
 
-    def get_room_id(self, obj):
+    def get_room_id(self, obj) -> int:
         return obj.room_data.room.id
 
-    def get_room_version(self, obj):
+    def get_room_version(self, obj) -> int:
         return obj.room_data.version
 
-    def get_element_id(self, obj):
+    def get_element_id(self, obj) -> int:
         return obj.element_data.element.id
 
-    def get_element_version(self, obj):
+    def get_element_version(self, obj) -> int:
         return obj.element_data.version

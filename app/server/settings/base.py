@@ -25,9 +25,10 @@ SECRET_KEY = 'django-insecure-3rcbe+gz$rym9f23&)7l-7^sr55c5pw=h567prfpeks_*n3^5*
 ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
-    'django.contrib.staticfiles',
-    'rest_framework',
     'django_filters',
+    'django.contrib.staticfiles',
+    'drf_spectacular',
+    'rest_framework',
     'studio',
 ]
 MIDDLEWARE = [
@@ -64,6 +65,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -71,6 +73,19 @@ USE_I18N = True
 USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Studio API',
+    'DESCRIPTION': 'API documentation for Studio back-end',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'SERVERS': [
+        {'url': 'http://localhost:8000', 'description': 'Local Development server'},
+        {'url': 'https://dev.modsy.com', 'description': 'Development server'},
+        {'url': 'https://staging.modsy.com', 'description': 'Staging server'},
+        {'url': 'https://modsy.com', 'description': 'Production server'},
+    ],
+}
 
 sentry_sdk.init(
     environment=DEPLOYMENT_ENV,

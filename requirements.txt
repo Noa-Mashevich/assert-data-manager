@@ -1,11 +1,12 @@
 black~=24.10.0
 boto3~=1.28.39
 cryptography~=41.0.2
+drf-spectacular~=0.28.0
 Django~=4.2.2
 djangorestframework~=3.14.0
 django-filter~=23.5
 jsonschema~=4.23.0
-psycopg2~=2.9.7
 pre_commit~=4.0.1
+psycopg2~=2.9.7
 python-dotenv~=1.0.1
 sentry-sdk~=2.4.0

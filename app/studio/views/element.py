@@ -1,3 +1,7 @@
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+)
 from rest_framework import (
     mixins,
     viewsets,
@@ -13,6 +17,7 @@ from studio.models.element_data_change import ElementDataChange
 from studio.serializers.element import (
     ElementReadSerializer,
     ElementWriteSerializer,
+    ElementWriteResponseSerializer,
     ElementUpgradeSerializer,
     ElementVersionReadSerializer,
 )
@@ -31,6 +36,23 @@ class ElementQuerySet(list):
         return self
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all elements, with their latest versions.",
+        responses=ElementReadSerializer,
+    ),
+    create=extend_schema(
+        description="Creates and returns a new element.",
+        responses=ElementWriteResponseSerializer,
+    ),
+    retrieve=extend_schema(
+        description="Returns an element, with its latest version.",
+        responses=ElementReadSerializer,
+    ),
+    destroy=extend_schema(
+        description="Not yet implemented.",
+    ),
+)
 class ElementViewSet(
     mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet
 ):
@@ -57,6 +79,11 @@ class ElementViewSet(
         ]
         return ElementQuerySet(element_with_latest_valid, model=Element)
 
+    @extend_schema(
+        description="Creates and returns a new element version.",
+        request=None,
+        responses=ElementWriteResponseSerializer,
+    )
     @action(detail=True, methods=['post'])
     def upgrade(self, request, pk):
         element = Element.objects.get(pk=pk)
@@ -65,6 +92,22 @@ class ElementViewSet(
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all versions of an element.",
+        responses=ElementVersionReadSerializer,
+    ),
+    create=extend_schema(
+        exclude=True,
+    ),
+    retrieve=extend_schema(
+        description="Returns an element for a specific version.",
+        responses=ElementVersionReadSerializer,
+    ),
+    destroy=extend_schema(
+        exclude=True,
+    ),
+)
 class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         element_id = int(self.kwargs['element_id'])
@@ -80,6 +123,21 @@ class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all changes related to an element for a specific version.",
+        responses=ElementDataChangeSerializer,
+    ),
+    create=extend_schema(
+        exclude=True,
+    ),
+    retrieve=extend_schema(
+        exclude=True,
+    ),
+    destroy=extend_schema(
+        exclude=True,
+    ),
+)
 class ElementVersionChangesViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         element_id = int(self.kwargs['element_id'])

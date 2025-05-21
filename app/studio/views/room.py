@@ -1,3 +1,7 @@
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+)
 from rest_framework import (
     mixins,
     viewsets,
@@ -13,6 +17,7 @@ from studio.models.room_data_change import RoomDataChange
 from studio.serializers.room import (
     RoomReadSerializer,
     RoomWriteSerializer,
+    RoomWriteResponseSerializer,
     RoomUpgradeSerializer,
     RoomVersionSerializer,
 )
@@ -31,6 +36,23 @@ class RoomQuerySet(list):
         return self
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all rooms, with their latest versions.",
+        responses=RoomReadSerializer,
+    ),
+    create=extend_schema(
+        description="Creates and returns a new room.",
+        responses=RoomWriteResponseSerializer,
+    ),
+    retrieve=extend_schema(
+        description="Returns a room, with its latest version.",
+        responses=RoomReadSerializer,
+    ),
+    destroy=extend_schema(
+        description="Not yet implemented.",
+    ),
+)
 class RoomViewSet(
     mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet
 ):
@@ -57,6 +79,11 @@ class RoomViewSet(
         ]
         return RoomQuerySet(room_with_latest_valid, model=Room)
 
+    @extend_schema(
+        description="Creates and returns a new room version.",
+        request=None,
+        responses=RoomWriteResponseSerializer,
+    )
     @action(detail=True, methods=['post'])
     def upgrade(self, request, pk):
         room = Room.objects.get(pk=pk)
@@ -65,6 +92,22 @@ class RoomViewSet(
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all versions of a room.",
+        responses=RoomVersionSerializer,
+    ),
+    create=extend_schema(
+        exclude=True,
+    ),
+    retrieve=extend_schema(
+        description="Returns a room for a specific version.",
+        responses=RoomVersionSerializer,
+    ),
+    destroy=extend_schema(
+        exclude=True,
+    ),
+)
 class RoomVersionViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         room_id = int(self.kwargs['room_id'])
@@ -80,6 +123,21 @@ class RoomVersionViewSet(viewsets.ReadOnlyModelViewSet):
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    list=extend_schema(
+        description="Returns all changes related to a room for a specific version.",
+        responses=RoomDataChangeSerializer,
+    ),
+    create=extend_schema(
+        exclude=True,
+    ),
+    retrieve=extend_schema(
+        exclude=True,
+    ),
+    destroy=extend_schema(
+        exclude=True,
+    ),
+)
 class RoomVersionChangesViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         room_id = int(self.kwargs['room_id'])

@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from drf_spectacular.utils import extend_schema
 from http import HTTPStatus
 from rest_framework import (
     mixins,
@@ -11,6 +12,9 @@ from studio.models import Validator
 from studio.serializers import ValidatorResponseSerializer
 
 
+@extend_schema(
+    exclude=True,
+)
 class ValidatorViewSet(mixins.CreateModelMixin, viewsets.ReadOnlyModelViewSet):
     @action(detail=False, methods=['post'])
     def validate(self, request):

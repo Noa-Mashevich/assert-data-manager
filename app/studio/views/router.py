@@ -3,6 +3,10 @@
 # import pprint
 
 from django.urls import path, include
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularSwaggerView,
+)
 from rest_framework import routers
 
 from .element import (
@@ -32,6 +36,8 @@ router.register(r'validator', ValidatorViewSet, basename='validator')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
+    path('api/swagger/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-swagger'),
 ]
 
 # TODO: remove, this is for debugging available end-points.

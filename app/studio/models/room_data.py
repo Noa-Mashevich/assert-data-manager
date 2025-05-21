@@ -91,7 +91,7 @@ class RoomData(models.Model):
         ordering = ['-version']
 
     @property
-    def status(self):
+    def status(self) -> int:
         from .file import File
 
         files = File.objects.filter(ownership__room_data=self)

@@ -93,7 +93,7 @@ class ElementData(models.Model):
         ordering = ['-version']
 
     @property
-    def status(self):
+    def status(self) -> int:
         from .file import File
 
         files = File.objects.filter(ownership__element_data=self)
