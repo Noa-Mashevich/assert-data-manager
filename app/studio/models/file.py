@@ -91,6 +91,10 @@ class FileManager(models.Manager):
             if file.type == FileType.Json:
                 file_ownership.element_data.track_changes()
 
+        if file_ownership.get_entity_type() == EntityType.Room:
+            if file.type == FileType.Json:
+                file_ownership.room_data.track_changes()
+
 
 class File(models.Model):
     type = models.IntegerField()
@@ -116,6 +120,9 @@ class File(models.Model):
 
     @property
     def upload_url(self):
+        if self.exists:
+            return None
+
         if is_test():
             return 'placeholder_upload_url'
 
@@ -141,6 +148,9 @@ class File(models.Model):
 
     @property
     def download_url(self):
+        if not self.exists:
+            return None
+
         if is_test():
             return 'placeholder_download_url'
 
@@ -148,10 +158,6 @@ class File(models.Model):
             s3_key = self.get_s3_key
         except Exception:
             raise Http404
-
-        # TODO: figure out what should be done when file has not been uploaded.
-        if not self.exists:
-            return None
 
         return File.objects.get_signed_url(s3_key)
 

@@ -27,10 +27,10 @@ class ElementDataManager(models.Manager):
 
         element_data = self.model.objects.create_versioned_element(element=element)
 
-        FileOwnership.objects.create_for_element(FileType.Json, element_data)
-        FileOwnership.objects.create_for_element(FileType.Dxf, element_data)
-        FileOwnership.objects.create_for_element(FileType.Rfa, element_data)
-        FileOwnership.objects.create_for_element(FileType.Jpg, element_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Json, element_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Dxf, element_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Rfa, element_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Jpg, element_data)
 
         return element_data
 
@@ -125,16 +125,7 @@ class ElementData(models.Model):
 
         # Note: only for unittesting.
         if is_migration() or is_test():
-            current_path = os.path.realpath(__file__)
-            test_path = os.path.realpath(
-                FileUtils.join_path(current_path, '..', '..', 'tests')
-            )
-            base_name = os.path.basename(json_file.s3_key)
-            file_path = FileUtils.join_path(test_path, 'data', 'file', base_name)
-            try:
-                return FileUtils.read_dict(file_path)
-            except Exception:
-                return {}
+            return FileUtils.read_test_file_content(json_file.s3_key)
 
         json_file_s3 = get_object(json_file.s3_key)
         json_data = json.load(json_file_s3['Body'])

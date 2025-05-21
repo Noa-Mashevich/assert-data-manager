@@ -10,19 +10,19 @@ class EntityType(IntEnum):
     def get_name(self):
         if self.value == EntityType.Element:
             return 'element'
-        elif self.value == EntityType.RoomElement:
-            return 'room-element'
         elif self.value == EntityType.Room:
             return 'room'
+        elif self.value == EntityType.RoomElement:
+            return 'room-element'
         raise ValueError(f'Entity type {self.value} is not valid')
 
     def get_s3_folder(self):
         if self.value == EntityType.Element:
             return 'studio/elements'
-        elif self.value == EntityType.RoomElement:
-            return 'studio/roomelements'
         elif self.value == EntityType.Room:
             return 'studio/rooms'
+        elif self.value == EntityType.RoomElement:
+            return 'studio/roomelements'
         raise ValueError(f'Entity type {self.value} is not valid')
 
     def get_s3_prefix(self, entity_id):

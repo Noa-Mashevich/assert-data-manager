@@ -4,7 +4,7 @@ from studio.models.data_change_type import DataChangeType
 from studio.models.element_data_change import compare_element_data
 
 
-class TestElementData(TestCase):
+class TestElementDataChange(TestCase):
     def test_data_comparison(self):
         json_data_1 = {}
         json_data_2 = {}

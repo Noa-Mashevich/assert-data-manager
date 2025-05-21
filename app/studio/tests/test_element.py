@@ -113,7 +113,7 @@ class ElementApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-    def check_data_for_element(self, data, is_created):
+    def check_data_for_element(self, data):
         self.assertIsNotNone(data.get('id'))
         self.assertIsNotNone(data.get('name'))
         self.assertIsNotNone(data.get('category'))
@@ -122,9 +122,9 @@ class ElementApiTests(TestCase):
 
         self.assertIsNotNone(element_data)
 
-        self.check_data_for_element_data(element_data, is_created)
+        self.check_data_for_element_data(element_data)
 
-    def check_data_for_element_data(self, data, is_created):
+    def check_data_for_element_data(self, data):
         self.assertIsNotNone(data.get('id'))
         self.assertIsNotNone(data.get('version'))
         self.assertIsNotNone(data.get('status'))
@@ -136,17 +136,21 @@ class ElementApiTests(TestCase):
 
         self.assertIsNotNone(files)
         self.assertEqual(len(files), 4)
+
         for x in files:
-            self.assertIsNotNone(x.get('id'))
-            self.assertIsNotNone(x.get('type'))
-            self.assertIsNotNone(x.get('content_type'))
-            self.assertIsNotNone(x.get('status'))
-            if is_created:
-                self.assertIsNotNone(x.get('upload_url'))
-                self.assertIsNone(x.get('download_url'))
-            else:
-                self.assertIsNone(x.get('upload_url'))
-                self.assertIsNotNone(x.get('download_url'))
+            self.check_data_for_file(x)
+
+    def check_data_for_file(self, data):
+        self.assertIsNotNone(data.get('id'))
+        self.assertIsNotNone(data.get('type'))
+        self.assertIsNotNone(data.get('content_type'))
+        self.assertIsNotNone(data.get('status'))
+        upload_url = data.get('upload_url')
+        download_url = data.get('download_url')
+        if upload_url is not None:
+            self.assertIsNone(download_url)
+        if download_url is not None:
+            self.assertIsNone(upload_url)
 
     def get_paginated(self, url, previous_results=None):
         all_results = previous_results if previous_results else []
@@ -207,7 +211,7 @@ class ElementApiTests(TestCase):
 
         data = json.loads(response.content)
 
-        self.check_data_for_element(data, True)
+        self.check_data_for_element(data)
 
     def test_get_elements(self):
         url = reverse('element-list')
@@ -240,7 +244,7 @@ class ElementApiTests(TestCase):
 
         self.assertEqual(len(results), 1)
         for result in results:
-            self.check_data_for_element(result, False)
+            self.check_data_for_element(result)
 
         create_file_notification('studio/elements/2/files/5.json')
         create_file_notification('studio/elements/2/files/6.dxf')
@@ -252,7 +256,7 @@ class ElementApiTests(TestCase):
         self.assertEqual(len(results), 2)
 
         for result in results:
-            self.check_data_for_element(result, False)
+            self.check_data_for_element(result)
 
     def test_get_element(self):
         url = reverse('element-detail', kwargs={'pk': 1})
@@ -282,7 +286,7 @@ class ElementApiTests(TestCase):
 
         data = json.loads(response.content)
 
-        self.check_data_for_element(data, False)
+        self.check_data_for_element(data)
 
     def test_upgrade_element(self):
         url = reverse('element-list')
@@ -301,7 +305,7 @@ class ElementApiTests(TestCase):
 
         data = json.loads(response.content)
 
-        self.check_data_for_element(data, True)
+        self.check_data_for_element(data)
 
         self.assertEqual(data.get('element_data').get('version'), 2)
 
@@ -311,7 +315,7 @@ class ElementApiTests(TestCase):
 
         data = json.loads(response.content)
 
-        self.check_data_for_element(data, True)
+        self.check_data_for_element(data)
 
         self.assertEqual(data.get('element_data').get('version'), 3)
 
@@ -347,7 +351,7 @@ class ElementApiTests(TestCase):
             self.assertEqual(len(results), 4)
 
             for result in results:
-                self.check_data_for_element(result, False)
+                self.check_data_for_element(result)
 
     def test_get_element_version(self):
         url = reverse('element-list')
@@ -384,7 +388,7 @@ class ElementApiTests(TestCase):
 
             data = json.loads(response.content)
 
-            self.check_data_for_element(data, False)
+            self.check_data_for_element(data)
 
             element_data = data.get('element_data')
 

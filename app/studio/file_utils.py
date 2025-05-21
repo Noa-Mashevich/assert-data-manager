@@ -27,3 +27,18 @@ class FileUtils:
         for _, _, files in os.walk(dir_name):
             file_names.extend(files)
         return file_names
+
+    @staticmethod
+    def read_test_file_content(s3_key: str):
+        current_path = os.path.realpath(__file__)
+        test_path = os.path.realpath(FileUtils.join_path(current_path, '..', 'tests'))
+        splits = s3_key.split('studio/')
+        if len(splits) != 2:
+            base_name = os.path.basename(s3_key)
+        else:
+            base_name = splits[1]
+        file_path = FileUtils.join_path(test_path, 'data', base_name)
+        try:
+            return FileUtils.read_dict(file_path)
+        except Exception:
+            return {}
