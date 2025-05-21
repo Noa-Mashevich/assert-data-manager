@@ -56,7 +56,7 @@ class RoomWriteResponseSerializer(ModelSerializer):
 
 
 class RoomReadSerializer(ModelSerializer):
-    room_data = RoomDataWriteSerializer(source='latest_valid_room_data')
+    room_data = RoomDataReadSerializer(source='latest_valid_room_data')
 
     class Meta:
         model = Room
