@@ -5,12 +5,19 @@ from enum import IntEnum
 from .entity_type import EntityType
 
 
-# TODO: define room category.
 class RoomCategory(IntEnum):
     RoomCategoryNone = 0
-    Category1 = 1
-    Category2 = 2
-    Category3 = 3
+    LivingRoom = 1
+    DiningRoom = 2
+    Kitchen = 3
+    Bedroom = 4
+    Loft = 5
+    Closet = 6
+    Corridor = 7
+    Stairs = 8
+    UtilityRoom = 9
+    Garage = 10
+    OutdoorArea = 11
 
 
 class RoomManager(models.Manager):

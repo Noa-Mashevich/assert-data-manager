@@ -62,7 +62,7 @@ class TestRoom(TestCase):
 
         room = Room.objects.create(
             name='Test name',
-            category=RoomCategory.Category1,
+            category=RoomCategory.Loft,
             function='Test function',
             type='Test type',
         )
@@ -100,7 +100,7 @@ class TestRoom(TestCase):
 
         room = Room.objects.create(
             name='Test name',
-            category=RoomCategory.Category1,
+            category=RoomCategory.Loft,
             function='Test function',
             type='Test type',
         )
