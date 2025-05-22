@@ -38,7 +38,7 @@ class RoomQuerySet(list):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Returns all rooms, with their latest versions.",
+        description="Returns all rooms with their latest versions.",
         responses=RoomReadSerializer,
     ),
     create=extend_schema(
@@ -46,11 +46,11 @@ class RoomQuerySet(list):
         responses=RoomWriteResponseSerializer,
     ),
     retrieve=extend_schema(
-        description="Returns a room, with its latest version.",
+        description="Returns a room with its latest version.",
         responses=RoomReadSerializer,
     ),
     destroy=extend_schema(
-        description="Not yet implemented.",
+        description="Removes a room and all its versions.",
     ),
 )
 class RoomViewSet(
@@ -101,14 +101,17 @@ class RoomViewSet(
         exclude=True,
     ),
     retrieve=extend_schema(
-        description="Returns a room for a specific version.",
+        description="Returns a specific version of a room.",
         responses=RoomVersionSerializer,
     ),
     destroy=extend_schema(
-        exclude=True,
+        description="Removes a specific version of a room.",
     ),
 )
-class RoomVersionViewSet(viewsets.ReadOnlyModelViewSet):
+class RoomVersionViewSet(mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
+    def perform_destroy(self, instance):
+        instance.destroy()
+
     def get_queryset(self):
         room_id = int(self.kwargs['room_id'])
         return RoomData.objects.filter(room_id=room_id)
@@ -125,7 +128,7 @@ class RoomVersionViewSet(viewsets.ReadOnlyModelViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Returns all changes related to a room for a specific version.",
+        description="Returns all changes related to a specific version of a room.",
         responses=RoomDataChangeSerializer,
     ),
     create=extend_schema(

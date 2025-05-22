@@ -78,10 +78,8 @@ class Element(models.Model):
         ElementData.objects.create_for_element(element=self)
 
     def destroy(self):
-        # TODO: figure out if all versions should be destroyed, or just
-        #  one specific version.
-        element_data = self.latest_element_data
-        element_data.deleted_at = timezone.now()
-        element_data.save()
+        versions = self.versions
+        for version in versions:
+            version.destroy()
 
         self.save()

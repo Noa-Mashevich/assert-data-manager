@@ -38,7 +38,7 @@ class ElementQuerySet(list):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Returns all elements, with their latest versions.",
+        description="Returns all elements with their latest versions.",
         responses=ElementReadSerializer,
     ),
     create=extend_schema(
@@ -46,11 +46,11 @@ class ElementQuerySet(list):
         responses=ElementWriteResponseSerializer,
     ),
     retrieve=extend_schema(
-        description="Returns an element, with its latest version.",
+        description="Returns an element with its latest version.",
         responses=ElementReadSerializer,
     ),
     destroy=extend_schema(
-        description="Not yet implemented.",
+        description="Removes an element and all its versions.",
     ),
 )
 class ElementViewSet(
@@ -101,20 +101,23 @@ class ElementViewSet(
         exclude=True,
     ),
     retrieve=extend_schema(
-        description="Returns an element for a specific version.",
+        description="Returns a specific version of an element.",
         responses=ElementVersionReadSerializer,
     ),
     destroy=extend_schema(
-        exclude=True,
+        description="Removes a specific version of an element.",
     ),
 )
-class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
-    def get_queryset(self):
-        element_id = int(self.kwargs['element_id'])
-        return ElementData.objects.filter(element_id=element_id)
+class ElementVersionViewSet(mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
+    def perform_destroy(self, instance):
+        instance.destroy()
 
     def get_serializer_class(self):
         return ElementVersionReadSerializer
+
+    def get_queryset(self):
+        element_id = int(self.kwargs['element_id'])
+        return ElementData.objects.filter(element_id=element_id)
 
     def retrieve(self, request, *args, **kwargs):
         version_id = int(kwargs['pk'])
@@ -125,7 +128,7 @@ class ElementVersionViewSet(viewsets.ReadOnlyModelViewSet):
 
 @extend_schema_view(
     list=extend_schema(
-        description="Returns all changes related to an element for a specific version.",
+        description="Returns all changes related to a specific version of an element.",
         responses=ElementDataChangeSerializer,
     ),
     create=extend_schema(

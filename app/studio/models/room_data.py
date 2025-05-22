@@ -4,6 +4,7 @@ from django.db import (
     models,
     transaction,
 )
+from django.utils import timezone
 
 from server.utils import (
     get_object,
@@ -152,7 +153,12 @@ class RoomData(models.Model):
 
         RoomElement.objects.create_from_data(self)
 
-    def save(self, *args, **kwargs):
-        # Always insert a new record
-        self.pk = None
+    def destroy(self):
+        self.deleted_at = timezone.now()
+        self.save(is_destroying=True)
+
+    def save(self, is_destroying=False, *args, **kwargs):
+        # Insert a new record when not destroying.
+        if not is_destroying:
+            self.pk = None
         super().save(*args, **kwargs)

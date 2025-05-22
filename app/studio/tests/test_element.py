@@ -500,3 +500,187 @@ class ElementApiTests(TestCase):
         self.assertTrue(
             'changed value for property' in changed_property_value.get('description')
         )
+
+    def test_delete_element(self):
+        url = reverse('element-list')
+
+        self.client.post(
+            url,
+            data='{"name": "Test name #1", "category": 6}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/elements/1/files/1.json')
+        create_file_notification('studio/elements/1/files/2.dxf')
+        create_file_notification('studio/elements/1/files/3.rfa')
+        create_file_notification('studio/elements/1/files/4.jpg')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 1)
+
+        url = reverse('element-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        self.client.post(url)
+
+        create_file_notification('studio/elements/1/files/9.json')
+        create_file_notification('studio/elements/1/files/10.dxf')
+        create_file_notification('studio/elements/1/files/11.rfa')
+        create_file_notification('studio/elements/1/files/12.jpg')
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 3)
+
+        url = reverse('element-detail', kwargs={'pk': 1})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
+        url = reverse('element-detail', kwargs={'pk': 1})
+
+        response = self.client.get(url)
+
+        data = json.loads(response.content)
+
+        self.assertIsNone(data.get('element_data'))
+
+        url = reverse('element-id-version-list', kwargs={'element_id': 1})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 3)
+
+        for x in results:
+            self.assertIsNotNone(x.get('element_data').get('deleted_at'))
+
+        for version in [1, 2, 3]:
+            url = reverse(
+                'element-id-version-detail', kwargs={'element_id': '1', 'pk': version}
+            )
+
+            response = self.client.get(url)
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+
+            self.assertIsNotNone(data.get('element_data').get('deleted_at'))
+
+    def test_delete_element_version(self):
+        url = reverse('element-list')
+
+        self.client.post(
+            url,
+            data='{"name": "Test name #1", "category": 6}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/elements/1/files/1.json')
+        create_file_notification('studio/elements/1/files/2.dxf')
+        create_file_notification('studio/elements/1/files/3.rfa')
+        create_file_notification('studio/elements/1/files/4.jpg')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 1)
+
+        url = reverse('element-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        self.client.post(url)
+
+        create_file_notification('studio/elements/1/files/9.json')
+        create_file_notification('studio/elements/1/files/10.dxf')
+        create_file_notification('studio/elements/1/files/11.rfa')
+        create_file_notification('studio/elements/1/files/12.jpg')
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 3)
+
+        url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 3})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 1)
+
+        url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 2})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 1)
+
+        url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 1})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
+        url = reverse('element-detail', kwargs={'pk': 1})
+
+        response = self.client.get(url)
+
+        data = json.loads(response.content)
+
+        self.assertIsNone(data.get('element_data'))
+
+        url = reverse('element-id-version-list', kwargs={'element_id': 1})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 3)
+
+        for x in results:
+            self.assertIsNotNone(x.get('element_data').get('deleted_at'))
+
+        for version in [1, 2, 3]:
+            url = reverse(
+                'element-id-version-detail', kwargs={'element_id': '1', 'pk': version}
+            )
+
+            response = self.client.get(url)
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+
+            self.assertIsNotNone(data.get('element_data').get('deleted_at'))

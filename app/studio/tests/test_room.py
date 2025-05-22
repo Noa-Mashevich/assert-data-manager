@@ -684,3 +684,170 @@ class RoomApiTests(TestCase):
         for p in changed_property_value:
             self.assertEqual(p.get('type'), DataChangeType.Patch)
             self.assertTrue('changed value for property' in p.get('description'))
+
+    def test_delete_room(self):
+        self.create_elements()
+
+        url = reverse('room-list')
+
+        self.client.post(
+            url,
+            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/rooms/1/files/17.json')
+        create_file_notification('studio/rooms/1/files/18.dxf')
+        create_file_notification('studio/rooms/1/files/19.jpg')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 1)
+
+        url = reverse('room-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        create_file_notification('studio/rooms/1/files/24.json')
+        create_file_notification('studio/rooms/1/files/25.dxf')
+        create_file_notification('studio/rooms/1/files/26.jpg')
+
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 2)
+
+        url = reverse('room-detail', kwargs={'pk': 1})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
+        url = reverse('room-detail', kwargs={'pk': 1})
+
+        response = self.client.get(url)
+
+        data = json.loads(response.content)
+
+        self.assertIsNone(data.get('room_data'))
+
+        url = reverse('room-id-version-list', kwargs={'room_id': 1})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 2)
+
+        for x in results:
+            self.assertIsNotNone(x.get('room_data').get('deleted_at'))
+
+        for version in [1, 2]:
+            url = reverse(
+                'room-id-version-detail', kwargs={'room_id': '1', 'pk': version}
+            )
+
+            response = self.client.get(url)
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+
+            self.assertIsNotNone(data.get('room_data').get('deleted_at'))
+
+    def test_delete_room_version(self):
+        self.create_elements()
+
+        url = reverse('room-list')
+
+        self.client.post(
+            url,
+            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/rooms/1/files/17.json')
+        create_file_notification('studio/rooms/1/files/18.dxf')
+        create_file_notification('studio/rooms/1/files/19.jpg')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 1)
+
+        url = reverse('room-upgrade', kwargs={'pk': '1'})
+
+        self.client.post(url)
+
+        create_file_notification('studio/rooms/1/files/24.json')
+        create_file_notification('studio/rooms/1/files/25.dxf')
+        create_file_notification('studio/rooms/1/files/26.jpg')
+
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 2)
+
+        url = reverse('room-id-version-detail', kwargs={'room_id': '1', 'pk': 2})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 1)
+
+        url = reverse('room-id-version-detail', kwargs={'room_id': '1', 'pk': 1})
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
+        url = reverse('room-detail', kwargs={'pk': 1})
+
+        response = self.client.get(url)
+
+        data = json.loads(response.content)
+
+        self.assertIsNone(data.get('room_data'))
+
+        url = reverse('room-id-version-list', kwargs={'room_id': 1})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 2)
+
+        for x in results:
+            self.assertIsNotNone(x.get('room_data').get('deleted_at'))
+
+        for version in [1, 2]:
+            url = reverse(
+                'room-id-version-detail', kwargs={'room_id': '1', 'pk': version}
+            )
+
+            response = self.client.get(url)
+
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            data = json.loads(response.content)
+
+            self.assertIsNotNone(data.get('room_data').get('deleted_at'))

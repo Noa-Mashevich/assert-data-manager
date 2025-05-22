@@ -72,10 +72,8 @@ class Room(models.Model):
         RoomData.objects.create_for_room(room=self)
 
     def destroy(self):
-        # TODO: figure out if all versions should be destroyed, or just
-        #  one specific version.
-        room_data = self.latest_room_data
-        room_data.deleted_at = timezone.now()
-        room_data.save()
+        versions = self.versions
+        for version in versions:
+            version.destroy()
 
         self.save()
