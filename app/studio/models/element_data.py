@@ -34,7 +34,7 @@ class ElementDataManager(models.Manager):
         FileOwnership.objects.create_for_entity_data(FileType.Json, element_data)
         FileOwnership.objects.create_for_entity_data(FileType.Dxf, element_data)
         FileOwnership.objects.create_for_entity_data(FileType.Rfa, element_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Jpg, element_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Png, element_data)
 
         return element_data
 

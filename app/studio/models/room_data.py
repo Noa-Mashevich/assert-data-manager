@@ -35,8 +35,7 @@ class RoomDataManager(models.Manager):
         room_data = self.model.objects.create_versioned_room(room=room)
 
         FileOwnership.objects.create_for_entity_data(FileType.Json, room_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Dxf, room_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Jpg, room_data)
+        FileOwnership.objects.create_for_entity_data(FileType.Png, room_data)
 
         return room_data
 

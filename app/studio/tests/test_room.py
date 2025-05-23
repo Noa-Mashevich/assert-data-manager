@@ -37,25 +37,25 @@ class TestRoom(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         Element.objects.create(name='Test name #2', category=ElementCategory.Door)
         create_file_notification('studio/elements/2/files/5.json')
         create_file_notification('studio/elements/2/files/6.dxf')
         create_file_notification('studio/elements/2/files/7.rfa')
-        create_file_notification('studio/elements/2/files/8.jpg')
+        create_file_notification('studio/elements/2/files/8.png')
 
         Element.objects.create(name='Test name #3', category=ElementCategory.Door)
         create_file_notification('studio/elements/3/files/9.json')
         create_file_notification('studio/elements/3/files/10.dxf')
         create_file_notification('studio/elements/3/files/11.rfa')
-        create_file_notification('studio/elements/3/files/12.jpg')
+        create_file_notification('studio/elements/3/files/12.png')
 
         Element.objects.create(name='Test name #4', category=ElementCategory.Door)
         create_file_notification('studio/elements/4/files/13.json')
         create_file_notification('studio/elements/4/files/14.dxf')
         create_file_notification('studio/elements/4/files/15.rfa')
-        create_file_notification('studio/elements/4/files/16.jpg')
+        create_file_notification('studio/elements/4/files/16.png')
 
     def test_initialization(self):
         self.create_elements()
@@ -76,11 +76,10 @@ class TestRoom(TestCase):
 
         files = room_data.files
 
-        self.assertEqual(len(files), 3)
+        self.assertEqual(len(files), 2)
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         room_data = room.latest_valid_room_data
 
@@ -89,7 +88,7 @@ class TestRoom(TestCase):
 
         files = room_data.files
 
-        self.assertEqual(len(files), 3)
+        self.assertEqual(len(files), 2)
 
         room_elements = RoomElement.objects.filter(room_data=room_data)
 
@@ -113,8 +112,7 @@ class TestRoom(TestCase):
         self.assertIsNone(room.latest_valid_room_data)
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         room_data = room.latest_valid_room_data
 
@@ -143,9 +141,8 @@ class TestRoom(TestCase):
         self.assertIsNotNone(room_data)
         self.assertEqual(room_data.version, 1)
 
-        create_file_notification('studio/rooms/1/files/24.json')
-        create_file_notification('studio/rooms/1/files/25.dxf')
-        create_file_notification('studio/rooms/1/files/26.jpg')
+        create_file_notification('studio/rooms/1/files/23.json')
+        create_file_notification('studio/rooms/1/files/24.png')
 
         room_data = room.latest_room_data
 
@@ -197,7 +194,7 @@ class RoomApiTests(TestCase):
         files = data.get('files')
 
         self.assertIsNotNone(files)
-        self.assertEqual(len(files), 3)
+        self.assertEqual(len(files), 2)
 
         for x in files:
             self.check_data_for_file(x)
@@ -265,7 +262,7 @@ class RoomApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         self.client.post(
             url,
@@ -276,7 +273,7 @@ class RoomApiTests(TestCase):
         create_file_notification('studio/elements/2/files/5.json')
         create_file_notification('studio/elements/2/files/6.dxf')
         create_file_notification('studio/elements/2/files/7.rfa')
-        create_file_notification('studio/elements/2/files/8.jpg')
+        create_file_notification('studio/elements/2/files/8.png')
 
         self.client.post(
             url,
@@ -287,7 +284,7 @@ class RoomApiTests(TestCase):
         create_file_notification('studio/elements/3/files/9.json')
         create_file_notification('studio/elements/3/files/10.dxf')
         create_file_notification('studio/elements/3/files/11.rfa')
-        create_file_notification('studio/elements/3/files/12.jpg')
+        create_file_notification('studio/elements/3/files/12.png')
 
         self.client.post(
             url,
@@ -298,7 +295,7 @@ class RoomApiTests(TestCase):
         create_file_notification('studio/elements/4/files/13.json')
         create_file_notification('studio/elements/4/files/14.dxf')
         create_file_notification('studio/elements/4/files/15.rfa')
-        create_file_notification('studio/elements/4/files/16.jpg')
+        create_file_notification('studio/elements/4/files/16.png')
 
     def test_create_room(self):
         url = reverse('room-list')
@@ -355,8 +352,7 @@ class RoomApiTests(TestCase):
         )
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         url = reverse('room-detail', kwargs={'pk': 1})
 
@@ -394,9 +390,8 @@ class RoomApiTests(TestCase):
 
         self.client.post(url)
 
-        create_file_notification('studio/rooms/1/files/24.json')
-        create_file_notification('studio/rooms/1/files/25.dxf')
-        create_file_notification('studio/rooms/1/files/26.jpg')
+        create_file_notification('studio/rooms/1/files/23.json')
+        create_file_notification('studio/rooms/1/files/24.png')
 
         url = reverse('room-detail', kwargs={'pk': 1})
 
@@ -453,8 +448,7 @@ class RoomApiTests(TestCase):
         self.assertEqual(len(results), 0)
 
         create_file_notification('studio/rooms/1/files/1.json')
-        create_file_notification('studio/rooms/1/files/2.dxf')
-        create_file_notification('studio/rooms/1/files/3.jpg')
+        create_file_notification('studio/rooms/1/files/2.png')
 
         results = self.get_paginated(url)
 
@@ -462,9 +456,8 @@ class RoomApiTests(TestCase):
         for result in results:
             self.check_data_for_room(result)
 
-        create_file_notification('studio/rooms/2/files/4.json')
-        create_file_notification('studio/rooms/2/files/5.dxf')
-        create_file_notification('studio/rooms/2/files/6.jpg')
+        create_file_notification('studio/rooms/2/files/3.json')
+        create_file_notification('studio/rooms/2/files/4.png')
 
         results = self.get_paginated(url)
 
@@ -489,8 +482,7 @@ class RoomApiTests(TestCase):
         )
 
         create_file_notification('studio/rooms/1/files/1.json')
-        create_file_notification('studio/rooms/1/files/2.dxf')
-        create_file_notification('studio/rooms/1/files/3.jpg')
+        create_file_notification('studio/rooms/1/files/2.png')
 
         url = reverse('room-detail', kwargs={'pk': 1})
 
@@ -620,8 +612,7 @@ class RoomApiTests(TestCase):
         )
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         url = reverse(
             'room-id-version-id-changes-list',
@@ -649,9 +640,8 @@ class RoomApiTests(TestCase):
 
         self.assertEqual(len(results), 0)
 
-        create_file_notification('studio/rooms/1/files/24.json')
-        create_file_notification('studio/rooms/1/files/25.dxf')
-        create_file_notification('studio/rooms/1/files/26.jpg')
+        create_file_notification('studio/rooms/1/files/23.json')
+        create_file_notification('studio/rooms/1/files/24.png')
 
         url = reverse(
             'room-id-version-id-changes-list',
@@ -697,8 +687,7 @@ class RoomApiTests(TestCase):
         )
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         results = self.get_paginated(url)
 
@@ -709,9 +698,8 @@ class RoomApiTests(TestCase):
 
         self.client.post(url)
 
-        create_file_notification('studio/rooms/1/files/24.json')
-        create_file_notification('studio/rooms/1/files/25.dxf')
-        create_file_notification('studio/rooms/1/files/26.jpg')
+        create_file_notification('studio/rooms/1/files/23.json')
+        create_file_notification('studio/rooms/1/files/24.png')
 
         url = reverse('room-list')
 
@@ -774,8 +762,7 @@ class RoomApiTests(TestCase):
         )
 
         create_file_notification('studio/rooms/1/files/17.json')
-        create_file_notification('studio/rooms/1/files/18.dxf')
-        create_file_notification('studio/rooms/1/files/19.jpg')
+        create_file_notification('studio/rooms/1/files/18.png')
 
         results = self.get_paginated(url)
 
@@ -786,9 +773,8 @@ class RoomApiTests(TestCase):
 
         self.client.post(url)
 
-        create_file_notification('studio/rooms/1/files/24.json')
-        create_file_notification('studio/rooms/1/files/25.dxf')
-        create_file_notification('studio/rooms/1/files/26.jpg')
+        create_file_notification('studio/rooms/1/files/23.json')
+        create_file_notification('studio/rooms/1/files/24.png')
 
         url = reverse('room-list')
 

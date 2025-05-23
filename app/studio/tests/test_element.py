@@ -44,7 +44,7 @@ class TestElement(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         element_data = element.latest_valid_element_data
 
@@ -68,7 +68,7 @@ class TestElement(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         element_data = element.latest_valid_element_data
 
@@ -94,7 +94,7 @@ class TestElement(TestCase):
         create_file_notification('studio/elements/1/files/5.json')
         create_file_notification('studio/elements/1/files/6.dxf')
         create_file_notification('studio/elements/1/files/7.rfa')
-        create_file_notification('studio/elements/1/files/8.jpg')
+        create_file_notification('studio/elements/1/files/8.png')
 
         element_data = element.latest_element_data
 
@@ -241,7 +241,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         results = self.get_paginated(url)
 
@@ -252,7 +252,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/2/files/5.json')
         create_file_notification('studio/elements/2/files/6.dxf')
         create_file_notification('studio/elements/2/files/7.rfa')
-        create_file_notification('studio/elements/2/files/8.jpg')
+        create_file_notification('studio/elements/2/files/8.png')
 
         results = self.get_paginated(url)
 
@@ -279,7 +279,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         url = reverse('element-detail', kwargs={'pk': 1})
 
@@ -409,7 +409,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         url = reverse(
             'element-id-version-id-changes-list',
@@ -444,7 +444,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/9.json')
         create_file_notification('studio/elements/1/files/10.dxf')
         create_file_notification('studio/elements/1/files/11.rfa')
-        create_file_notification('studio/elements/1/files/12.jpg')
+        create_file_notification('studio/elements/1/files/12.png')
 
         url = reverse(
             'element-id-version-id-changes-list',
@@ -466,7 +466,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/13.json')
         create_file_notification('studio/elements/1/files/14.dxf')
         create_file_notification('studio/elements/1/files/15.rfa')
-        create_file_notification('studio/elements/1/files/16.jpg')
+        create_file_notification('studio/elements/1/files/16.png')
 
         url = reverse(
             'element-id-version-id-changes-list',
@@ -513,7 +513,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         results = self.get_paginated(url)
 
@@ -529,7 +529,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/9.json')
         create_file_notification('studio/elements/1/files/10.dxf')
         create_file_notification('studio/elements/1/files/11.rfa')
-        create_file_notification('studio/elements/1/files/12.jpg')
+        create_file_notification('studio/elements/1/files/12.png')
 
         url = reverse('element-list')
 
@@ -592,7 +592,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/1.json')
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
-        create_file_notification('studio/elements/1/files/4.jpg')
+        create_file_notification('studio/elements/1/files/4.png')
 
         results = self.get_paginated(url)
 
@@ -608,7 +608,7 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/9.json')
         create_file_notification('studio/elements/1/files/10.dxf')
         create_file_notification('studio/elements/1/files/11.rfa')
-        create_file_notification('studio/elements/1/files/12.jpg')
+        create_file_notification('studio/elements/1/files/12.png')
 
         url = reverse('element-list')
 
