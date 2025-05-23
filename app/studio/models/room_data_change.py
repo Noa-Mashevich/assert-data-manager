@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 
 from .data_change_type import DataChangeType
@@ -16,10 +18,6 @@ def flatten_dict(dd, separator='.', prefix=''):
     )
 
 
-# TODO: implement room-specific changes, such as:
-#  - stretch lines
-#  - room size
-#  - elements
 def compare_room_data(previous_data, current_data):
     changes = []
 
@@ -36,6 +34,48 @@ def compare_room_data(previous_data, current_data):
         return changes
 
     previous_data_flattened = flatten_dict(previous_data)
+
+    # Special processing for stretch lines.
+    previous_stretch_lines = previous_data.get('stretch_lines', [])
+    previous_data_flattened.pop('stretch_lines', None)
+    current_stretch_lines = current_data.get('stretch_lines', [])
+    current_data_flattened.pop('stretch_lines', None)
+
+    if json.dumps(current_stretch_lines) != json.dumps(previous_stretch_lines):
+        changes.append(
+            {
+                'type': DataChangeType.Major,
+                'description': f"changed value for property 'stretch_lines'",
+            }
+        )
+
+    # Special processing for room size.
+    previous_room_size = previous_data.get('Outline', [])
+    previous_data_flattened.pop('Outline', None)
+    current_room_size = current_data.get('Outline', [])
+    current_data_flattened.pop('Outline', None)
+
+    if json.dumps(current_room_size) != json.dumps(previous_room_size):
+        changes.append(
+            {
+                'type': DataChangeType.Major,
+                'description': f"changed value for property 'Outline'",
+            }
+        )
+
+    # Special processing for elements.
+    previous_elements = previous_data.get('elements', [])
+    previous_data_flattened.pop('elements', None)
+    current_elements = current_data.get('elements', [])
+    current_data_flattened.pop('elements', None)
+
+    if json.dumps(current_elements) != json.dumps(previous_elements):
+        changes.append(
+            {
+                'type': DataChangeType.Minor,
+                'description': f"changed value for property 'elements'",
+            }
+        )
 
     removed_properties = {
         x: previous_data_flattened[x]
@@ -95,6 +135,8 @@ def compare_room_data(previous_data, current_data):
                 'description': f"changed value for property '{value_changed_property_name}'",
             }
         )
+
+    changes.sort(key=lambda x: x.get('type'))
 
     return changes
 

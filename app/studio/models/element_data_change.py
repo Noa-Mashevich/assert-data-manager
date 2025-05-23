@@ -92,6 +92,8 @@ def compare_element_data(previous_data, current_data):
             }
         )
 
+    changes.sort(key=lambda x: x.get('type'))
+
     return changes
 
 

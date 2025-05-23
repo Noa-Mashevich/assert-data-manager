@@ -621,7 +621,7 @@ class RoomApiTests(TestCase):
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 34)
+        self.assertEqual(len(results), 12)
 
         for x in results:
             self.assertEqual(x.get('type'), DataChangeType.Minor)
@@ -664,16 +664,24 @@ class RoomApiTests(TestCase):
             'changed type for property' in changed_property_type.get('description')
         )
 
-        added_property = results[2]
+        changed_elements_property = results[2]
+
+        self.assertEqual(changed_elements_property.get('type'), DataChangeType.Minor)
+        self.assertTrue(
+            'changed value for property' in changed_elements_property.get('description')
+        )
+
+        added_property = results[3]
 
         self.assertEqual(added_property.get('type'), DataChangeType.Minor)
         self.assertTrue('added property' in added_property.get('description'))
 
-        changed_property_value = results[3:5]
+        changed_property_value = results[4]
 
-        for p in changed_property_value:
-            self.assertEqual(p.get('type'), DataChangeType.Patch)
-            self.assertTrue('changed value for property' in p.get('description'))
+        self.assertEqual(changed_property_value.get('type'), DataChangeType.Patch)
+        self.assertTrue(
+            'changed value for property' in changed_property_value.get('description')
+        )
 
     def test_delete_room(self):
         self.create_elements()
