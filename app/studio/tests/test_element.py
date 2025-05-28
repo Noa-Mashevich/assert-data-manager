@@ -594,28 +594,63 @@ class ElementApiTests(TestCase):
         create_file_notification('studio/elements/1/files/3.rfa')
         create_file_notification('studio/elements/1/files/4.png')
 
+        self.client.post(
+            url,
+            data='{"name": "Test name #2", "category": 6}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/elements/2/files/5.json')
+        create_file_notification('studio/elements/2/files/6.dxf')
+        create_file_notification('studio/elements/2/files/7.rfa')
+        create_file_notification('studio/elements/2/files/8.png')
+
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].get('element_data').get('version'), 1)
+        self.assertEqual(len(results), 2)
 
-        url = reverse('element-upgrade', kwargs={'pk': '1'})
+        for x in results:
+            self.assertEqual(x.get('element_data').get('version'), 1)
 
-        self.client.post(url)
+        url_1 = reverse('element-upgrade', kwargs={'pk': '1'})
+        url_2 = reverse('element-upgrade', kwargs={'pk': '2'})
 
-        self.client.post(url)
+        self.client.post(url_1)
 
         create_file_notification('studio/elements/1/files/9.json')
         create_file_notification('studio/elements/1/files/10.dxf')
         create_file_notification('studio/elements/1/files/11.rfa')
         create_file_notification('studio/elements/1/files/12.png')
 
+        self.client.post(url_2)
+
+        create_file_notification('studio/elements/2/files/13.json')
+        create_file_notification('studio/elements/2/files/14.dxf')
+        create_file_notification('studio/elements/2/files/15.rfa')
+        create_file_notification('studio/elements/2/files/16.png')
+
+        self.client.post(url_1)
+
+        create_file_notification('studio/elements/1/files/17.json')
+        create_file_notification('studio/elements/1/files/18.dxf')
+        create_file_notification('studio/elements/1/files/19.rfa')
+        create_file_notification('studio/elements/1/files/20.png')
+
+        self.client.post(url_2)
+
+        create_file_notification('studio/elements/2/files/21.json')
+        create_file_notification('studio/elements/2/files/22.dxf')
+        create_file_notification('studio/elements/2/files/23.rfa')
+        create_file_notification('studio/elements/2/files/24.png')
+
         url = reverse('element-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].get('element_data').get('version'), 3)
+        self.assertEqual(len(results), 2)
+
+        for x in results:
+            self.assertEqual(x.get('element_data').get('version'), 3)
 
         url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 3})
 
@@ -623,12 +658,23 @@ class ElementApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        url = reverse('element-id-version-list', kwargs={'element_id': '1'})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(results[0].get('element_data').get('version'), 3)
+        self.assertIsNotNone(results[0].get('element_data').get('deleted_at'))
+        self.assertEqual(results[1].get('element_data').get('version'), 2)
+        self.assertIsNone(results[1].get('element_data').get('deleted_at'))
+        self.assertEqual(results[2].get('element_data').get('version'), 1)
+        self.assertIsNone(results[2].get('element_data').get('deleted_at'))
+
         url = reverse('element-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].get('element_data').get('version'), 1)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].get('element_data').get('version'), 2)
 
         url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 2})
 
@@ -636,11 +682,22 @@ class ElementApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        url = reverse('element-id-version-list', kwargs={'element_id': '1'})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(results[0].get('element_data').get('version'), 3)
+        self.assertIsNotNone(results[0].get('element_data').get('deleted_at'))
+        self.assertEqual(results[1].get('element_data').get('version'), 2)
+        self.assertIsNotNone(results[1].get('element_data').get('deleted_at'))
+        self.assertEqual(results[2].get('element_data').get('version'), 1)
+        self.assertIsNone(results[2].get('element_data').get('deleted_at'))
+
         url = reverse('element-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
+        self.assertEqual(len(results), 2)
         self.assertEqual(results[0].get('element_data').get('version'), 1)
 
         url = reverse('element-id-version-detail', kwargs={'element_id': '1', 'pk': 1})
@@ -649,11 +706,22 @@ class ElementApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        url = reverse('element-id-version-list', kwargs={'element_id': '1'})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(results[0].get('element_data').get('version'), 3)
+        self.assertIsNotNone(results[0].get('element_data').get('deleted_at'))
+        self.assertEqual(results[1].get('element_data').get('version'), 2)
+        self.assertIsNotNone(results[1].get('element_data').get('deleted_at'))
+        self.assertEqual(results[2].get('element_data').get('version'), 1)
+        self.assertIsNotNone(results[2].get('element_data').get('deleted_at'))
+
         url = reverse('element-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 0)
+        self.assertEqual(len(results), 1)
 
         url = reverse('element-detail', kwargs={'pk': 1})
 

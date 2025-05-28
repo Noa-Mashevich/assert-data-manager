@@ -772,24 +772,43 @@ class RoomApiTests(TestCase):
         create_file_notification('studio/rooms/1/files/17.json')
         create_file_notification('studio/rooms/1/files/18.png')
 
+        self.client.post(
+            url,
+            data='{"name": "Test name #2", "category": 3, "function": "Test function #2"}',
+            content_type='application/json',
+        )
+
+        create_file_notification('studio/rooms/2/files/23.json')
+        create_file_notification('studio/rooms/2/files/24.png')
+
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].get('room_data').get('version'), 1)
+        self.assertEqual(len(results), 2)
 
-        url = reverse('room-upgrade', kwargs={'pk': '1'})
+        for x in results:
+            self.assertEqual(x.get('room_data').get('version'), 1)
 
-        self.client.post(url)
+        url_1 = reverse('room-upgrade', kwargs={'pk': '1'})
+        url_2 = reverse('room-upgrade', kwargs={'pk': '2'})
 
-        create_file_notification('studio/rooms/1/files/23.json')
-        create_file_notification('studio/rooms/1/files/24.png')
+        self.client.post(url_1)
+
+        create_file_notification('studio/rooms/1/files/25.json')
+        create_file_notification('studio/rooms/1/files/26.png')
+
+        self.client.post(url_2)
+
+        create_file_notification('studio/rooms/2/files/27.json')
+        create_file_notification('studio/rooms/2/files/28.png')
 
         url = reverse('room-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].get('room_data').get('version'), 2)
+        self.assertEqual(len(results), 2)
+
+        for x in results:
+            self.assertEqual(x.get('room_data').get('version'), 2)
 
         url = reverse('room-id-version-detail', kwargs={'room_id': '1', 'pk': 2})
 
@@ -797,11 +816,20 @@ class RoomApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        url = reverse('room-id-version-list', kwargs={'room_id': '1'})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(results[0].get('room_data').get('version'), 2)
+        self.assertIsNotNone(results[0].get('room_data').get('deleted_at'))
+        self.assertEqual(results[1].get('room_data').get('version'), 1)
+        self.assertIsNone(results[1].get('room_data').get('deleted_at'))
+
         url = reverse('room-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 1)
+        self.assertEqual(len(results), 2)
         self.assertEqual(results[0].get('room_data').get('version'), 1)
 
         url = reverse('room-id-version-detail', kwargs={'room_id': '1', 'pk': 1})
@@ -810,11 +838,20 @@ class RoomApiTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        url = reverse('room-id-version-list', kwargs={'room_id': '1'})
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(results[0].get('room_data').get('version'), 2)
+        self.assertIsNotNone(results[0].get('room_data').get('deleted_at'))
+        self.assertEqual(results[1].get('room_data').get('version'), 1)
+        self.assertIsNotNone(results[1].get('room_data').get('deleted_at'))
+
         url = reverse('room-list')
 
         results = self.get_paginated(url)
 
-        self.assertEqual(len(results), 0)
+        self.assertEqual(len(results), 1)
 
         url = reverse('room-detail', kwargs={'pk': 1})
 

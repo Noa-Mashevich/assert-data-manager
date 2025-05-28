@@ -4,6 +4,7 @@ from drf_spectacular.utils import (
 )
 from rest_framework import (
     mixins,
+    status,
     viewsets,
 )
 from rest_framework.decorators import action
@@ -109,9 +110,6 @@ class RoomViewSet(
     ),
 )
 class RoomVersionViewSet(mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet):
-    def perform_destroy(self, instance):
-        instance.destroy()
-
     def get_queryset(self):
         room_id = int(self.kwargs['room_id'])
         return RoomData.objects.filter(room_id=room_id)
@@ -124,6 +122,12 @@ class RoomVersionViewSet(mixins.DestroyModelMixin, viewsets.ReadOnlyModelViewSet
         room_data = self.get_queryset().get(version=version_id)
         serializer = RoomVersionSerializer(room_data)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        version_id = int(kwargs['pk'])
+        room_data = self.get_queryset().get(version=version_id)
+        room_data.destroy()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema_view(
