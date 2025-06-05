@@ -172,7 +172,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-region: ${AWS::Region}
+              awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref TaskLogGroup
               awslogs-stream-prefix: ecs
     DependsOn:
