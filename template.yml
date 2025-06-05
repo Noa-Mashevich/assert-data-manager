@@ -172,7 +172,7 @@ Resources:
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-region: us-west-2
+              awslogs-region: ${AWS::Region}
               awslogs-group: !Ref TaskLogGroup
               awslogs-stream-prefix: ecs
     DependsOn:
@@ -259,6 +259,9 @@ Resources:
       Subnets: !Ref PrivateSubnets
       SecurityGroups:
         - !GetAtt ServiceSecurityGroup.GroupId
+    DependsOn:
+      - TaskRolePolicy
+      - TaskExecutionRolePolicy
 
   MigrationPollerLambda:
     Type: AWS::Serverless::Function
