@@ -2,7 +2,7 @@
 
 ENVIRONMENT="dev"
 SNAPSHOT_ARN=""
-PARAMETERS="VpcId=vpc-07fd53624ee8e82e8 PrivateSubnets=subnet-00def7448f25aa454,subnet-02b9f68ab2eb0503a DeploymentEnv=${ENVIRONMENT} Database=studio InstanceType=db.t4g.small Storage=5 HighlyAvailable=false SnapshotARN=${SNAPSHOT_ARN}"
+PARAMETERS="VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-0042ba85a0b0681e7,subnet-01a1227b58daca793 DeploymentEnv=${ENVIRONMENT} Database=studio InstanceType=db.t4g.small Storage=5 HighlyAvailable=false SnapshotARN=${SNAPSHOT_ARN}"
 
 echo "build"
 sam build \
