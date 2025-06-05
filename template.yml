@@ -205,7 +205,7 @@ Resources:
           - Sid: 'iam'
             Action:
               - 'iam:PassRole'
-            Resource: !GetAtt TaskExecutionRole.Arn
+            Resource: !GetAtt TaskRole.Arn
             Effect: Allow
           - Sid: 'ecs'
             Action:
@@ -319,7 +319,6 @@ Resources:
       PolicyName: !Sub '${AWS::StackName}-execution-role-policy'
       Roles:
         - !Ref TaskExecutionRole
-
 
   QueuePollerTaskDefinition:
     Type: AWS::ECS::TaskDefinition
