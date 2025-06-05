@@ -175,6 +175,7 @@ Resources:
               awslogs-region: !Ref AWS::Region
               awslogs-group: !Ref TaskLogGroup
               awslogs-stream-prefix: ecs
+              awslogs-create-group: true
     DependsOn:
       - TaskExecutionRolePolicy
       - TaskRolePolicy
@@ -343,6 +344,7 @@ Resources:
               awslogs-group: !Ref TaskLogGroup
               awslogs-stream-prefix: !Sub '${AWS::StackName}-storage-queue-poller'
               awslogs-region: !Ref AWS::Region
+              awslogs-create-group: true
       Cpu: 256
       Memory: 512
       ExecutionRoleArn: !GetAtt TaskExecutionRole.Arn
@@ -396,6 +398,7 @@ Resources:
               awslogs-group: !Ref TaskLogGroup
               awslogs-stream-prefix: !Sub '${AWS::StackName}-service'
               awslogs-region: !Ref AWS::Region
+              awslogs-create-group: true
           Name: studio
           PortMappings:
             - ContainerPort: !Ref ContainerPort
