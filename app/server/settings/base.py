@@ -100,7 +100,7 @@ sentry_sdk.init(
 
 QUEUE_URL = os.getenv('QUEUE_URL')
 
-AWS_REGION = 'us-west-2'
+AWS_REGION = os.getenv('AWS_DEFAULT_REGION', 'us-east-1')
 
 AWS_CLIENT_S3 = boto3.client('s3', region_name=AWS_REGION)
 AWS_CLIENT_SQS = boto3.client('sqs', region_name=AWS_REGION)

@@ -1,0 +1,8 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "e2e-dev-studio"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_prefix = "studio_dev"
+region = "us-west-2"
+capabilities = "CAPABILITY_IAM"

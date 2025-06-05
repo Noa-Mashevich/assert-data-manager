@@ -1,0 +1,215 @@
+name: Studio CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+      - staging-clean
+      - production
+  pull_request:
+    branches:
+      - main
+      - staging
+      - production
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
+  ECR_REPOSITORY: veev
+  ECR_HOST: 505794203161.dkr.ecr.us-east-1.amazonaws.com
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.8'
+
+      - name: Lint
+        run: |
+          pip install -r requirements.txt
+          black -S app/studio --force-exclude migrations --line-length 90 --check
+
+      - name: Test
+        run: |
+          python app/manage.py test studio
+
+  undeploy-app:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/staging-clean'
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Undeploy staging
+        run: |
+          aws cloudformation delete-stack --stack-name=veev-staging-studio
+          aws cloudformation wait stack-delete-complete --stack-name=veev-staging-studio
+
+  build-deploy:
+    runs-on: ubuntu-latest
+    needs: [undeploy-app]
+    if: |
+      github.ref == 'refs/heads/staging-clean'
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set environment variables
+        id: set-env
+        run: |
+          echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+          echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
+          echo "ALB_PRIORITY=351" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Check migrations
+        run: |
+          docker run ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} python manage.py makemigrations
+          docker run ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} python manage.py showmigrations
+
+      - name: Lookup RDS SecurityGroup
+        run: |
+          RDS_SG=$(aws cloudformation describe-stacks --stack-name=veev-${{ env.ENVIRONMENT }}-studio-db --query="Stacks[0].Outputs[?OutputKey=='SecurityGroup'].OutputValue" --output text)
+          echo "Found RDS Security Group: ${RDS_SG}"
+          echo "RDS_SG=${RDS_SG}" >> $GITHUB_ENV
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: SAM Build
+        run: |
+          sam build \
+            --template-file template.yml \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=e2e-prod-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --parallel
+
+      - name: SAM Deploy
+        run: |
+          sam deploy \
+            --stack-name veev-${{ env.ENVIRONMENT }}-studio \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=e2e-prod-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --image-repository "${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}" \
+            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
+            --s3-prefix veev_{{ env.ENVIRONMENT }}_studio \
+            --capabilities CAPABILITY_IAM \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --tags "org=veev app=studio env=${{ env.ENVIRONMENT }} ApplicationName=\"Studio BE\" ApplicationOwner=\"Adam Konrad\" Environment=${{ env.ENVIRONMENT }}"
+
+  build-deploy-direct:
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/main' || 
+      github.ref == 'refs/heads/staging' || 
+      github.ref == 'refs/heads/production'
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Set environment variables
+        id: set-env
+        run: |
+          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-dev-storage-Topic-Y4FPKrAfZb6X" >> $GITHUB_ENV
+            echo "ALB_PRIORITY=352" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF == 'refs/heads/staging' ]]; then
+            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
+            echo "ALB_PRIORITY=351" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF == 'refs/heads/production' ]]; then
+            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+            echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
+            echo "ALB_PRIORITY=350" >> $GITHUB_ENV
+          fi
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Check migrations
+        run: |
+          docker run ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} python manage.py makemigrations
+          docker run ${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} python manage.py showmigrations
+
+      - name: Lookup RDS SecurityGroup
+        run: |
+          RDS_SG=$(aws cloudformation describe-stacks --stack-name=veev-${{ env.ENVIRONMENT }}-studio-db --query="Stacks[0].Outputs[?OutputKey=='SecurityGroup'].OutputValue" --output text)
+          echo "Found RDS Security Group: ${RDS_SG}"
+          echo "RDS_SG=${RDS_SG}" >> $GITHUB_ENV
+
+      - name: Setup SAM CLI
+        uses: aws-actions/setup-sam@v2
+
+      - name: SAM Build
+        run: |
+          sam build \
+            --template-file template.yml \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=veev-web-app-cluster PublicALBSecurityGroupId=sg-0436281ce6efaa795 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-web-app-alb/4c6d92b4040996e3/2c806710d027f315 RDSSecurityGroup=${RDS_SG} VpcId=vpc-07fd53624ee8e82e8 PrivateSubnets=subnet-00def7448f25aa454,subnet-02b9f68ab2eb0503a ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --config-file veevsamconfig.toml \
+            --parallel
+
+      - name: SAM Deploy
+        run: |
+          sam deploy \
+            --stack-name veev-${{ env.ENVIRONMENT }}-studio \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=veev-web-app-cluster PublicALBSecurityGroupId=sg-0436281ce6efaa795 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-web-app-alb/4c6d92b4040996e3/2c806710d027f315 RDSSecurityGroup=${RDS_SG} VpcId=vpc-07fd53624ee8e82e8 PrivateSubnets=subnet-00def7448f25aa454,subnet-02b9f68ab2eb0503a ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --image-repository "${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}" \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --tags "org=veev app=studio env=${{ env.ENVIRONMENT }} ApplicationName=\"Studio BE\" ApplicationOwner=\"Adam Konrad\" Environment=${{ env.ENVIRONMENT }}" \
+            --config-file veevsamconfig.toml

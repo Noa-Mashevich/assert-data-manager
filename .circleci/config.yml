@@ -7,8 +7,8 @@ executors:
 
 orbs:
   docker: circleci/docker@2.5.0
-  sam: circleci/aws-sam-serverless@3.2.0
-  aws-cli: circleci/aws-cli@3.1.3
+  sam: circleci/aws-sam-serverless@6.1.0
+  aws-cli: circleci/aws-cli@5.4.0
 
 commands:
   fast_checkout:
@@ -34,11 +34,11 @@ commands:
           name: Test
           command: |
             # TODO figure out a way to use the container
-            python app/manage.py test studio
+            DJANGO_SETTINGS_MODULE=server.settings.e2e-local python app/manage.py test studio
 
   sam_build_deploy:
     parameters:
-      stack-name:
+      stack_name:
         type: string
       environment:
         type: string
@@ -56,13 +56,14 @@ commands:
             sam build \
               --template-file <<parameters.template>> \
               --parameter-overrides "<<parameters.overrides>>" \
-              --parallel
+              --parallel \
+              --config-file e2esamconfig.toml
       - run:
           name: SAM Deploy
           no_output_timeout: 30m
           command: |
             sam deploy \
-              --stack-name <<parameters.stack-name>> \
+              --stack-name <<parameters.stack_name>> \
               --parameter-overrides "<<parameters.overrides>>" \
               --image-repository "052457202381.dkr.ecr.us-west-2.amazonaws.com/e2e" \
               --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
@@ -70,46 +71,17 @@ commands:
               --capabilities CAPABILITY_IAM \
               --no-confirm-changeset \
               --no-fail-on-empty-changeset \
-              --tags "<<parameters.tags>>"
-
-  undeploy:
-    parameters:
-      environment:
-        type: string
-      stack-name:
-        type: string
-    steps:
-      - aws-cli/setup:
-          role-arn: ${AWS_ROLE_ARN}
-      - run:
-          name: Undeploy <<parameters.environment>>
-          command: |
-            if [ "<<parameters.environment>>" = "prod" ]; then
-              echo "Undeploying prod environment is not allowed."
-              exit 1
-            fi
-            aws cloudformation delete-stack --stack-name=<<parameters.stack-name>>
-            aws cloudformation wait stack-delete-complete --stack-name=<<parameters.stack-name>>
+              --tags "<<parameters.tags>>" \
+              --config-file e2esamconfig.toml
 
 jobs:
   lint-test:
     steps:
       - aws-cli/setup:
-          role-arn: ${AWS_ROLE_ARN}
+          role_arn: ${AWS_ROLE_ARN}
       - fast_checkout
       - lint
       - test
-    executor: default
-    resource_class: large
-
-  undeploy-app:
-    parameters:
-      environment:
-        type: string
-    steps:
-      - undeploy:
-          environment: <<parameters.environment>>
-          stack-name: e2e-<<parameters.environment>>-studio
     executor: default
     resource_class: large
 
@@ -131,7 +103,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - aws-cli/setup:
-          role-arn: ${AWS_ROLE_ARN}
+          role_arn: ${AWS_ROLE_ARN}
       - sam/install
       - fast_checkout
       - run:
@@ -165,11 +137,12 @@ jobs:
             echo "Found RDS Security Group: ${RDS_SG}"
             echo "export RDS_SG=${RDS_SG}" >> ${BASH_ENV}
       - sam_build_deploy:
-          stack-name: e2e-<<parameters.environment>>-studio
+          stack_name: e2e-<<parameters.environment>>-studio
           environment: <<parameters.environment>>
           overrides: >-
             StudioImage=${APP_IMAGE_PATH}
             DeploymentEnv=<<parameters.environment>>
+            Settings=e2e-<<parameters.environment>>
             Cluster=e2e-prod-core
             PublicALBSecurityGroupId=sg-0989ce36f62da2ae7
             PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0
@@ -201,9 +174,6 @@ workflows:
             branches:
               ignore:
                 - main
-                - staging
-                - staging-clean
-                - production
       - build-deploy:
           context: aws
           environment: 'dev'
@@ -212,35 +182,3 @@ workflows:
           filters:
             branches:
               only: main
-      - undeploy-app:
-          environment: 'staging'
-          context: aws
-          filters:
-            branches:
-              only: staging-clean
-      - build-deploy:
-          context: aws
-          environment: 'staging'
-          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-staging-storage-Topic-nQjaiemFAnkO'
-          alb_priority: 351
-          requires:
-            - undeploy-app
-          filters:
-            branches:
-              only: staging-clean
-      - build-deploy:
-          context: aws
-          environment: 'staging'
-          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-staging-storage-Topic-nQjaiemFAnkO'
-          alb_priority: 351
-          filters:
-            branches:
-              only: staging
-      - build-deploy:
-          context: aws
-          environment: 'prod'
-          storage_topic_arn: 'arn:aws:sns:us-west-2:052457202381:e2e-prod-storage-Topic-BK2lrnhs7qwu'
-          alb_priority: 350
-          filters:
-            branches:
-              only: production

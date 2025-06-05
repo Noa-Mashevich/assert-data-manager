@@ -2,21 +2,21 @@ version = 0.1
 
 [dev.deploy.parameters]
 stack_name = "e2e-dev-studio"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_bucket = "veev-aws-sam-cli-managed1"
 s3_prefix = "studio_dev"
-region = "us-west-2"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 
 [staging.deploy.parameters]
 stack_name = "e2e-staging-studio"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_bucket = "???"
 s3_prefix = "studio_staging"
-region = "us-west-2"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
 
 [prod.deploy.parameters]
 stack_name = "e2e-prod-studio"
-s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft"
+s3_bucket = "???"
 s3_prefix = "studio_prod"
-region = "us-west-2"
+region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
