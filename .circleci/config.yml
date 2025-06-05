@@ -142,6 +142,7 @@ jobs:
           overrides: >-
             StudioImage=${APP_IMAGE_PATH}
             DeploymentEnv=<<parameters.environment>>
+            Prefix=e2e
             Settings=e2e-<<parameters.environment>>
             Cluster=e2e-prod-core
             PublicALBSecurityGroupId=sg-0989ce36f62da2ae7

@@ -8,7 +8,7 @@ Metadata: &config
     - Name: DEPLOYMENT_ENV
       Value: !Ref DeploymentEnv
     - Name: DJANGO_SETTINGS_MODULE
-      Value: !Sub 'server.settings.${Settings}'
+      Value: !Sub 'server.settings.${Prefix}-${DeploymentEnv}'
     - Name: QUEUE_URL
       Value: !Ref Queue
   Secrets:
@@ -26,7 +26,7 @@ Parameters:
     Type: List<AWS::EC2::Subnet::Id>
   DeploymentEnv:
     Type: String
-  Settings:
+  Prefix:
     Type: String
   Cluster:
     Type: String
@@ -115,29 +115,29 @@ Resources:
         Statement:
           - Action: cloudformation:DescribeStacks
             Effect: Allow
-            Resource: !Sub 'arn:aws:cloudformation:*:${AWS::AccountId}:stack/veev-${DeploymentEnv}-*'
+            Resource: !Sub 'arn:aws:cloudformation:*:${AWS::AccountId}:stack/${Prefix}-${DeploymentEnv}-*'
           - Action: ssm:GetParameter
             Effect: Allow
-            Resource: !Sub 'arn:aws:ssm:*:${AWS::AccountId}:parameter/veev-${DeploymentEnv}-*'
+            Resource: !Sub 'arn:aws:ssm:*:${AWS::AccountId}:parameter/${Prefix}-${DeploymentEnv}-*'
           - Action: lambda:InvokeFunction
             Effect: Allow
-            Resource: !Sub 'arn:aws:lambda:*:${AWS::AccountId}:function:veev-${DeploymentEnv}-*'
+            Resource: !Sub 'arn:aws:lambda:*:${AWS::AccountId}:function:${Prefix}-${DeploymentEnv}-*'
           - Action: sns:Publish
             Effect: Allow
-            Resource: !Sub 'arn:aws:sns:*:${AWS::AccountId}:veev-${DeploymentEnv}-*'
+            Resource: !Sub 'arn:aws:sns:*:${AWS::AccountId}:${Prefix}-${DeploymentEnv}-*'
           - Action:
               - sqs:SendMessage
               - sqs:ReceiveMessage
               - sqs:DeleteMessage
             Effect: Allow
-            Resource: !Sub 'arn:aws:sqs:*:${AWS::AccountId}:veev-${DeploymentEnv}-*'
+            Resource: !Sub 'arn:aws:sqs:*:${AWS::AccountId}:${Prefix}-${DeploymentEnv}-*'
           - Action:
               - s3:GetObject
               - s3:PutObject
               - s3:PutObjectAcl
             Effect: Allow
             Resource:
-              - !Sub 'arn:aws:s3:::veev-${DeploymentEnv}-storage/*'
+              - !Sub 'arn:aws:s3:::${Prefix}-${DeploymentEnv}-storage/*'
       PolicyName: !Sub '${AWS::StackName}-task-role-policy'
       Roles:
         - !Ref TaskRole
@@ -303,7 +303,7 @@ Resources:
               - ecr:BatchGetImage
               - ecr:GetDownloadUrlForLayer
             Effect: Allow
-            Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/e2e'
+            Resource: !Sub 'arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${Prefix}'
           - Action: ecr:GetAuthorizationToken
             Effect: Allow
             Resource: '*'
@@ -496,7 +496,7 @@ Resources:
       Conditions:
         - Field: http-header
           HttpHeaderConfig:
-            HttpHeaderName: x-e2e-app
+            HttpHeaderName: !Sub 'x-${Prefix}-app'
             Values:
               - !Ref AWS::StackName
       ListenerArn: !Ref PublicALBHTTPSListenerArn
