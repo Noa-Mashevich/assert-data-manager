@@ -8,6 +8,7 @@ ecs = boto3.client('ecs')
 def run_task(cluster, task_definition, subnets, security_groups):
     response = ecs.run_task(
         cluster=cluster,
+        launchType='FARGATE',
         networkConfiguration={
             'awsvpcConfiguration': {
                 'subnets': subnets,

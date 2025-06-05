@@ -124,14 +124,14 @@ jobs:
         run: |
           sam build \
             --template-file template.yml \
-            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=e2e-prod-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --parallel
 
       - name: SAM Deploy
         run: |
           sam deploy \
             --stack-name veev-${{ env.ENVIRONMENT }}-studio \
-            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=e2e-prod-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-0989ce36f62da2ae7 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-west-2:052457202381:listener/app/e2e-prod-core-public/fb3b6a1bd7e27679/9ab155a6201d87e0 PublicALBDNSRecord=e2e-prod-core-public-alb.modsy.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0df37fa28593dad4e PrivateSubnets=subnet-0bc5a566f52ea1e09,subnet-0aa84d4f12dbfb323 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --image-repository "${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}" \
             --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
             --s3-prefix veev_{{ env.ENVIRONMENT }}_studio \
