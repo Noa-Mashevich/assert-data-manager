@@ -205,7 +205,9 @@ Resources:
           - Sid: 'iam'
             Action:
               - 'iam:PassRole'
-            Resource: !GetAtt TaskRole.Arn
+            Resource:
+              - !GetAtt TaskRole.Arn
+              - !GetAtt TaskExecutionRole.Arn
             Effect: Allow
           - Sid: 'ecs'
             Action:
