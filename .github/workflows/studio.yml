@@ -210,6 +210,7 @@ jobs:
             --template-file template.yml \
             --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Settings=${{ env.ENVIRONMENT }} Cluster=veev-web-app-cluster PublicALBSecurityGroupId=sg-0436281ce6efaa795 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-web-app-alb/4c6d92b4040996e3/2c806710d027f315 RDSSecurityGroup=${RDS_SG} VpcId=vpc-07fd53624ee8e82e8 PrivateSubnets=subnet-00def7448f25aa454,subnet-02b9f68ab2eb0503a ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --config-file veevsamconfig.toml \
+            --config-env ${{ env.ENVIRONMENT }} \
             --parallel
 
       - name: SAM Deploy
@@ -221,4 +222,5 @@ jobs:
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
             --tags "org=veev app=studio env=${{ env.ENVIRONMENT }} ApplicationName=\"Studio BE\" ApplicationOwner=\"Adam Konrad\" Environment=${{ env.ENVIRONMENT }}" \
-            --config-file veevsamconfig.toml
+            --config-file veevsamconfig.toml \
+            --config-env ${{ env.ENVIRONMENT }}
