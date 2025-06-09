@@ -1,31 +1,30 @@
 from django.db import models
-from django.utils import timezone
-from enum import IntEnum
+from enum import Enum
 
 from .entity_type import EntityType
 
 
-class ElementCategory(IntEnum):
-    ElementCategoryNone = 0
-    Wall = 1
-    Floor = 2
-    Ceiling = 3
-    StructuralFoundation = 4
-    Roof = 5
-    Door = 6
-    Window = 7
-    Fascia = 8
-    GenericModel = 9
-    StructuralColumn = 10
-    ElectricalFixture = 11
-    MechanicalEquipment = 12
-    PlumbingFixture = 13
-    LightingFixture = 14
-    SpecialtyEquipment = 15
-    Casework = 16
-    Staircase = 17
-    Railing = 18
-    Furniture = 19
+class ElementCategory(Enum):
+    ElementCategoryNone = ''
+    Wall = 'wall'
+    Floor = 'floor'
+    Ceiling = 'ceiling'
+    StructuralFoundation = 'structural_foundation'
+    Roof = 'roof'
+    Door = 'door'
+    Window = 'window'
+    Fascia = 'fascia'
+    GenericModel = 'generic_model'
+    StructuralColumn = 'structural_column'
+    ElectricalFixture = 'electrical_fixture'
+    MechanicalEquipment = 'mechanical_equipment'
+    PlumbingFixture = 'plumbing_fixture'
+    LightingFixture = 'lighting_fixture'
+    SpecialtyEquipment = 'special_equipment'
+    Casework = 'casework'
+    Staircase = 'staircase'
+    Railing = 'railing'
+    Furniture = 'furniture'
 
 
 class ElementManager(models.Manager):
@@ -41,7 +40,7 @@ class ElementManager(models.Manager):
 
 class Element(models.Model):
     name = models.TextField(default='')
-    category = models.IntegerField(default=ElementCategory.ElementCategoryNone)
+    category = models.TextField(default=ElementCategory.ElementCategoryNone)
 
     objects = ElementManager()
 

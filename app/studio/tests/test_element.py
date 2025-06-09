@@ -190,7 +190,7 @@ class ElementApiTests(TestCase):
 
         response = self.client.post(
             url,
-            data='{"category": 6}',
+            data='{"category": "door"}',
             content_type='application/json',
         )
 
@@ -206,7 +206,7 @@ class ElementApiTests(TestCase):
 
         response = self.client.post(
             url,
-            data='{"name": "Test name", "category": 6}',
+            data='{"name": "Test name", "category": "door"}',
             content_type='application/json',
         )
 
@@ -225,12 +225,12 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 6}',
+            data='{"name": "Test name #2", "category": "door"}',
             content_type='application/json',
         )
 
@@ -272,7 +272,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
 
@@ -296,7 +296,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
 
@@ -327,12 +327,12 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 6}',
+            data='{"name": "Test name #2", "category": "door"}',
             content_type='application/json',
         )
 
@@ -361,12 +361,12 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 6}',
+            data='{"name": "Test name #2", "category": "door"}',
             content_type='application/json',
         )
 
@@ -402,7 +402,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "WD_Single Hung 3050", "category": 7}',
+            data='{"name": "WD_Single Hung 3050", "category": "window"}',
             content_type='application/json',
         )
 
@@ -506,7 +506,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
 
@@ -585,7 +585,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 6}',
+            data='{"name": "Test name #1", "category": "door"}',
             content_type='application/json',
         )
 
@@ -596,7 +596,7 @@ class ElementApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 6}',
+            data='{"name": "Test name #2", "category": "door"}',
             content_type='application/json',
         )
 

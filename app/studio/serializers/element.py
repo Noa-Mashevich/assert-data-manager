@@ -25,7 +25,7 @@ class ElementWriteSerializer(ModelSerializer):
             raise serializers.ValidationError('Name is not valid')
 
         category = data.get('category')
-        if category is None or category not in set(ElementCategory):
+        if category is None or category not in [x.value for x in ElementCategory]:
             raise serializers.ValidationError('Category is not valid')
 
         return data
@@ -76,7 +76,7 @@ class ElementUpgradeSerializer(ModelSerializer):
 class ElementVersionReadSerializer(ModelSerializer):
     id = serializers.IntegerField(source='element_id')
     name = serializers.CharField(source='element.name')
-    category = serializers.IntegerField(source='element.category')
+    category = serializers.CharField(source='element.category')
     element_data = ElementDataReadSerializer(source='*')
 
     class Meta:
