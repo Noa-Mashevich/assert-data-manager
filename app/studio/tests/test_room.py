@@ -314,7 +314,7 @@ class RoomApiTests(TestCase):
 
         response = self.client.post(
             url,
-            data='{"category": 6}',
+            data='{"category": "closet"}',
             content_type='application/json',
         )
 
@@ -330,7 +330,7 @@ class RoomApiTests(TestCase):
 
         response = self.client.post(
             url,
-            data='{"name": "Test name", "category": 3, "function": "Test function"}',
+            data='{"name": "Test name", "category": "closet", "function": "Test function"}',
             content_type='application/json',
         )
 
@@ -347,7 +347,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -434,12 +434,12 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 3, "function": "Test function #2"}',
+            data='{"name": "Test name #2", "category": "kitchen", "function": "Test function #2"}',
             content_type='application/json',
         )
 
@@ -477,7 +477,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -499,7 +499,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -530,12 +530,12 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 3, "function": "Test function #2"}',
+            data='{"name": "Test name #2", "category": "kitchen", "function": "Test function #2"}',
             content_type='application/json',
         )
 
@@ -564,12 +564,12 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 3, "function": "Test function #2"}',
+            data='{"name": "Test name #2", "category": "kitchen", "function": "Test function #2"}',
             content_type='application/json',
         )
 
@@ -607,7 +607,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -690,7 +690,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -765,7 +765,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #1", "category": 3, "function": "Test function #1"}',
+            data='{"name": "Test name #1", "category": "kitchen", "function": "Test function #1"}',
             content_type='application/json',
         )
 
@@ -774,7 +774,7 @@ class RoomApiTests(TestCase):
 
         self.client.post(
             url,
-            data='{"name": "Test name #2", "category": 3, "function": "Test function #2"}',
+            data='{"name": "Test name #2", "category": "kitchen", "function": "Test function #2"}',
             content_type='application/json',
         )
 

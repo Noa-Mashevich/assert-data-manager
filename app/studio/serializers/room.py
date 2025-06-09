@@ -27,7 +27,7 @@ class RoomWriteSerializer(ModelSerializer):
             raise serializers.ValidationError('Name is not valid')
 
         category = data.get('category')
-        if category is None or category not in set(RoomCategory):
+        if category is None or category not in [x.value for x in RoomCategory]:
             raise serializers.ValidationError('Category is not valid')
 
         function = data.get('function')
@@ -82,7 +82,7 @@ class RoomUpgradeSerializer(ModelSerializer):
 class RoomVersionSerializer(ModelSerializer):
     id = serializers.IntegerField(source='room_id')
     name = serializers.CharField(source='room.name')
-    category = serializers.IntegerField(source='room.category')
+    category = serializers.CharField(source='room.category')
     function = serializers.CharField(source='room.function')
     type = serializers.CharField(source='room.type')
     room_data = RoomDataReadSerializer(source='*')

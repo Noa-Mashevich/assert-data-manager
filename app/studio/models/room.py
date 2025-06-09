@@ -1,23 +1,22 @@
 from django.db import models
-from django.utils import timezone
-from enum import IntEnum
+from enum import Enum
 
 from .entity_type import EntityType
 
 
-class RoomCategory(IntEnum):
-    RoomCategoryNone = 0
-    LivingRoom = 1
-    DiningRoom = 2
-    Kitchen = 3
-    Bedroom = 4
-    Loft = 5
-    Closet = 6
-    Corridor = 7
-    Stairs = 8
-    UtilityRoom = 9
-    Garage = 10
-    OutdoorArea = 11
+class RoomCategory(Enum):
+    RoomCategoryNone = ''
+    LivingRoom = 'living_room'
+    DiningRoom = 'dining_room'
+    Kitchen = 'kitchen'
+    Bedroom = 'bedroom'
+    Loft = 'loft'
+    Closet = 'closet'
+    Corridor = 'corridor'
+    Stairs = 'stairs'
+    UtilityRoom = 'utility_room'
+    Garage = 'garage'
+    OutdoorArea = 'outdoor_area'
 
 
 class RoomManager(models.Manager):
@@ -33,7 +32,7 @@ class RoomManager(models.Manager):
 
 class Room(models.Model):
     name = models.TextField(default='')
-    category = models.IntegerField(default=RoomCategory.RoomCategoryNone)
+    category = models.TextField(default=RoomCategory.RoomCategoryNone)
     function = models.TextField(default='')
     type = models.TextField(default='')
 
