@@ -99,6 +99,10 @@ class FileManager(models.Manager):
             if file.type == FileType.Json:
                 file_ownership.room_data.track_changes()
 
+        if file_ownership.get_entity_type() == EntityType.RoomElement:
+            if file.type == FileType.Json:
+                file_ownership.room_element.track_changes()
+
 
 class File(models.Model):
     type = models.IntegerField()

@@ -1,5 +1,7 @@
+import hashlib
 import json
 
+from collections import OrderedDict
 from django.db import (
     models,
     transaction,
@@ -80,6 +82,7 @@ class RoomDataManager(models.Manager):
 class RoomData(models.Model):
     room = models.ForeignKey(Room, on_delete=models.RESTRICT)
     version = models.BigIntegerField()
+    data = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)
@@ -114,7 +117,12 @@ class RoomData(models.Model):
         return RoomElement.objects.filter(room_data=self, deleted_at__isnull=True)
 
     @property
-    def data(self):
+    def data_hash(self):
+        hash_data = dict(OrderedDict(sorted(self.data.items())))
+        content = json.dumps(hash_data).encode('utf-8')
+        return hashlib.md5(content).hexdigest()
+
+    def get_data_from_file(self):
         from .file import File
         from .file_type import FileType
 
@@ -146,6 +154,9 @@ class RoomData(models.Model):
         from .room_data_change import RoomDataChange
         from .room_element import RoomElement
 
+        self.data = self.get_data_from_file()
+        self.save(is_updating=True)
+
         previous_room_data = RoomData.objects.previous(self)
 
         RoomDataChange.objects.create_from_data_comparison(previous_room_data, self)
@@ -154,10 +165,10 @@ class RoomData(models.Model):
 
     def destroy(self):
         self.deleted_at = timezone.now()
-        self.save(is_destroying=True)
+        self.save(is_updating=True)
 
-    def save(self, is_destroying=False, *args, **kwargs):
-        # Insert a new record when not destroying.
-        if not is_destroying:
+    def save(self, is_updating=False, *args, **kwargs):
+        # Insert a new record when not updating.
+        if not is_updating:
             self.pk = None
         super().save(*args, **kwargs)

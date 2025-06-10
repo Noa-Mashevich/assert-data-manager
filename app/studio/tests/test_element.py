@@ -131,9 +131,6 @@ class ElementApiTests(TestCase):
         self.assertIsNotNone(data.get('id'))
         self.assertIsNotNone(data.get('version'))
         self.assertIsNotNone(data.get('status'))
-        self.assertIsNotNone(data.get('created_at'))
-        self.assertIsNotNone(data.get('updated_at'))
-        self.assertIsNone(data.get('deleted_at'))
 
         files = data.get('files')
 
@@ -142,6 +139,13 @@ class ElementApiTests(TestCase):
 
         for x in files:
             self.check_data_for_file(x)
+
+        self.assertIsNotNone(data.get('data'))
+        self.assertIsNotNone(data.get('data_hash'))
+
+        self.assertIsNotNone(data.get('created_at'))
+        self.assertIsNotNone(data.get('updated_at'))
+        self.assertIsNone(data.get('deleted_at'))
 
     def check_data_for_file(self, data):
         self.assertIsNotNone(data.get('id'))

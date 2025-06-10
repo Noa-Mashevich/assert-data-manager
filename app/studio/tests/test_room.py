@@ -187,9 +187,6 @@ class RoomApiTests(TestCase):
         self.assertIsNotNone(data.get('id'))
         self.assertIsNotNone(data.get('version'))
         self.assertIsNotNone(data.get('status'))
-        self.assertIsNotNone(data.get('created_at'))
-        self.assertIsNotNone(data.get('updated_at'))
-        self.assertIsNone(data.get('deleted_at'))
 
         files = data.get('files')
 
@@ -205,6 +202,13 @@ class RoomApiTests(TestCase):
 
         for x in room_elements:
             self.check_data_for_room_element(x)
+
+        self.assertIsNotNone(data.get('data'))
+        self.assertIsNotNone(data.get('data_hash'))
+
+        self.assertIsNotNone(data.get('created_at'))
+        self.assertIsNotNone(data.get('updated_at'))
+        self.assertIsNone(data.get('deleted_at'))
 
     def check_data_for_file(self, data):
         self.assertIsNotNone(data.get('id'))
@@ -231,6 +235,9 @@ class RoomApiTests(TestCase):
 
         for x in files:
             self.check_data_for_file(x)
+
+        self.assertIsNotNone(data.get('data'))
+        self.assertIsNotNone(data.get('data_hash'))
 
     def get_paginated(self, url, previous_results=None):
         all_results = previous_results if previous_results else []
@@ -368,14 +375,23 @@ class RoomApiTests(TestCase):
 
         self.assertEqual(len(room_elements), 2)
 
-        self.assertEqual(room_elements[0].get('room_id'), 1)
-        self.assertEqual(room_elements[0].get('room_version'), 1)
-        self.assertEqual(room_elements[0].get('element_id'), 1)
-        self.assertEqual(room_elements[0].get('element_version'), 1)
-        self.assertEqual(room_elements[1].get('room_id'), 1)
-        self.assertEqual(room_elements[1].get('room_version'), 1)
-        self.assertEqual(room_elements[1].get('element_id'), 2)
-        self.assertEqual(room_elements[1].get('element_version'), 1)
+        roomelement_0 = room_elements[0]
+        roomelement_1 = room_elements[1]
+
+        self.assertEqual(roomelement_0.get('room_id'), 1)
+        self.assertEqual(roomelement_0.get('room_version'), 1)
+        self.assertEqual(roomelement_0.get('element_id'), 1)
+        self.assertEqual(roomelement_0.get('element_version'), 1)
+        self.assertEqual(roomelement_1.get('room_id'), 1)
+        self.assertEqual(roomelement_1.get('room_version'), 1)
+        self.assertEqual(roomelement_1.get('element_id'), 2)
+        self.assertEqual(roomelement_1.get('element_version'), 1)
+
+        for room_element in room_elements:
+            self.assertEqual(room_element.get('data'), {})
+            self.assertEqual(
+                room_element.get('data_hash'), '99914b932bd37a50b983c5e7c90ae93b'
+            )
 
         for x in room_elements:
             files = x.get('files')
@@ -385,6 +401,27 @@ class RoomApiTests(TestCase):
             for y in files:
                 self.assertIsNone(y.get('download_url'))
                 self.assertIsNotNone(y.get('upload_url'))
+
+        create_file_notification('studio/roomelements/1/files/19.json')
+        create_file_notification('studio/roomelements/2/files/21.json')
+
+        url = reverse('room-detail', kwargs={'pk': 1})
+
+        response = self.client.get(url)
+
+        data = json.loads(response.content)
+
+        self.check_data_for_room(data)
+
+        room_elements = data.get('room_data').get('elements')
+
+        for room_element in room_elements:
+            data = room_element.get('data')
+            self.assertIsNotNone(data)
+            self.assertGreater(len(data), 0)
+            self.assertNotEqual(
+                room_element.get('data_hash'), '99914b932bd37a50b983c5e7c90ae93b'
+            )
 
         url = reverse('room-upgrade', kwargs={'pk': '1'})
 

@@ -21,6 +21,8 @@ class RoomElementSerializer(ModelSerializer):
             'element_id',
             'element_version',
             'files',
+            'data',
+            'data_hash',
             'created_at',
             'updated_at',
             'deleted_at',

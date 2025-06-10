@@ -1,6 +1,11 @@
+import hashlib
 import json
 
-from django.db import models, transaction
+from collections import OrderedDict
+from django.db import (
+    models,
+    transaction,
+)
 from django.utils import timezone
 
 from server.utils import (
@@ -83,6 +88,7 @@ class ElementDataManager(models.Manager):
 class ElementData(models.Model):
     element = models.ForeignKey(Element, on_delete=models.RESTRICT)
     version = models.BigIntegerField()
+    data = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)
@@ -111,7 +117,12 @@ class ElementData(models.Model):
         return File.objects.filter(ownership__element_data=self)
 
     @property
-    def data(self):
+    def data_hash(self):
+        hash_data = dict(OrderedDict(sorted(self.data.items())))
+        content = json.dumps(hash_data).encode('utf-8')
+        return hashlib.md5(content).hexdigest()
+
+    def get_data_from_file(self):
         from .file import File
         from .file_type import FileType
 
@@ -142,16 +153,19 @@ class ElementData(models.Model):
     def track_changes(self):
         from .element_data_change import ElementDataChange
 
+        self.data = self.get_data_from_file()
+        self.save(is_updating=True)
+
         previous_element_data = ElementData.objects.previous(self)
 
         ElementDataChange.objects.create_from_data_comparison(previous_element_data, self)
 
     def destroy(self):
         self.deleted_at = timezone.now()
-        self.save(is_destroying=True)
+        self.save(is_updating=True)
 
-    def save(self, is_destroying=False, *args, **kwargs):
-        # Insert a new record when not destroying.
-        if not is_destroying:
+    def save(self, is_updating=False, *args, **kwargs):
+        # Insert a new record when not updating.
+        if not is_updating:
             self.pk = None
         super().save(*args, **kwargs)

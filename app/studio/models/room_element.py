@@ -1,5 +1,7 @@
+import hashlib
 import json
 
+from collections import OrderedDict
 from django.db import models
 from django.utils import timezone
 
@@ -50,6 +52,7 @@ class RoomElementManager(models.Manager):
 class RoomElement(models.Model):
     room_data = models.ForeignKey(RoomData, null=True, on_delete=models.RESTRICT)
     element_data = models.ForeignKey(ElementData, null=True, on_delete=models.RESTRICT)
+    data = models.JSONField(default=dict)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)
@@ -63,11 +66,14 @@ class RoomElement(models.Model):
         return File.objects.filter(ownership__room_element=self)
 
     @property
-    def data(self):
+    def data_hash(self):
+        hash_data = dict(OrderedDict(sorted(self.data.items())))
+        content = json.dumps(hash_data).encode('utf-8')
+        return hashlib.md5(content).hexdigest()
+
+    def get_data_from_file(self):
         from .file import File
         from .file_type import FileType
-
-        # TODO: shall we merge element data to these instance data?
 
         json_files = File.objects.filter(ownership__room_element=self, type=FileType.Json)
 
@@ -93,6 +99,10 @@ class RoomElement(models.Model):
 
     def get_entity_type(self):
         return EntityType.RoomElement
+
+    def track_changes(self):
+        self.data = self.get_data_from_file()
+        self.save()
 
     def destroy(self):
         self.deleted_at = timezone.now()
