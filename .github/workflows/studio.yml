@@ -208,7 +208,7 @@ jobs:
         run: |
           sam build \
             --template-file template.yml \
-            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-0042ba85a0b0681e7,subnet-01a1227b58daca793 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033  ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --config-file veevsamconfig.toml \
             --config-env ${{ env.ENVIRONMENT }} \
             --parallel
@@ -217,7 +217,7 @@ jobs:
         run: |
           sam deploy \
             --stack-name veev-${{ env.ENVIRONMENT }}-studio \
-            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-0042ba85a0b0681e7,subnet-01a1227b58daca793 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --image-repository "${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}" \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
