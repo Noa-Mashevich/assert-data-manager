@@ -50,7 +50,7 @@ Mappings:
   ServiceGroupSize:
     dev:
       Desired: 1
-    staging:
+    stage:
       Desired: 1
     prod:
       Desired: 1
