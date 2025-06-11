@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-      - staging
-      - staging-clean
+      - stage
+      - stage-clean
       - production
   pull_request:
     branches:
       - main
-      - staging
+      - stage
       - production
 
 env:
@@ -54,7 +54,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-    if: github.ref == 'refs/heads/staging-clean'
+    if: github.ref == 'refs/heads/stage-clean'
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -62,10 +62,10 @@ jobs:
           role-to-assume: ${{ env.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Undeploy staging
+      - name: Undeploy stage
         run: |
-          aws cloudformation delete-stack --stack-name=veev-staging-studio
-          aws cloudformation wait stack-delete-complete --stack-name=veev-staging-studio
+          aws cloudformation delete-stack --stack-name=veev-stage-studio
+          aws cloudformation wait stack-delete-complete --stack-name=veev-stage-studio
 
   build-deploy:
     runs-on: ubuntu-latest
@@ -74,7 +74,7 @@ jobs:
       contents: read
     needs: [undeploy-app]
     if: |
-      github.ref == 'refs/heads/staging-clean'
+      github.ref == 'refs/heads/stage-clean'
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -95,8 +95,8 @@ jobs:
       - name: Set environment variables
         id: set-env
         run: |
-          echo "ENVIRONMENT=staging" >> $GITHUB_ENV
-          echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
+          echo "ENVIRONMENT=stage" >> $GITHUB_ENV
+          echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
           echo "ALB_PRIORITY=351" >> $GITHUB_ENV
 
       - name: Build and push Docker image
@@ -125,6 +125,8 @@ jobs:
           sam build \
             --template-file template.yml \
             --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 PublicALBDNSRecord=veev-dev-core.veev.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
+            --config-file veevsamconfig.toml \
+            --config-env ${{ env.ENVIRONMENT }} \
             --parallel
 
       - name: SAM Deploy
@@ -133,12 +135,11 @@ jobs:
             --stack-name veev-${{ env.ENVIRONMENT }}-studio \
             --parameter-overrides "StudioImage=${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} DeploymentEnv=${{ env.ENVIRONMENT }} Prefix=veev Settings=${{ env.ENVIRONMENT }} Cluster=veev-dev-core PublicALBSecurityGroupId=sg-08d50ebb8825bb8d3 PublicALBHTTPSListenerArn=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23 PublicALBDNSRecord=veev-dev-core.veev.com RDSSecurityGroup=${RDS_SG} VpcId=vpc-0472ea68c16693fcf PrivateSubnets=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033 ALBPriority=${{ env.ALB_PRIORITY }} StorageTopicARN=${{ env.STORAGE_TOPIC_ARN }}" \
             --image-repository "${{ env.ECR_HOST }}/${{ env.ECR_REPOSITORY }}" \
-            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-28m720vdnyft \
-            --s3-prefix veev_{{ env.ENVIRONMENT }}_studio \
-            --capabilities CAPABILITY_IAM \
             --no-confirm-changeset \
             --no-fail-on-empty-changeset \
-            --tags "org=veev app=studio env=${{ env.ENVIRONMENT }} ApplicationName=\"Studio BE\" ApplicationOwner=\"Adam Konrad\" Environment=${{ env.ENVIRONMENT }}"
+            --tags "org=veev app=studio env=${{ env.ENVIRONMENT }} ApplicationName=\"Studio BE\" ApplicationOwner=\"Adam Konrad\" Environment=${{ env.ENVIRONMENT }}" \
+            --config-file veevsamconfig.toml \
+            --config-env ${{ env.ENVIRONMENT }}
 
   build-deploy-direct:
     runs-on: ubuntu-latest
@@ -147,7 +148,7 @@ jobs:
       contents: read
     if: |
       github.ref == 'refs/heads/main' || 
-      github.ref == 'refs/heads/staging' || 
+      github.ref == 'refs/heads/stage' || 
       github.ref == 'refs/heads/production'
     steps:
       - name: Configure AWS credentials
@@ -173,9 +174,9 @@ jobs:
             echo "ENVIRONMENT=dev" >> $GITHUB_ENV
             echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-dev-storage-Topic-Y4FPKrAfZb6X" >> $GITHUB_ENV
             echo "ALB_PRIORITY=352" >> $GITHUB_ENV
-          elif [[ $GITHUB_REF == 'refs/heads/staging' ]]; then
-            echo "ENVIRONMENT=staging" >> $GITHUB_ENV
-            echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
+          elif [[ $GITHUB_REF == 'refs/heads/stage' ]]; then
+            echo "ENVIRONMENT=stage" >> $GITHUB_ENV
+            echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
             echo "ALB_PRIORITY=351" >> $GITHUB_ENV
           elif [[ $GITHUB_REF == 'refs/heads/production' ]]; then
             echo "ENVIRONMENT=prod" >> $GITHUB_ENV
