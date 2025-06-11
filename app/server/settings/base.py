@@ -81,10 +81,8 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
     'SORT_OPERATIONS': False,
     'SERVERS': [
-        {'url': 'http://localhost:8000', 'description': 'Local Development server'},
-        {'url': 'https://dev.modsy.com', 'description': 'Development server'},
-        {'url': 'https://staging.modsy.com', 'description': 'Staging server'},
-        {'url': 'https://modsy.com', 'description': 'Production server'},
+        {'url': 'http://localhost:8000', 'description': 'local dev'},
+        {'url': 'https://dev.modsy.com', 'description': 'e2e dev'}
     ],
 }
 
