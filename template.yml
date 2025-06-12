@@ -38,6 +38,10 @@ Parameters:
     Type: String
   PublicALBHTTPSListenerArn:
     Type: String
+  PrivateALBSecurityGroupId:
+    Type: String
+  PrivateALBHTTPSListenerArn:
+    Type: String
   ALBPriority:
     Type: Number
   ContainerPort:
@@ -85,6 +89,19 @@ Resources:
       Endpoint: !GetAtt Queue.Arn
 
   PublicALBTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: !Ref ContainerPort
+      HealthCheckEnabled: true
+      HealthCheckPath: !Sub '/health/'
+      Protocol: HTTP
+      TargetType: ip
+      VpcId: !Ref VpcId
+      TargetGroupAttributes:
+        - Key: 'deregistration_delay.timeout_seconds'
+          Value: 60
+
+  PrivateALBTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       Port: !Ref ContainerPort
@@ -424,6 +441,9 @@ Resources:
         - ContainerName: studio
           ContainerPort: !Ref ContainerPort
           TargetGroupArn: !Ref PublicALBTargetGroup
+        - ContainerName: studio
+          ContainerPort: !Ref ContainerPort
+          TargetGroupArn: !Ref PrivateALBTargetGroup
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
@@ -442,6 +462,8 @@ Resources:
       - MigrationPollerResource
       - PublicALBTargetGroup
       - PublicALBRule1
+      - PrivateALBTargetGroup
+      - PrivateALBRule1
 
   ServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -506,4 +528,49 @@ Resources:
             Values:
               - !Ref AWS::StackName
       ListenerArn: !Ref PublicALBHTTPSListenerArn
+      Priority: !Ref ALBPriority
+
+  PrivateALBToServiceSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Private load balancer to Studio
+      SourceSecurityGroupId: !Ref PrivateALBSecurityGroupId
+      GroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref ContainerPort
+      ToPort: !Ref ContainerPort
+
+  PrivateALBToServiceSecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      Description: Private load balancer to Studio
+      GroupId: !Ref PrivateALBSecurityGroupId
+      DestinationSecurityGroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: !Ref ContainerPort
+      ToPort: !Ref ContainerPort
+
+  StudioToPrivateALB:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Studio to Private load balancer
+      GroupId: !Ref PrivateALBSecurityGroupId
+      SourceSecurityGroupId: !GetAtt ServiceSecurityGroup.GroupId
+      IpProtocol: tcp
+      FromPort: 443
+      ToPort: 443
+
+  PrivateALBRule1:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref PrivateALBTargetGroup
+          Type: forward
+      Conditions:
+        - Field: http-header
+          HttpHeaderConfig:
+            HttpHeaderName: !Sub 'x-${Prefix}-app'
+            Values:
+              - !Ref AWS::StackName
+      ListenerArn: !Ref PrivateALBHTTPSListenerArn
       Priority: !Ref ALBPriority
