@@ -102,6 +102,9 @@ jobs:
           echo "PUBLIC_ALB_SG=sg-0576c41f0fd1e2169" >> $GITHUB_ENV
           echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-public/278ec71a5cbfcac3/3cb1926030b263af" >> $GITHUB_ENV
           echo "PUBLIC_ALB_DNS=veev-stage-core.veev.com" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_SG=sg-0ba0a5b890cde01b6" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-private/7b8527288ac7d283/48181205b6a5f6bf" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_DNS=veev-stage-core-private.veev.com" >> $GITHUB_ENV
           echo "ALB_PRIORITY=351" >> $GITHUB_ENV
           echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
 
@@ -197,6 +200,9 @@ jobs:
             echo "PUBLIC_ALB_SG=sg-0576c41f0fd1e2169" >> $GITHUB_ENV
             echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-public/278ec71a5cbfcac3/3cb1926030b263af" >> $GITHUB_ENV
             echo "PUBLIC_ALB_DNS=veev-stage-core.veev.com" >> $GITHUB_ENV
+            echo "PRIVATE_ALB_SG=sg-0ba0a5b890cde01b6" >> $GITHUB_ENV
+            echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-private/7b8527288ac7d283/48181205b6a5f6bf" >> $GITHUB_ENV
+            echo "PRIVATE_ALB_DNS=veev-stage-core-private.veev.com" >> $GITHUB_ENV
             echo "ALB_PRIORITY=351" >> $GITHUB_ENV
             echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
           elif [[ $GITHUB_REF == 'refs/heads/production' ]]; then
