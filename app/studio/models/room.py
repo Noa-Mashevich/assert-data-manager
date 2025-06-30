@@ -17,6 +17,7 @@ class RoomCategory(Enum):
     UtilityRoom = 'utility_room'
     Garage = 'garage'
     OutdoorArea = 'outdoor_area'
+    Bathroom = 'bathroom'
 
 
 class RoomManager(models.Manager):
