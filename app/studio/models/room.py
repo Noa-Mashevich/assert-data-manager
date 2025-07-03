@@ -6,18 +6,19 @@ from .entity_type import EntityType
 
 class RoomCategory(Enum):
     RoomCategoryNone = ''
-    LivingRoom = 'living_room'
-    DiningRoom = 'dining_room'
+    FamilyRoom = 'family_room'
+    DiningRoom = 'dining'
     Kitchen = 'kitchen'
     Bedroom = 'bedroom'
     Loft = 'loft'
     Closet = 'closet'
-    Corridor = 'corridor'
+    Corridor = 'corridors'
     Stairs = 'stairs'
     UtilityRoom = 'utility_room'
     Garage = 'garage'
-    OutdoorArea = 'outdoor_area'
+    OutdoorArea = 'outdoor_areas'
     Bathroom = 'bathroom'
+    Study = 'study'
 
 
 class RoomManager(models.Manager):
