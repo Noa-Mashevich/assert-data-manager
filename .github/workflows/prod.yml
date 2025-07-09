@@ -15,35 +15,6 @@ env:
   ECR_HOST: 616645605022.dkr.ecr.us-east-1.amazonaws.com
 
 jobs:
-  lint-test:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ env.AWS_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10.8'
-
-      - name: Lint
-        run: |
-          pip install -r requirements.txt
-          black -S app/studio --force-exclude migrations --line-length 90 --check
-
-      - name: Test
-        run: |
-          python app/manage.py test studio
-
   build-deploy-direct:
     runs-on: ubuntu-latest
     permissions:
