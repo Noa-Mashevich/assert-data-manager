@@ -16,6 +16,7 @@ sam deploy \
   --parameter-overrides "${PARAMETERS}" \
   --s3-bucket veev-aws-sam-cli-managed1 \
   --s3-prefix "veev_${ENVIRONMENT}_studio" \
+  --region us-east-1 \
   --capabilities CAPABILITY_IAM \
   --no-confirm-changeset \
   --no-fail-on-empty-changeset

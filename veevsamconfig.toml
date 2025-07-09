@@ -16,7 +16,7 @@ capabilities = "CAPABILITY_IAM"
 
 [prod.deploy.parameters]
 stack_name = "e2e-prod-studio"
-s3_bucket = "???"
+s3_bucket = "veev-aws-sam-cli-managed2"
 s3_prefix = "studio_prod"
 region = "us-east-1"
 capabilities = "CAPABILITY_IAM"
