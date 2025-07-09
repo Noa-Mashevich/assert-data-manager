@@ -1,17 +1,13 @@
-name: Studio CI/CD
+name: Stage Studio CI/CD
 
 on:
   push:
     branches:
-      - main
       - stage
       - stage-clean
-      - production
   pull_request:
     branches:
-      - main
       - stage
-      - production
 
 env:
   AWS_REGION: ${{ vars.AWS_REGION }}
@@ -156,9 +152,7 @@ jobs:
       id-token: write
       contents: read
     if: |
-      github.ref == 'refs/heads/main' || 
-      github.ref == 'refs/heads/stage' || 
-      github.ref == 'refs/heads/production'
+      github.ref == 'refs/heads/stage'
     steps:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -179,43 +173,18 @@ jobs:
       - name: Set environment variables
         id: set-env
         run: |
-          if [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-            echo "CLUSTER=veev-dev-core" >> $GITHUB_ENV
-            echo "VPC_ID=vpc-0472ea68c16693fcf" >> $GITHUB_ENV
-            echo "PRIVATE_SUBNETS=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_SG=sg-08d50ebb8825bb8d3" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_DNS=veev-dev-core.veev.com" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_SG=sg-0b74e99819f3a2605" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-private/acb6d00e4f53d341/58a096d2ffe35612" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_DNS=veev-dev-core-private.veev.com" >> $GITHUB_ENV
-            echo "ALB_PRIORITY=352" >> $GITHUB_ENV
-            echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-dev-storage-Topic-Y4FPKrAfZb6X" >> $GITHUB_ENV
-          elif [[ $GITHUB_REF == 'refs/heads/stage' ]]; then
-            echo "ENVIRONMENT=stage" >> $GITHUB_ENV
-            echo "CLUSTER=veev-stage-core" >> $GITHUB_ENV
-            echo "VPC_ID=vpc-0a6d03d7e95ed4751" >> $GITHUB_ENV
-            echo "PRIVATE_SUBNETS=subnet-0757a35c00aa418ea,subnet-0ba3ee09261250f52" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_SG=sg-0576c41f0fd1e2169" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-public/278ec71a5cbfcac3/3cb1926030b263af" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_DNS=veev-stage-core.veev.com" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_SG=sg-0ba0a5b890cde01b6" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-private/7b8527288ac7d283/48181205b6a5f6bf" >> $GITHUB_ENV
-            echo "PRIVATE_ALB_DNS=veev-stage-core-private.veev.com" >> $GITHUB_ENV
-            echo "ALB_PRIORITY=351" >> $GITHUB_ENV
-            echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
-          elif [[ $GITHUB_REF == 'refs/heads/production' ]]; then
-            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            echo "CLUSTER=veev-dev-core" >> $GITHUB_ENV
-            echo "VPC_ID=vpc-0472ea68c16693fcf" >> $GITHUB_ENV
-            echo "PRIVATE_SUBNETS=subnet-05c667ecc5fccd18d,subnet-0e2e4fa350c535033" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_SG=sg-08d50ebb8825bb8d3" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-public/028f2294fd8a7013/9673ec14cc246b23" >> $GITHUB_ENV
-            echo "PUBLIC_ALB_DNS=veev-dev-core.veev.com" >> $GITHUB_ENV
-            echo "ALB_PRIORITY=350" >> $GITHUB_ENV
-            echo "STORAGE_TOPIC_ARN=FIXME" >> $GITHUB_ENV
-          fi
+          echo "ENVIRONMENT=stage" >> $GITHUB_ENV
+          echo "CLUSTER=veev-stage-core" >> $GITHUB_ENV
+          echo "VPC_ID=vpc-0a6d03d7e95ed4751" >> $GITHUB_ENV
+          echo "PRIVATE_SUBNETS=subnet-0757a35c00aa418ea,subnet-0ba3ee09261250f52" >> $GITHUB_ENV
+          echo "PUBLIC_ALB_SG=sg-0576c41f0fd1e2169" >> $GITHUB_ENV
+          echo "PUBLIC_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-public/278ec71a5cbfcac3/3cb1926030b263af" >> $GITHUB_ENV
+          echo "PUBLIC_ALB_DNS=veev-stage-core.veev.com" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_SG=sg-0ba0a5b890cde01b6" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-stage-core-private/7b8527288ac7d283/48181205b6a5f6bf" >> $GITHUB_ENV
+          echo "PRIVATE_ALB_DNS=veev-stage-core-private.veev.com" >> $GITHUB_ENV
+          echo "ALB_PRIORITY=351" >> $GITHUB_ENV
+          echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-stage-storage-Topic-5km41CuiAen3" >> $GITHUB_ENV
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
