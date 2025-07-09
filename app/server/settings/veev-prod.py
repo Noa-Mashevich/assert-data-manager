@@ -1,9 +1,9 @@
 from .base import *
 
-AWS_STACK_STORAGE_CDN = 'e2e-prod-storage-cdn'
+AWS_STACK_STORAGE_CDN = 'veev-prod-storage-cdn'
 AWS_STACK_STORAGE_CDN_REGION = 'us-east-1'
-AWS_STACK_STORAGE = 'e2e-prod-storage'
-AWS_STACK_UPLOAD = 'e2e-prod-upload'
+AWS_STACK_STORAGE = 'veev-prod-storage'
+AWS_STACK_UPLOAD = 'veev-prod-upload'
 AWS_STACKS = [
     # the app should not reference its own stack
     # deployment with outputs finishes after the app is already started
