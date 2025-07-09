@@ -78,7 +78,6 @@ jobs:
           echo "PUBLIC_ALB_DNS=veev-dev-core.veev.com" >> $GITHUB_ENV
           echo "PRIVATE_ALB_SG=sg-0b74e99819f3a2605" >> $GITHUB_ENV
           echo "PRIVATE_ALB_LISTENER=arn:aws:elasticloadbalancing:us-east-1:505794203161:listener/app/veev-dev-core-private/acb6d00e4f53d341/58a096d2ffe35612" >> $GITHUB_ENV
-          echo "PRIVATE_ALB_DNS=veev-dev-core-private.veev.com" >> $GITHUB_ENV
           echo "ALB_PRIORITY=352" >> $GITHUB_ENV
           echo "STORAGE_TOPIC_ARN=arn:aws:sns:us-east-1:505794203161:veev-dev-storage-Topic-Y4FPKrAfZb6X" >> $GITHUB_ENV
 
