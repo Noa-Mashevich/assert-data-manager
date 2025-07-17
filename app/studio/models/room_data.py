@@ -6,6 +6,7 @@ from django.db import (
     models,
     transaction,
 )
+from django.db.models import F
 from django.utils import timezone
 
 from server.utils import (
@@ -85,7 +86,8 @@ class RoomData(models.Model):
     room = models.ForeignKey(Room, on_delete=models.RESTRICT)
     version = models.BigIntegerField()
     data = models.JSONField(default=dict)
-    required_file_count = models.IntegerField(default=len(RoomFileTypes))
+    required_file_count = models.IntegerField(default=len(RoomFileTypes), db_index=True)
+    current_file_count = models.IntegerField(default=0, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, db_index=True)
@@ -95,6 +97,12 @@ class RoomData(models.Model):
     class Meta:
         # newest first
         ordering = ['-version']
+
+        indexes = [
+            models.Index(
+                fields=['deleted_at', 'current_file_count', 'required_file_count']
+            ),
+        ]
 
     @property
     def status(self) -> int:
@@ -152,6 +160,12 @@ class RoomData(models.Model):
 
     def get_parent(self):
         return self.room
+
+    def increment_file_count(self):
+        RoomData.objects.filter(id=self.id).update(
+            current_file_count=F('current_file_count') + 1
+        )
+        self.refresh_from_db()
 
     def track_changes(self):
         from .room_data_change import RoomDataChange

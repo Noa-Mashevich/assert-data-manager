@@ -92,10 +92,14 @@ class FileManager(models.Manager):
             )
 
         if file_ownership.get_entity_type() == EntityType.Element:
+            file_ownership.element_data.increment_file_count()
+
             if file.type == FileType.Json:
                 file_ownership.element_data.track_changes()
 
         if file_ownership.get_entity_type() == EntityType.Room:
+            file_ownership.room_data.increment_file_count()
+
             if file.type == FileType.Json:
                 file_ownership.room_data.track_changes()
 

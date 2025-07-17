@@ -1,8 +1,8 @@
 from django.db import models
+from django.db.models import F
 from enum import Enum
 
 from .entity_type import EntityType
-from .file_status import FileStatus
 from .file_type import FileType
 
 
@@ -37,20 +37,10 @@ class RoomManager(models.Manager):
         return instance
 
     def by_latest_valid(self):
-        raw_request = self.raw(
-            'SELECT DISTINCT sr.* FROM studio_room sr '
-            'INNER JOIN ('
-            'SELECT DISTINCT srd.* FROM studio_roomdata srd '
-            'JOIN studio_fileownership sfo ON srd.id = sfo.room_data_id '
-            'JOIN studio_filenotification sfn ON sfn.file_id = sfo.file_id '
-            'WHERE srd.deleted_at IS NULL AND sfn.status = %s '
-            'GROUP BY srd.id '
-            'HAVING COUNT(sfn.id) = srd.required_file_count '
-            ') rd '
-            'ON sr.id = rd.room_id ',
-            [int(FileStatus.Ready)],
-        )
-        return list(raw_request)
+        return Room.objects.filter(
+            roomdata__deleted_at__isnull=True,
+            roomdata__current_file_count=F('roomdata__required_file_count'),
+        ).distinct()
 
 
 class Room(models.Model):
