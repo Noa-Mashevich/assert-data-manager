@@ -25,18 +25,6 @@ from studio.serializers.room import (
 from studio.serializers.room_data_change import RoomDataChangeSerializer
 
 
-class RoomQuerySet(list):
-    def __init__(self, *args, model, **kwargs):
-        self.model = model
-        super().__init__(*args, **kwargs)
-
-    def filter(self, *args, **kwargs):
-        return self
-
-    def order_by(self, *args, **kwargs):
-        return self
-
-
 @extend_schema_view(
     list=extend_schema(
         description="Returns all rooms with their latest versions.",
@@ -75,10 +63,7 @@ class RoomViewSet(
             room_id = int(self.kwargs['pk'])
             return Room.objects.filter(pk=room_id)
 
-        room_with_latest_valid = [
-            x for x in Room.objects.all() if x.latest_valid_room_data is not None
-        ]
-        return RoomQuerySet(room_with_latest_valid, model=Room)
+        return Room.objects.by_latest_valid()
 
     @extend_schema(
         description="Creates and returns a new room version.",

@@ -15,7 +15,10 @@ from server.utils import (
 )
 from studio.file_utils import FileUtils
 
-from .room import Room
+from .room import (
+    Room,
+    RoomFileTypes,
+)
 from .room_data_status import RoomDataStatus
 
 
@@ -32,12 +35,11 @@ class RoomDataManager(models.Manager):
 
     def create_for_room(self, room):
         from .file_ownership import FileOwnership
-        from .file_type import FileType
 
         room_data = self.model.objects.create_versioned_room(room=room)
 
-        FileOwnership.objects.create_for_entity_data(FileType.Json, room_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Png, room_data)
+        for file_type in RoomFileTypes:
+            FileOwnership.objects.create_for_entity_data(file_type, room_data)
 
         return room_data
 
@@ -83,9 +85,10 @@ class RoomData(models.Model):
     room = models.ForeignKey(Room, on_delete=models.RESTRICT)
     version = models.BigIntegerField()
     data = models.JSONField(default=dict)
+    required_file_count = models.IntegerField(default=len(RoomFileTypes))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True)
+    deleted_at = models.DateTimeField(null=True, db_index=True)
 
     objects = RoomDataManager()
 

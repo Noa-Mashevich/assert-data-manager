@@ -53,8 +53,8 @@ class FileNotificationManager(models.Manager):
 
 
 class FileNotification(models.Model):
-    file_id = models.BigIntegerField()
-    status = models.IntegerField(default=FileStatus.Created)
+    file_id = models.BigIntegerField(db_index=True)
+    status = models.IntegerField(default=FileStatus.Created, db_index=True)
     s3_key = models.CharField(max_length=1024, db_index=True)
     s3_size = models.IntegerField()
     s3_etag = models.CharField(max_length=1024)

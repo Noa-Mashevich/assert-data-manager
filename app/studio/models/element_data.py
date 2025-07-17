@@ -15,7 +15,10 @@ from server.utils import (
 )
 from studio.file_utils import FileUtils
 
-from .element import Element
+from .element import (
+    Element,
+    ElementFileTypes,
+)
 from .element_data_status import ElementDataStatus
 
 
@@ -32,14 +35,11 @@ class ElementDataManager(models.Manager):
 
     def create_for_element(self, element):
         from .file_ownership import FileOwnership
-        from .file_type import FileType
 
         element_data = self.model.objects.create_versioned_element(element=element)
 
-        FileOwnership.objects.create_for_entity_data(FileType.Json, element_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Dxf, element_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Rfa, element_data)
-        FileOwnership.objects.create_for_entity_data(FileType.Png, element_data)
+        for file_type in ElementFileTypes:
+            FileOwnership.objects.create_for_entity_data(file_type, element_data)
 
         return element_data
 
@@ -89,9 +89,10 @@ class ElementData(models.Model):
     element = models.ForeignKey(Element, on_delete=models.RESTRICT)
     version = models.BigIntegerField()
     data = models.JSONField(default=dict)
+    required_file_count = models.IntegerField(default=len(ElementFileTypes))
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True)
+    deleted_at = models.DateTimeField(null=True, db_index=True)
 
     objects = ElementDataManager()
 

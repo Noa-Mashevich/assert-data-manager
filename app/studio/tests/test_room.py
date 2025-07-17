@@ -485,6 +485,11 @@ class RoomApiTests(TestCase):
         self.assertEqual(len(results), 0)
 
         create_file_notification('studio/rooms/1/files/1.json')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
         create_file_notification('studio/rooms/1/files/2.png')
 
         results = self.get_paginated(url)
@@ -743,10 +748,15 @@ class RoomApiTests(TestCase):
 
         self.client.post(url)
 
+        url = reverse('room-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('room_data').get('version'), 1)
+
         create_file_notification('studio/rooms/1/files/23.json')
         create_file_notification('studio/rooms/1/files/24.png')
-
-        url = reverse('room-list')
 
         results = self.get_paginated(url)
 

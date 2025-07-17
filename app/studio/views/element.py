@@ -25,18 +25,6 @@ from studio.serializers.element import (
 from studio.serializers.element_data_change import ElementDataChangeSerializer
 
 
-class ElementQuerySet(list):
-    def __init__(self, *args, model, **kwargs):
-        self.model = model
-        super().__init__(*args, **kwargs)
-
-    def filter(self, *args, **kwargs):
-        return self
-
-    def order_by(self, *args, **kwargs):
-        return self
-
-
 @extend_schema_view(
     list=extend_schema(
         description="Returns all elements with their latest versions.",
@@ -75,10 +63,7 @@ class ElementViewSet(
             element_id = int(self.kwargs['pk'])
             return Element.objects.filter(pk=element_id)
 
-        element_with_latest_valid = [
-            x for x in Element.objects.all() if x.latest_valid_element_data is not None
-        ]
-        return ElementQuerySet(element_with_latest_valid, model=Element)
+        return Element.objects.by_latest_valid()
 
     @extend_schema(
         description="Creates and returns a new element version.",

@@ -2,6 +2,8 @@ from django.db import models
 from enum import Enum
 
 from .entity_type import EntityType
+from .file_status import FileStatus
+from .file_type import FileType
 
 
 class ElementCategory(Enum):
@@ -28,6 +30,9 @@ class ElementCategory(Enum):
     Furniture = 'furniture'
 
 
+ElementFileTypes = [FileType.Json, FileType.Dxf, FileType.Rfa, FileType.Png]
+
+
 class ElementManager(models.Manager):
     def create(self, *args, **kwargs):
         instance = super().create(*args, **kwargs)
@@ -37,6 +42,22 @@ class ElementManager(models.Manager):
         ElementData.objects.create_for_element(element=instance)
 
         return instance
+
+    def by_latest_valid(self):
+        raw_request = self.raw(
+            'SELECT DISTINCT se.* FROM studio_element se '
+            'INNER JOIN ('
+            'SELECT DISTINCT sed.*, COUNT(sfn.id) AS file_count FROM studio_elementdata sed '
+            'JOIN studio_fileownership sfo ON sed.id = sfo.element_data_id '
+            'JOIN studio_filenotification sfn ON sfn.file_id = sfo.file_id '
+            'WHERE sed.deleted_at IS NULL AND sfn.status = %s '
+            'GROUP BY sed.id '
+            'HAVING file_count = sed.required_file_count '
+            ') ed '
+            'ON se.id = ed.element_id ',
+            [int(FileStatus.Ready)],
+        )
+        return list(raw_request)
 
 
 class Element(models.Model):

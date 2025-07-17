@@ -243,6 +243,11 @@ class ElementApiTests(TestCase):
         self.assertEqual(len(results), 0)
 
         create_file_notification('studio/elements/1/files/1.json')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 0)
+
         create_file_notification('studio/elements/1/files/2.dxf')
         create_file_notification('studio/elements/1/files/3.rfa')
         create_file_notification('studio/elements/1/files/4.png')
@@ -527,6 +532,15 @@ class ElementApiTests(TestCase):
         url = reverse('element-upgrade', kwargs={'pk': '1'})
 
         self.client.post(url)
+
+        url = reverse('element-list')
+
+        results = self.get_paginated(url)
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].get('element_data').get('version'), 1)
+
+        url = reverse('element-upgrade', kwargs={'pk': '1'})
 
         self.client.post(url)
 
