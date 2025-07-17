@@ -47,12 +47,12 @@ class ElementManager(models.Manager):
         raw_request = self.raw(
             'SELECT DISTINCT se.* FROM studio_element se '
             'INNER JOIN ('
-            'SELECT DISTINCT sed.*, COUNT(sfn.id) AS file_count FROM studio_elementdata sed '
+            'SELECT DISTINCT sed.* FROM studio_elementdata sed '
             'JOIN studio_fileownership sfo ON sed.id = sfo.element_data_id '
             'JOIN studio_filenotification sfn ON sfn.file_id = sfo.file_id '
             'WHERE sed.deleted_at IS NULL AND sfn.status = %s '
             'GROUP BY sed.id '
-            'HAVING file_count = sed.required_file_count '
+            'HAVING COUNT(sfn.id) = sed.required_file_count '
             ') ed '
             'ON se.id = ed.element_id ',
             [int(FileStatus.Ready)],

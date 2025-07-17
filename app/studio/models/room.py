@@ -40,12 +40,12 @@ class RoomManager(models.Manager):
         raw_request = self.raw(
             'SELECT DISTINCT sr.* FROM studio_room sr '
             'INNER JOIN ('
-            'SELECT DISTINCT srd.*, COUNT(sfn.id) AS file_count FROM studio_roomdata srd '
+            'SELECT DISTINCT srd.* FROM studio_roomdata srd '
             'JOIN studio_fileownership sfo ON srd.id = sfo.room_data_id '
             'JOIN studio_filenotification sfn ON sfn.file_id = sfo.file_id '
             'WHERE srd.deleted_at IS NULL AND sfn.status = %s '
             'GROUP BY srd.id '
-            'HAVING file_count = srd.required_file_count '
+            'HAVING COUNT(sfn.id) = srd.required_file_count '
             ') rd '
             'ON sr.id = rd.room_id ',
             [int(FileStatus.Ready)],
