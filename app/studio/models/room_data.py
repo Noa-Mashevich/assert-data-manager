@@ -16,11 +16,11 @@ from server.utils import (
 )
 from studio.file_utils import FileUtils
 
+from .data_status import DataStatus
 from .room import (
     Room,
     RoomFileTypes,
 )
-from .room_data_status import RoomDataStatus
 
 
 class RoomDataManager(models.Manager):
@@ -58,7 +58,7 @@ class RoomDataManager(models.Manager):
         ).order_by('-version')
 
         valid_room_data = [
-            x for x in room_data_versions if x.status == RoomDataStatus.Complete
+            x for x in room_data_versions if x.status == DataStatus.Complete
         ]
 
         if len(valid_room_data) == 0:
@@ -106,14 +106,11 @@ class RoomData(models.Model):
 
     @property
     def status(self) -> int:
-        from .file import File
-
-        files = File.objects.filter(ownership__room_data=self)
-
-        if not all([x.exists for x in files]):
-            return RoomDataStatus.Incomplete
-
-        return RoomDataStatus.Complete
+        return (
+            DataStatus.Complete
+            if self.current_file_count == self.required_file_count
+            else DataStatus.Incomplete
+        )
 
     @property
     def files(self):

@@ -1,6 +1,6 @@
 from enum import IntEnum
 
 
-class ElementDataStatus(IntEnum):
+class DataStatus(IntEnum):
     Incomplete = 0
     Complete = 1

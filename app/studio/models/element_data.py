@@ -16,11 +16,11 @@ from server.utils import (
 )
 from studio.file_utils import FileUtils
 
+from .data_status import DataStatus
 from .element import (
     Element,
     ElementFileTypes,
 )
-from .element_data_status import ElementDataStatus
 
 
 class ElementDataManager(models.Manager):
@@ -60,7 +60,7 @@ class ElementDataManager(models.Manager):
         ).order_by('-version')
 
         valid_element_data = [
-            x for x in element_data_versions if x.status == ElementDataStatus.Complete
+            x for x in element_data_versions if x.status == DataStatus.Complete
         ]
 
         if len(valid_element_data) == 0:
@@ -112,14 +112,11 @@ class ElementData(models.Model):
 
     @property
     def status(self) -> int:
-        from .file import File
-
-        files = File.objects.filter(ownership__element_data=self)
-
-        if not all([x.exists for x in files]):
-            return ElementDataStatus.Incomplete
-
-        return ElementDataStatus.Complete
+        return (
+            DataStatus.Complete
+            if self.current_file_count == self.required_file_count
+            else DataStatus.Incomplete
+        )
 
     @property
     def files(self):
