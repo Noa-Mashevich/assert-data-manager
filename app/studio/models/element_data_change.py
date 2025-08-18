@@ -26,7 +26,10 @@ def compare_element_data(previous_data, current_data):
             changes.append(
                 {
                     'type': DataChangeType.Minor,
+                    'property': x,
                     'description': f"added property '{x}'",
+                    'previous_value': None,
+                    'new_value': current_data_flattened[x],
                 }
             )
         return changes
@@ -43,7 +46,10 @@ def compare_element_data(previous_data, current_data):
         changes.append(
             {
                 'type': DataChangeType.Major,
+                'property': removed_property_name,
                 'description': f"removed property '{removed_property_name}'",
+                'previous_value': removed_properties[removed_property_name],
+                'new_value': None,
             }
         )
 
@@ -58,7 +64,10 @@ def compare_element_data(previous_data, current_data):
         changes.append(
             {
                 'type': DataChangeType.Major,
+                'property': type_changed_property_name,
                 'description': f"changed type for property '{type_changed_property_name}'",
+                'previous_value': previous_data_flattened[type_changed_property_name],
+                'new_value': current_data_flattened[type_changed_property_name],
             }
         )
 
@@ -72,7 +81,10 @@ def compare_element_data(previous_data, current_data):
         changes.append(
             {
                 'type': DataChangeType.Minor,
+                'property': added_property_name,
                 'description': f"added property '{added_property_name}'",
+                'previous_value': None,
+                'new_value': current_data_flattened[added_property_name],
             }
         )
 
@@ -88,7 +100,10 @@ def compare_element_data(previous_data, current_data):
         changes.append(
             {
                 'type': DataChangeType.Patch,
+                'property': value_changed_property_name,
                 'description': f"changed value for property '{value_changed_property_name}'",
+                'previous_value': previous_data_flattened[value_changed_property_name],
+                'new_value': current_data_flattened[value_changed_property_name],
             }
         )
 
@@ -109,17 +124,26 @@ class ElementDataChangeManager(models.Manager):
         for change in changes:
             type = int(change.get('type'))
             description = change.get('description')
+            property = change.get('property')
+            previous_value = change.get('previous_value')
+            new_value = change.get('new_value')
 
             self.model.objects.create(
                 element_data=current_element_data,
                 type=type,
                 description=description,
+                property=property,
+                previous_value=previous_value,
+                new_value=new_value,
             )
 
 
 class ElementDataChange(models.Model):
-    element_data = models.ForeignKey(ElementData, on_delete=models.RESTRICT)
+    element_data = models.ForeignKey('ElementData', on_delete=models.RESTRICT)
     type = models.IntegerField()
     description = models.TextField(default='')
+    property = models.TextField(null=True, blank=True)
+    previous_value = models.JSONField(null=True, blank=True)
+    new_value = models.JSONField(null=True, blank=True)
 
     objects = ElementDataChangeManager()
