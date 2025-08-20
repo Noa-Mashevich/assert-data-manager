@@ -74,6 +74,111 @@ class ElementViewSet(
     def upgrade(self, request, pk):
         element = Element.objects.get(pk=pk)
         element.upgrade()
+
+        serializer = ElementUpgradeSerializer(instance=element)
+        return Response(serializer.data)
+
+    # for testing
+    @extend_schema(
+        description="Update element data with custom values - SIMPLE, NO VERSIONING!",
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'data': {
+                        'type': 'object',
+                        'description': 'The new data to set for the element',
+                    }
+                },
+            }
+        },
+        responses=ElementWriteResponseSerializer,
+    )
+    @action(detail=True, methods=['post'])
+    def update_data(self, request, pk):
+        """
+        Simple endpoint to update element data - NO VERSIONING, NO DUPLICATES!
+        Just updates the current version's data.
+        """
+        element = Element.objects.get(pk=pk)
+
+        # Get the new data from request
+        new_data = request.data.get('data', {})
+
+        # Get current data
+        current_data = element.latest_element_data
+
+        # Save old data for comparison
+        old_data = current_data.data.copy()
+
+        # Update the data
+        current_data.data = new_data
+        current_data.save()
+
+        # Generate change records
+        from studio.models.element_data_change import ElementDataChange
+
+        ElementDataChange.objects.create_from_data_comparison(
+            None, current_data  # No previous version since we're updating same version
+        )
+
+        serializer = ElementUpgradeSerializer(instance=element)
+        return Response(serializer.data)
+
+    # For testing
+    @extend_schema(
+        description="Create a new version of the element with updated data",
+        request={
+            'application/json': {
+                'type': 'object',
+                'properties': {
+                    'data': {
+                        'type': 'object',
+                        'description': 'The new data to add to the new version',
+                    },
+                    'additional_info': {
+                        'type': 'object',
+                        'description': 'Additional information to include in the new version',
+                    },
+                },
+            }
+        },
+        responses=ElementWriteResponseSerializer,
+    )
+    @action(detail=True, methods=['post'])
+    def upgrade_with_data(self, request, pk):
+        """
+        Create a new version of the element and add the provided data.
+        This will increment the version number and create a new ElementData record.
+        """
+        element = Element.objects.get(pk=pk)
+
+        # Get the new data from request
+        new_data = request.data.get('data', {})
+        additional_info = request.data.get('additional_info', {})
+
+        # Create a new version using the proper method
+        element.upgrade()
+
+        # Get the new version that was just created
+        new_version = element.latest_element_data
+
+        # Combine the data
+        combined_data = {**new_data, **additional_info}
+
+        # Update the new version with the combined data
+        new_version.data = combined_data
+        new_version.save(is_updating=True)
+
+        # Generate change records by comparing with previous version
+        from studio.models.element_data_change import ElementDataChange
+
+        previous_version = element.previous_element_data
+
+        ElementDataChange.objects.create_from_data_comparison(
+            previous_version, new_version
+        )
+
         serializer = ElementUpgradeSerializer(instance=element)
         return Response(serializer.data)
 
