@@ -12,6 +12,7 @@ from rest_framework.response import Response
 
 from server.pagination import LargeResultsSetPagination
 
+from django.core.exceptions import ObjectDoesNotExist
 from studio.models.element import Element
 from studio.models.element_data import ElementData
 from studio.models.element_data_change import ElementDataChange
@@ -125,7 +126,7 @@ class ElementViewSet(
         serializer = ElementUpgradeSerializer(instance=element)
         return Response(serializer.data)
 
-    # For testing
+    # For TESTING - APIgateway for updating + upgrading versions with new data
     @extend_schema(
         description="Create a new version of the element with updated data",
         request={
@@ -151,36 +152,50 @@ class ElementViewSet(
         Create a new version of the element and add the provided data.
         This will increment the version number and create a new ElementData record.
         """
-        element = Element.objects.get(pk=pk)
+        try:
+            element = Element.objects.get(pk=pk)
 
-        # Get the new data from request
-        new_data = request.data.get('data', {})
-        additional_info = request.data.get('additional_info', {})
+            # Get the new data from request
+            new_data = request.data.get('data', {})
+            additional_info = request.data.get('additional_info', {})
 
-        # Create a new version using the proper method
-        element.upgrade()
+            # Create a new version using the proper method
+            element.upgrade()
 
-        # Get the new version that was just created
-        new_version = element.latest_element_data
+            # Get the new version that was just created
+            new_version = element.latest_element_data
 
-        # Combine the data
-        combined_data = {**new_data, **additional_info}
+            # Combine the data
+            combined_data = {**new_data, **additional_info}
 
-        # Update the new version with the combined data
-        new_version.data = combined_data
-        new_version.save(is_updating=True)
+            # Update the new version with the combined data
+            new_version.data = combined_data
+            new_version.save(is_updating=True)
 
-        # Generate change records by comparing with previous version
-        from studio.models.element_data_change import ElementDataChange
+            # Generate change records by comparing with previous version
+            from studio.models.element_data_change import ElementDataChange
 
-        previous_version = element.previous_element_data
+            previous_version = element.previous_element_data
 
-        ElementDataChange.objects.create_from_data_comparison(
-            previous_version, new_version
-        )
+            # Only create change records if there's a previous version to compare with
+            if previous_version is not None:
+                ElementDataChange.objects.create_from_data_comparison(
+                    previous_version, new_version
+                )
 
-        serializer = ElementUpgradeSerializer(instance=element)
-        return Response(serializer.data)
+            serializer = ElementUpgradeSerializer(instance=element)
+            return Response(serializer.data)
+
+        except ObjectDoesNotExist:
+            return Response(
+                {"error": f"Element with ID {pk} not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to upgrade element: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 
 @extend_schema_view(

@@ -21,6 +21,7 @@ def compare_element_data(previous_data, current_data):
 
     current_data_flattened = flatten_dict(current_data)
 
+    # Logic 1: Find properties that exist in current but NOT in previous.
     if previous_data is None:
         for x in current_data_flattened.keys():
             changes.append(
@@ -36,6 +37,7 @@ def compare_element_data(previous_data, current_data):
 
     previous_data_flattened = flatten_dict(previous_data)
 
+    # Logic 2: Find properties that exist in previous but NOT in current.
     removed_properties = {
         x: previous_data_flattened[x]
         for x in previous_data_flattened
@@ -53,6 +55,7 @@ def compare_element_data(previous_data, current_data):
             }
         )
 
+    # Logic 3: Find properties that exist in both but have different data types.
     type_changed_properties = {
         x: current_data_flattened[x]
         for x in current_data_flattened
@@ -71,6 +74,7 @@ def compare_element_data(previous_data, current_data):
             }
         )
 
+    # Logic 4: Find properties that exist in current but NOT in previous.
     added_properties = {
         x: current_data_flattened[x]
         for x in current_data_flattened
@@ -88,6 +92,7 @@ def compare_element_data(previous_data, current_data):
             }
         )
 
+    # Logic 5: Find properties that exist in both with same type but different values.
     value_changed_properties = {
         x: current_data_flattened[x]
         for x in current_data_flattened

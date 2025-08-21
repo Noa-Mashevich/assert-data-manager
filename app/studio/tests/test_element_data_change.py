@@ -10,7 +10,6 @@ class TestElementDataChange(TestCase):
         json_data_2 = {}
 
         changes = compare_element_data(json_data_1, json_data_2)
-
         self.assertEqual(len(changes), 0)
 
         json_data_1 = {
@@ -33,7 +32,6 @@ class TestElementDataChange(TestCase):
         }
 
         changes = compare_element_data(json_data_1, json_data_2)
-
         self.assertEqual(len(changes), 4)
         self.assertEqual(
             len([x for x in changes if x.get('type') == DataChangeType.Major]), 2
