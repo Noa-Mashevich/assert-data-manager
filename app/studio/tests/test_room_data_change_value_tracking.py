@@ -1,6 +1,7 @@
 from traceback import print_exc
 from django.test import TestCase
 from django.test.client import json
+import copy
 
 from studio.models.data_change_type import DataChangeType
 from studio.models.room_data_change import compare_room_data
@@ -51,7 +52,7 @@ class TestRoomDataChangeValueTracking(TestCase):
     def test_room_string_value_changes(self):
         """Test room string value changes"""
 
-        json_data_2 = json_data_1.copy()
+        json_data_2 = copy.deepcopy(json_data_1)
         json_data_2["room_name"] = "new_name"
         changes = compare_room_data(json_data_1, json_data_2)
         self.assertEqual(len(changes), 1)
@@ -60,13 +61,15 @@ class TestRoomDataChangeValueTracking(TestCase):
 
         if "changed" in change['description']:
             self.assertNotEqual(change['previous_value'], change['new_value'])
+        else:
+            self.fail("changed not in description")
 
         self.assertEqual(change['type'], DataChangeType.Patch)
 
     def test_room_number_value_changes(self):
         """Test room number value changes"""
 
-        json_data_2 = json_data_1.copy()
+        json_data_2 = copy.deepcopy(json_data_1)
         json_data_2["area_sqm"] = 150
         changes = compare_room_data(json_data_1, json_data_2)
         self.assertEqual(len(changes), 1)
@@ -75,13 +78,15 @@ class TestRoomDataChangeValueTracking(TestCase):
 
         if "changed" in change['description']:
             self.assertNotEqual(change['previous_value'], change['new_value'])
+        else:
+            self.fail("changed not in description")
 
         self.assertEqual(change['type'], DataChangeType.Patch)
 
     def test_room_value_deleted(self):
         """Test room number value deleted"""
 
-        json_data_2 = json_data_1.copy()
+        json_data_2 = copy.deepcopy(json_data_1)
         del json_data_2["floor_number"]
         changes = compare_room_data(json_data_1, json_data_2)
         self.assertEqual(len(changes), 1)
@@ -90,13 +95,14 @@ class TestRoomDataChangeValueTracking(TestCase):
 
         if "removed" in change['description']:
             self.assertEqual(change['new_value'], None)
+        else:
+            self.fail("removed not in description")
 
         self.assertEqual(change['type'], DataChangeType.Major)
 
     def test_room_value_added(self):
         """Test room number value added"""
-
-        json_data_2 = json_data_1.copy()
+        json_data_2 = copy.deepcopy(json_data_1)
         json_data_2["room_type"] = "string"
         changes = compare_room_data(json_data_1, json_data_2)
         self.assertEqual(len(changes), 1)
@@ -106,59 +112,79 @@ class TestRoomDataChangeValueTracking(TestCase):
         if "added" in change['description']:
             self.assertEqual(change['previous_value'], None)
             self.assertNotEqual(change['new_value'], None)
+        else:
+            self.fail("added not in description")
 
         self.assertEqual(change['type'], DataChangeType.Minor)
 
+    def test_room_outline_changes(self):
+        """Test room Outline changes (should be Major)"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["Outline"][0]["Z"] = 3
 
-def test_room_boolean_value_changes(self):
-    """Test room boolean value changes"""
-    json_data_2 = json_data_1.copy()
-    json_data_2["lighting"]["natural_light"] = False
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 1)
+        change = changes[0]
+        self.assertEqual(change['type'], DataChangeType.Major)
+        self.assertEqual(change['property'], 'Outline')
 
-    changes = compare_room_data(json_data_1, json_data_2)
-    self.assertEqual(len(changes), 1)
-    change = changes[0]
-    self.assertEqual(change['type'], DataChangeType.Patch)
-    self.assertEqual(change['previous_value'], True)
-    self.assertEqual(change['new_value'], False)
+    def test_room_elements_changes(self):
+        """Test room elements changes (should be Minor)"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["elements"][0]["position"]["x"] = 5
 
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 1)
+        change = changes[0]
+        self.assertEqual(change['type'], DataChangeType.Minor)
+        self.assertEqual(change['property'], 'elements')
 
-def test_room_stretch_lines_changes(self):
-    """Test room stretch_lines changes (should be Major)"""
-    json_data_2 = json_data_1.copy()
-    json_data_2["stretch_lines"][0]["max"] = 100
+    def test_room_boolean_value_changes(self):
+        """Test room boolean value changes"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["lighting"]["natural_light"] = False
 
-    changes = compare_room_data(json_data_1, json_data_2)
-    self.assertEqual(len(changes), 1)
-    change = changes[0]
-    self.assertEqual(change['type'], DataChangeType.Major)
-    self.assertEqual(change['property'], 'stretch_lines')
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 1)
+        change = changes[0]
+        self.assertEqual(change['type'], DataChangeType.Patch)
+        self.assertEqual(change['previous_value'], True)
+        self.assertEqual(change['new_value'], False)
 
+    def test_room_stretch_lines_changes(self):
+        """Test room stretch_lines changes (should be Major)"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["stretch_lines"][0]["max"] = 100
 
-def test_room_multiple_changes(self):
-    """Test multiple property changes in one update"""
-    json_data_2 = json_data_1.copy()
-    json_data_2["room_name"] = "new_name"
-    json_data_2["area_sqm"] = 150
-    json_data_2["new_property"] = "new_value"
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 1)
+        change = changes[0]
+        self.assertEqual(change['type'], DataChangeType.Major)
+        self.assertEqual(change['property'], 'stretch_lines')
 
-    changes = compare_room_data(json_data_1, json_data_2)
-    self.assertEqual(len(changes), 3)
+    def test_room_multiple_changes(self):
+        """Test multiple property changes in one update"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["room_name"] = "new_name"
+        json_data_2["area_sqm"] = 150
+        json_data_2["new_property"] = "new_value"
 
-    # Check that we have one of each type
-    change_types = [c['type'] for c in changes]
-    self.assertIn(DataChangeType.Patch, change_types)
-    self.assertIn(DataChangeType.Minor, change_types)
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 3)
 
+        # Check that we have one of each type
+        change_types = [c['type'] for c in changes]
+        self.assertIn(DataChangeType.Patch, change_types)
+        self.assertIn(DataChangeType.Minor, change_types)
 
-def test_room_nested_object_changes(self):
-    """Test changes in nested objects"""
-    json_data_2 = json_data_1.copy()
-    json_data_2["lighting"]["artificial_lights"] = 5
+    def test_room_nested_object_changes(self):
+        """Test changes in nested objects"""
+        json_data_2 = copy.deepcopy(json_data_1)
+        json_data_2["lighting"]["artificial_lights"] = 5
 
-    changes = compare_room_data(json_data_1, json_data_2)
-    self.assertEqual(len(changes), 1)
-    change = changes[0]
-    self.assertEqual(change['property'], 'lighting.artificial_lights')
-    self.assertEqual(change['previous_value'], 0)
-    self.assertEqual(change['new_value'], 5)
+        changes = compare_room_data(json_data_1, json_data_2)
+        self.assertEqual(len(changes), 1)
+        change = changes[0]
+        self.assertEqual(change['property'], 'lighting.artificial_lights')
+        self.assertEqual(change['previous_value'], 0)
+        self.assertEqual(change['new_value'], 5)
